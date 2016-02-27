@@ -1,0 +1,121 @@
+fileFormatVersion: 2
+guid: 80615c3c91d124492aa9ee2d0dac5119
+timeCreated: 1456605270
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: card_template_0
+    21300002: card_template_1
+    21300004: card_template_2
+    21300006: card_template_3
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 325
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: card_template_0
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 2381
+        width: 750
+        height: 1050
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -218.72006, y: 307.04785}
+        - {x: -218.72006, y: -306.95215}
+        - {x: 220.27994, y: -306.95215}
+        - {x: 220.27994, y: 307.04785}
+    - name: card_template_1
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 2385
+        width: 742
+        height: 1045
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -216.67047, y: 305.88306}
+        - {x: -216.67047, y: -305.11694}
+        - {x: 217.32953, y: -305.11694}
+        - {x: 217.32953, y: 305.88306}
+    - name: card_template_2
+      rect:
+        serializedVersion: 2
+        x: 1664
+        y: 2385
+        width: 750
+        height: 1050
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -219.04279, y: 307.38306}
+        - {x: -219.04279, y: -306.61694}
+        - {x: 219.95721, y: -306.61694}
+        - {x: 219.95721, y: 307.38306}
+    - name: card_template_3
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 1277
+        width: 750
+        height: 1040
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -218.59238, y: 304.52338}
+        - {x: -218.59238, y: -303.47662}
+        - {x: 220.40762, y: -303.47662}
+        - {x: 220.40762, y: 304.52338}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
