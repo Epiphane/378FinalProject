@@ -18,26 +18,26 @@ public class HandScript : MonoBehaviour {
 		for (int i = 0; i < 10; i++) {
 			GameObject card = AddCard (Deck.RandomCard ());
 		}
-
-		ReorganizeHand ();
 	}
 
-	GameObject AddCard(Card card) {
+	public GameObject AddCard(Card card) {
 		GameObject newCard = GameObject.Instantiate (cardPrefab);
-
-//		GameObject anchor = new GameObject ();
 
 		// Set card to random type
 		newCard.GetComponent<CardDisplayScript>().SetCard(card);
-//		newCard.transform.parent = anchor.transform;
-//
-//		anchor.transform.parent = transform;
 		newCard.transform.parent = transform;
 
 		cards.Add (newCard.transform);
-//		ReorganizeHand ();
+		ReorganizeHand ();
 
 		return newCard;
+	}
+
+	public void RemoveCard(Transform card) {
+		cards.Remove (card);
+		Destroy (card.gameObject);
+
+		ReorganizeHand ();
 	}
 
 	void ReorganizeHand () {
@@ -55,6 +55,5 @@ public class HandScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-//		ReorganizeHand (FAN_DEG);
 	}
 }

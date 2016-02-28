@@ -34,4 +34,22 @@ public class CardDisplayScript : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	void OnMouseEnter() {
+	}
+
+	void OnMouseExit() {
+	}
+
+	void OnMouseUp() {
+		HandScript hand = transform.parent.GetComponent<HandScript> ();
+
+		if (hand != null) {
+			hand.RemoveCard (transform);
+		} 
+		else {
+			Debug.Log ("Removing Game Object but it's not in any hand");
+			Destroy (gameObject);
+		}
+	}
 }
