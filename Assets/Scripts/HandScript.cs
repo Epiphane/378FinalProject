@@ -10,10 +10,6 @@ public class HandScript : CardHolderScript {
 
 	// Use this for initialization
 	void Start () {
-		// Add a dummy hand
-		for (int i = 0; i < 3; i++) {
-			AddCard (Deck.RandomCard ());
-		}
 	}
 
 	public override GameObject AddCard(Card card) {
