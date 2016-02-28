@@ -1,10 +1,16 @@
 fileFormatVersion: 2
 guid: 0963b1c3464214c78b7ccc0c4d990cd1
-timeCreated: 1456605887
+timeCreated: 1456618319
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - redFrame: {fileID: 21300004, guid: 80615c3c91d124492aa9ee2d0dac5119, type: 3}
+  - blueFrame: {fileID: 21300002, guid: 80615c3c91d124492aa9ee2d0dac5119, type: 3}
+  - greenFrame: {fileID: 21300006, guid: 80615c3c91d124492aa9ee2d0dac5119, type: 3}
+  - attack: {fileID: 21300000, guid: 93c23624001e041cc8b565729077401e, type: 3}
+  - spell: {fileID: 21300002, guid: 93c23624001e041cc8b565729077401e, type: 3}
+  - block: {fileID: 21300004, guid: 93c23624001e041cc8b565729077401e, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

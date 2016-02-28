@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class HandScript : MonoBehaviour {
 
-	private Transform[] cards;
+	private static float SPACING = 1;
+
+	private List<Transform> cards = new List<Transform>();
 
 	public GameObject cardPrefab;
 
@@ -11,22 +14,27 @@ public class HandScript : MonoBehaviour {
 	void Start () {
 		// Add a dummy hand
 		for (int i = 0; i < 3; i++) {
-			GameObject card = AddDummyCard ();
-
-			card.transform.position = new Vector3 (3 - 2 * i, 0, 0);
+			GameObject card = AddCard (Deck.RandomCard ());
 		}
 	}
 
-	GameObject AddDummyCard() {
+	GameObject AddCard(Card card) {
 		GameObject newCard = GameObject.Instantiate (cardPrefab);
 
 		// Set card to random type
-		CardDisplayScript.Color c = CardDisplayScript.Color.BLUE;
-		CardDisplayScript.Type t = CardDisplayScript.Type.ATTACK;
-		newCard.GetComponent<CardDisplayScript> ().SetColorAndType (c, t);
-
+		newCard.GetComponent<CardDisplayScript>().SetCard(card);
 		newCard.transform.parent = transform;
+
+		cards.Add (newCard.transform);
+		ReorganizeHand ();
+
 		return newCard;
+	}
+
+	void ReorganizeHand () {
+		for (int i = 0; i < cards.Count; i++) {
+			cards[i].transform.position = new Vector3(SPACING * (cards.Count - 2 * i), 0, 0);
+		}
 	}
 	
 	// Update is called once per frame
