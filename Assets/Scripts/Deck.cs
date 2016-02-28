@@ -4,7 +4,7 @@ using System.Collections;
 public class Deck {
 	public static Card RandomCard() {
 		// Decide on a type
-		int cType = Random.Range (0, 2);
+		int cType = Random.Range (0, 3);
 		Card.Type t = Card.Type.ATTACK;
 		if (cType == 1)
 			t = Card.Type.SPELL;
@@ -12,7 +12,7 @@ public class Deck {
 			t = Card.Type.BLOCK;
 
 		// Decide on a color
-		int cColor = Random.Range (0, 2);
+		int cColor = Random.Range (0, 3);
 		Card.Color c = Card.Color.RED;
 		if (cColor == 1)
 			c = Card.Color.BLUE;
