@@ -11,7 +11,7 @@ public class CardDisplayScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cardFrame = GetComponent<SpriteRenderer>();
+		cardFrame = transform.FindChild ("Frame").GetComponent<SpriteRenderer>();
 		cardType = transform.FindChild ("Display").GetComponent<SpriteRenderer>();
 
 		if (card != null)
