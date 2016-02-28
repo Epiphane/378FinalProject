@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CardBankScript : CardHolderScript {
-
+	
 	private Deck deck;
-
 	private GameManagerScript game;
 
 	// Use this for initialization
-	void Awake () {
+	public override void Awake () {
+		base.Awake ();
+
 		deck = new Deck ();
 
 		// For now, we're going to initialize a bank with 63 cards
@@ -54,11 +56,23 @@ public class CardBankScript : CardHolderScript {
 	
 	}
 
-	public override void CardSelected (Transform transform, Card card) {
-		Destroy (transform.gameObject);
+	public List<Card> GetAvailableCards() {
+		return cards;
+	}
 
+	public void PickCard (int player_id, Card card) {
+		if (game.DrawCard (player_id, card)) {
+			RemoveCard (card);
+		}
+	}
+
+	public override void CardSelected (Transform transform, Card card) {
 		// Pass in 0 (the human player) because this is coming from a click event...
 		// TODO is this a good idea? Who knows!
-		game.DrawCard (0, card);
+		PickCard(0, card);
+//		return;
+//		if (game.DrawCard (0, card)) {
+//			Destroy (transform.gameObject);
+//		}
 	}
 }

@@ -6,9 +6,15 @@ public class CardHolderScript : MonoBehaviour {
 
 	public GameObject cardPrefab;
 
+	protected List<Card> cards;
+	protected List<Transform> cardTransforms;
+
 	// Use this for initialization
-	void Start () {
-	
+	public virtual void Awake () {
+		cards = new List<Card> ();
+		if (cardPrefab != null) {
+			cardTransforms = new List<Transform> ();
+		}
 	}
 	
 	// Update is called once per frame
@@ -16,22 +22,32 @@ public class CardHolderScript : MonoBehaviour {
 	
 	}
 
-	protected List<Transform> cards = new List<Transform>();
-
 	public virtual GameObject AddCard(Card card) {
-		GameObject newCard = GameObject.Instantiate (cardPrefab);
+		GameObject newCard = null;
 
-		// Set card to random type
-		newCard.GetComponent<CardDisplayScript>().card = card;
-		newCard.transform.parent = transform;
+		if (cardPrefab != null) {
+			newCard = GameObject.Instantiate (cardPrefab);
 
-		cards.Add (newCard.transform);
+			// Set card to random type
+			newCard.GetComponent<CardDisplayScript> ().card = card;
+			newCard.transform.parent = transform;
+
+			cardTransforms.Add (newCard.transform);
+		}
+
+		cards.Add (card);
 
 		return newCard;
 	}
 		
-	public virtual void RemoveCard (Transform card) {
-		cards.Remove (card);
+	public virtual void RemoveCard (Card card) {
+		int index = cards.IndexOf (card);
+		cards.RemoveAt (index);
+
+		if (cardPrefab != null) {
+			Destroy (cardTransforms[index].gameObject);
+			cardTransforms.RemoveAt (index);
+		}
 	}
 
 	public virtual void CardSelected (Transform transform, Card card) {

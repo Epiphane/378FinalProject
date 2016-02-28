@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerScript : MonoBehaviour {
 
 	public CardHolderScript hand;
+	public int ID;
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +16,7 @@ public class PlayerScript : MonoBehaviour {
 	
 	}
 
-	public void DrawCard(Card card) {
+	public virtual void DrawCard(Card card) {
 		hand.AddCard (card);
 	}
 }
