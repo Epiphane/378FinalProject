@@ -7,49 +7,40 @@ public class CardDisplayScript : MonoBehaviour {
 	private SpriteRenderer cardFrame;
 
 	/* Card object */
-	private Card card = null;
+	private Card _card = null;
 
 	// Use this for initialization
 	void Start () {
 		cardFrame = transform.FindChild ("Frame").GetComponent<SpriteRenderer>();
 		cardType = transform.FindChild ("Display").GetComponent<SpriteRenderer>();
 
-		if (card != null)
-			SetCard (card);
+		if (_card != null)
+			UpdateDisplay ();
 	}
 
-	public void SetCard(Card card) {
-		this.card = card;
+	public Card card {
+		set {
+			_card = value;
 
+			UpdateDisplay ();
+		}
+		get {
+			return _card;
+		}
+	}
+
+	void UpdateDisplay() {
 		// Set type image
 		if (cardType != null)
-			cardType.sprite = CardDisplayManager.instance.DisplayType (card.GetType());
+			cardType.sprite = CardDisplayManager.instance.DisplayType (_card.type);
 
 		// Set frame
 		if (cardFrame != null)
-			cardFrame.sprite = CardDisplayManager.instance.DisplayColor (card.GetColor());
+			cardFrame.sprite = CardDisplayManager.instance.DisplayColor (_card.color);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-	}
-
-	void OnMouseEnter() {
-	}
-
-	void OnMouseExit() {
-	}
-
-	void OnMouseUp() {
-		HandScript hand = transform.parent.GetComponent<HandScript> ();
-
-		if (hand != null) {
-			hand.RemoveCard (transform);
-		} 
-		else {
-			Debug.Log ("Removing Game Object but it's not in any hand");
-			Destroy (gameObject);
-		}
 	}
 }

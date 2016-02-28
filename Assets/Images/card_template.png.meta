@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 80615c3c91d124492aa9ee2d0dac5119
-timeCreated: 1456605270
+timeCreated: 1456638819
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,7 @@ TextureImporter:
     21300002: card_template_1
     21300004: card_template_2
     21300006: card_template_3
+    21300008: card_template_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -114,6 +115,21 @@ TextureImporter:
         - {x: -218.59238, y: -303.47662}
         - {x: 220.40762, y: -303.47662}
         - {x: 220.40762, y: 304.52338}
+    - name: card_template_4
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 158
+        width: 750
+        height: 1050
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -219.25714, y: 307.24173}
+        - {x: -219.25714, y: -306.75827}
+        - {x: 219.74286, y: -306.75827}
+        - {x: 219.74286, y: 307.24173}
     outline: []
   spritePackingTag: 
   userData: 

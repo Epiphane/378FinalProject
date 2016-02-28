@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: 445713358afd24ddb87fcd92ea0475f9
-timeCreated: 1456640971
+guid: 5b3f38ad3bc5148b39135427c6c8ffd2
+timeCreated: 1456636971
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - cardPrefab: {fileID: 133318, guid: 18bfb8eff51a74720b26ef2cc1493b17, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -2,12 +2,23 @@
 	public enum Type { NONE, ATTACK, SPELL, BLOCK };
 	public enum Color { BLANK, RED, BLUE, GREEN };
 
-	private Type type;
-	private Color color;
+	public static Type[] types = { Type.ATTACK, Type.SPELL, Type.BLOCK };
+	public static Color[] colors = { Color.BLUE, Color.RED, Color.GREEN };
+
+	private Type _type;
+	private Color _color;
 
 	public Card(Type type, Color color) {
-		this.type = type;
-		this.color = color;
+		this._type = type;
+		this._color = color;
+	}
+
+	public Type type {
+		get { return _type; }
+	}
+
+	public Color color {
+		get { return _color; }
 	}
 
 	public override string ToString () {
@@ -39,7 +50,4 @@
 
 		return t + " " + c;
 	}
-
-	public Type GetType() { return type; }
-	public Color GetColor() { return color; }
 }

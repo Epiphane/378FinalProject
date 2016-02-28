@@ -26,6 +26,7 @@ GameObject:
   - 4: {fileID: 405422}
   - 114: {fileID: 11426832}
   - 61: {fileID: 6110226}
+  - 114: {fileID: 11462864}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -56,7 +57,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133318}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.4107895, y: 1.7156713, z: 0}
+  m_LocalPosition: {x: 9.6, y: 1.7156713, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 419970}
@@ -110,6 +111,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0963b1c3464214c78b7ccc0c4d990cd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11462864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6f90695c2d64bccbcba752bfbe47c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!212 &21289344

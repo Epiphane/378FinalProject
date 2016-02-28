@@ -1,23 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Deck {
+
+	private List<Card> cards;
+
+	public int length {
+		get {
+			return cards.Count;
+		}
+	}
+
+	public Deck() {
+		cards = new List<Card> ();
+	}
+
+	public Card Draw () {
+		Card next = cards [0];
+		cards.RemoveAt (0);
+		return next;
+	}
+
+	public void AddCard (Card card) {
+		cards.Add (card);
+	}
+
+	public void Shuffle () {
+		int n = cards.Count;
+		while (n > 1) {
+			int k = Random.Range (0, n);
+			n--;
+			Card value = cards[k];
+			cards[k] = cards[n];
+			cards[n] = value;
+		}
+	}
+
 	public static Card RandomCard() {
 		// Decide on a type
-		int cType = Random.Range (0, 3);
-		Card.Type t = Card.Type.ATTACK;
-		if (cType == 1)
-			t = Card.Type.SPELL;
-		else if (cType == 2)
-			t = Card.Type.BLOCK;
+		Card.Type t = Card.types[Random.Range (0, Card.types.Length)];
 
 		// Decide on a color
-		int cColor = Random.Range (0, 3);
-		Card.Color c = Card.Color.RED;
-		if (cColor == 1)
-			c = Card.Color.BLUE;
-		else if (cColor == 2)
-			c = Card.Color.GREEN;
+		Card.Color c = Card.colors[Random.Range (0, Card.colors.Length)];
 
 		return new Card (t, c);
 	}
