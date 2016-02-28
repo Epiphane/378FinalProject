@@ -12,23 +12,11 @@ public class HandScript : CardHolderScript {
 	void Start () {
 	}
 
-	public override GameObject AddCard(Card card) {
-		GameObject newCard = base.AddCard (card);
-		ReorganizeHand ();
-
-		return newCard;
-	}
-
 	public override void CardSelected (Transform transform, Card card) {
 		RemoveCard (card);
-
-		ReorganizeHand ();
 	}
 
-	void ReorganizeHand () {
-		if (cardTransforms == null)
-			return;
-
+	public override void Reorganize () {
 		for (int i = 0; i < cardTransforms.Count; i++) {
 			float tilt = (cardTransforms.Count - 2.0f * i - 1) * FAN_WIDTH;
 			float xval = tilt * -3 / cardTransforms.Count;

@@ -37,6 +37,9 @@ public class CardHolderScript : MonoBehaviour {
 
 		cards.Add (card);
 
+		if (cardPrefab != null)
+			Reorganize ();
+
 		return newCard;
 	}
 		
@@ -48,6 +51,13 @@ public class CardHolderScript : MonoBehaviour {
 			Destroy (cardTransforms[index].gameObject);
 			cardTransforms.RemoveAt (index);
 		}
+
+		if (cardPrefab != null)
+			Reorganize ();
+	}
+
+	public virtual void Reorganize() {
+		Debug.LogError ("Reorganize not implemented!");
 	}
 
 	public virtual void CardSelected (Transform transform, Card card) {

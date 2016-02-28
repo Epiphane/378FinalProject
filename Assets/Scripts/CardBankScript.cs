@@ -47,8 +47,11 @@ public class CardBankScript : CardHolderScript {
 		while (amountToDraw-- > 0) {
 			GameObject newCard = AddCard (deck.Draw ());
 
-			newCard.transform.position = transform.position - new Vector3 ((amountToDraw + 1) * 3, 0, 0);
+			newCard.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 2.8f, -Mathf.Floor(amountToDraw / 4) * 3, 0);
 		}
+	}
+
+	public override void Reorganize () {
 	}
 	
 	// Update is called once per frame
