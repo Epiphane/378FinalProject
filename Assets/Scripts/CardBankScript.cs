@@ -73,9 +73,5 @@ public class CardBankScript : CardHolderScript {
 		// Pass in 0 (the human player) because this is coming from a click event...
 		// TODO is this a good idea? Who knows!
 		PickCard(0, card);
-//		return;
-//		if (game.DrawCard (0, card)) {
-//			Destroy (transform.gameObject);
-//		}
 	}
 }

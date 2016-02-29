@@ -6,12 +6,28 @@ public class CardHolderScript : MonoBehaviour {
 
 	public GameObject cardPrefab;
 
-	protected List<Card> cards;
+	protected List<Card> _cards;
 	protected List<Transform> cardTransforms;
+
+	public delegate bool ShouldPickCard(Card card);
+	public ShouldPickCard OnPickCard;
+
+	/* Calculated variables */
+	public List<Card> cards {
+		get {
+			return _cards;
+		}
+	}
+
+	public int Size {
+		get {
+			return cards.Count;
+		}
+	}
 
 	// Use this for initialization
 	public virtual void Awake () {
-		cards = new List<Card> ();
+		_cards = new List<Card> ();
 		if (cardPrefab != null) {
 			cardTransforms = new List<Transform> ();
 		}
@@ -35,7 +51,7 @@ public class CardHolderScript : MonoBehaviour {
 			cardTransforms.Add (newCard.transform);
 		}
 
-		cards.Add (card);
+		_cards.Add (card);
 
 		if (cardPrefab != null)
 			Reorganize ();
@@ -44,8 +60,11 @@ public class CardHolderScript : MonoBehaviour {
 	}
 		
 	public virtual void RemoveCard (Card card) {
-		int index = cards.IndexOf (card);
-		cards.RemoveAt (index);
+		int index = _cards.IndexOf (card);
+		if (index < 0)
+			return;
+
+		_cards.RemoveAt (index);
 
 		if (cardPrefab != null) {
 			Destroy (cardTransforms[index].gameObject);
@@ -54,6 +73,12 @@ public class CardHolderScript : MonoBehaviour {
 
 		if (cardPrefab != null)
 			Reorganize ();
+	}
+
+	public void Clear () {
+		while (_cards.Count > 0) {
+			RemoveCard (_cards [0]);
+		}
 	}
 
 	public virtual void Reorganize() {

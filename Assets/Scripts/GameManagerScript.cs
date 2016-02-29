@@ -7,7 +7,9 @@ public class GameManagerScript : MonoBehaviour {
 	
 	private static int PLAYER_ID = 0;
 	private enum STATE { DRAW_NEW_CARD, WAITING_ON_ACTION, RESOLVE_ACTIONS, ANIMATING_ACTION };
-	private static int COMP_WAIT_TIME = 50;
+	private static int COMP_WAIT_TIME = 100;
+
+	public enum MESSAGE { DRAW_NEW_CARD, MAKE_ACTION };
 
 	public CardBankScript cardBank;
 	public PlayerScript[] players;
@@ -40,12 +42,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void Update() {
-		if (state == STATE.DRAW_NEW_CARD && turn != PLAYER_ID) {
-			if (counter-- <= 0) {
-				// AI turn
-				((AIScript) players[turn]).PickCard(cardBank);
-			}
-		} else if (state == STATE.RESOLVE_ACTIONS) {
+		if (state == STATE.RESOLVE_ACTIONS) {
 			SetState(STATE.ANIMATING_ACTION);
 			counter = COMP_WAIT_TIME;
 		} else if (state == STATE.ANIMATING_ACTION) {
@@ -65,6 +62,18 @@ public class GameManagerScript : MonoBehaviour {
 	void SetState(STATE newState) {
 		state = newState;
 		UpdateStatus ();
+
+		switch (state) {
+		case STATE.DRAW_NEW_CARD:
+			players [turn].Message (MESSAGE.DRAW_NEW_CARD);
+			break;
+		case STATE.WAITING_ON_ACTION:
+			// Tell all players to move
+			foreach (PlayerScript player in players) {
+				player.Message (MESSAGE.MAKE_ACTION, NUM_ACTIONS);
+			}
+			break;
+		}
 	}
 
 	void UpdateStatus() {
@@ -84,10 +93,10 @@ public class GameManagerScript : MonoBehaviour {
 			}
 			break;
 		case STATE.RESOLVE_ACTIONS:
-			gameStatus.text = "Resolving action " + action;
+			gameStatus.text = "Resolving action " + action_num;
 			break;
 		case STATE.ANIMATING_ACTION:
-			gameStatus.text = "Animating action " + action;
+			gameStatus.text = "Animating action " + action_num;
 			break;
 		default:
 			Debug.LogError ("State unaccounted for: " + state);
@@ -102,11 +111,8 @@ public class GameManagerScript : MonoBehaviour {
 
 	void Flop (int count) {
 		cardBank.Flop (count);
-		state = STATE.DRAW_NEW_CARD;
 		turn = first_turn;
-		
-		// Let the computer "think" for a bit
-		counter = COMP_WAIT_TIME;
+		SetState (STATE.DRAW_NEW_CARD);
 	}
 
 	public bool DrawCard(int player, Card card) {
@@ -119,14 +125,16 @@ public class GameManagerScript : MonoBehaviour {
 
 			turn = (turn + 1) % players.Length;
 			// Are we done drawing?
-			if (turn == first_turn && cardBank.GetAvailableCards().Count < players.Length) {
+			if (turn == first_turn && cardBank.GetAvailableCards().Count - 1 < players.Length) {
+				cardBank.Clear ();
+
 				SetState (STATE.WAITING_ON_ACTION);
 			} else {
-				UpdateStatus ();
+				// Message the player
+				// Calling setState here so that it messages the player
+				// saying pick a card!
+				SetState (STATE.DRAW_NEW_CARD);
 			}
-
-			// Let the computer "think" for a bit
-			counter = COMP_WAIT_TIME;
 
 			return true;
 		}
@@ -152,6 +160,8 @@ public class GameManagerScript : MonoBehaviour {
 
 		// Everybody has acted!
 		SetState(STATE.RESOLVE_ACTIONS);
+		for (int i = 0; i < acted.Length; i++)
+			acted [i] = false;
 		action_num = 0;
 	}
 }

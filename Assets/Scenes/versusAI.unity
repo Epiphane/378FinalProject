@@ -85,12 +85,6 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &50846054 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11430672, guid: 5b053d4a0bbfa4af78117c81fbdca635,
-    type: 2}
-  m_PrefabInternal: {fileID: 937634702}
-  m_Script: {fileID: 11500000, guid: 5b3f38ad3bc5148b39135427c6c8ffd2, type: 3}
 --- !u!1 &254129235
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardBank: {fileID: 1514591382}
   players:
-  - {fileID: 50846054}
+  - {fileID: 0}
   - {fileID: 1251487503}
   gameStatus: {fileID: 830276917}
 --- !u!1 &712674306
@@ -413,7 +407,12 @@ Prefab:
       propertyPath: hand
       value: 
       objectReference: {fileID: 829116546}
-    m_RemovedComponents: []
+    - target: {fileID: 11430672, guid: 5b053d4a0bbfa4af78117c81fbdca635, type: 2}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 254129237}
+    m_RemovedComponents:
+    - {fileID: 11430672, guid: 5b053d4a0bbfa4af78117c81fbdca635, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 5b053d4a0bbfa4af78117c81fbdca635, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &937634703 stripped
@@ -577,6 +576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca23e4fd2e9d45eaa88830b937fe5fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   hand: {fileID: 1251487504}
   ID: 1
   cardBank: {fileID: 1514591382}
@@ -592,7 +592,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 0}
-  fan: 1
+--- !u!1 &1268813728 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 181074, guid: 5b053d4a0bbfa4af78117c81fbdca635, type: 2}
+  m_PrefabInternal: {fileID: 937634702}
+--- !u!114 &1268813729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1268813728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4be2446c231c045619cb46fab19e6a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 254129237}
+  hand: {fileID: 829116546}
+  ID: 0
 --- !u!1 &1514591381
 GameObject:
   m_ObjectHideFlags: 0

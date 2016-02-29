@@ -6,14 +6,14 @@ public class HandScript : CardHolderScript {
 
 	private static float FAN_WIDTH = 1;
 
-	public bool fan = true;
-
 	// Use this for initialization
 	void Start () {
 	}
 
 	public override void CardSelected (Transform transform, Card card) {
-		RemoveCard (card);
+		if (OnPickCard (card)) {
+			RemoveCard (card);
+		}
 	}
 
 	public override void Reorganize () {
