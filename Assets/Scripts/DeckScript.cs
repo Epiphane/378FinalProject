@@ -6,16 +6,12 @@ using UnityEngine.UI;
 public class DeckScript : MonoBehaviour {
 
 	public Text output;
-	private List<Card> cards;
+	private List<Card> cards = new List<Card> ();
 
 	public int length {
 		get {
 			return cards.Count;
 		}
-	}
-
-	void Awake() {
-		cards = new List<Card> ();
 	}
 
 	void UpdateDisplay () {

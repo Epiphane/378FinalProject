@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -193,6 +194,17 @@ public class GameManagerScript : MonoBehaviour {
 			case Card.Special.SunderArmor:
 				players [i].nextSpecial |= PlayerScript.SUNDER_ARMOR;
 				break;
+			}
+
+			// Game over?
+			if (players [i].health <= 0) {
+				if (players [i].health < players [1 - i].health) {
+					PlayerPrefs.SetInt ("Winner", 2 - i);
+				} else if (players [i].health == players [1 - i].health) {
+					PlayerPrefs.SetInt ("Winner", -1);
+				}
+
+				SceneManager.LoadScene ("GameOver");
 			}
 		}
 	}

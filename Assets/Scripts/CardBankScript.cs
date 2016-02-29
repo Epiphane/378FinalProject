@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class CardBankScript : CardHolderScript {
 	
-	private DeckScript deck;
-	private GameManagerScript game;
+	public DeckScript deck;
+	public GameManagerScript game;
 
 	// Use this for initialization
 	public override void Awake () {
@@ -46,6 +46,7 @@ public class CardBankScript : CardHolderScript {
 
 	public void Flop (int amountToDraw) {
 		float yoffset = Mathf.Floor (amountToDraw / 4);// * 1.4f;
+		Debug.Log (deck);
 
 		while (amountToDraw-- > 0) {
 			GameObject newCard = AddCard (deck.Draw ());

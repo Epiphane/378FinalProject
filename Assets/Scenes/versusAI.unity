@@ -906,6 +906,8 @@ MonoBehaviour:
   manaManager: {fileID: 358604152}
   actionDisplay: {fileID: 1251487506}
   ID: 1
+  special: 0
+  nextSpecial: 0
   healthOutput: {fileID: 1696085386}
   cardBank: {fileID: 1514591382}
 --- !u!114 &1251487504
@@ -965,6 +967,8 @@ MonoBehaviour:
   manaManager: {fileID: 670051489}
   actionDisplay: {fileID: 1268813731}
   ID: 0
+  special: 0
+  nextSpecial: 0
   healthOutput: {fileID: 1079936767}
 --- !u!114 &1268813730
 MonoBehaviour:
@@ -1020,6 +1024,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 133318, guid: 18bfb8eff51a74720b26ef2cc1493b17, type: 2}
+  deck: {fileID: 1514591385}
+  game: {fileID: 254129237}
 --- !u!212 &1514591383
 SpriteRenderer:
   m_ObjectHideFlags: 0
