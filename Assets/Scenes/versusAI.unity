@@ -129,6 +129,58 @@ MonoBehaviour:
   - {fileID: 1268813729}
   - {fileID: 1251487503}
   gameStatus: {fileID: 830276917}
+--- !u!1001 &358604151
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 123392, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_Name
+      value: AI ManaBars
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+  m_IsPrefabParent: 0
+--- !u!114 &358604152 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11453454, guid: ffef686eedd8c482ba36bfa3dddcd2eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 358604151}
+  m_Script: {fileID: 11500000, guid: ba319fc12529844c1a0e366841452e6a, type: 3}
 --- !u!1 &535606664
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +212,7 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -50}
+  m_AnchoredPosition: {x: 100, y: -24}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &535606666
@@ -202,6 +254,54 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 535606664}
+--- !u!1001 &670051488
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 410890, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: ffef686eedd8c482ba36bfa3dddcd2eb, type: 2}
+  m_IsPrefabParent: 0
+--- !u!114 &670051489 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11453454, guid: ffef686eedd8c482ba36bfa3dddcd2eb,
+    type: 2}
+  m_PrefabInternal: {fileID: 670051488}
+  m_Script: {fileID: 11500000, guid: ba319fc12529844c1a0e366841452e6a, type: 3}
 --- !u!1 &712674306
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,7 +787,7 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -100, y: -75}
+  m_AnchoredPosition: {x: -100, y: -49}
   m_SizeDelta: {x: 146, y: 39}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1079936767
@@ -800,9 +900,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca23e4fd2e9d45eaa88830b937fe5fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 254129237}
   hand: {fileID: 1251487504}
   deck: {fileID: 1251487505}
+  manaManager: {fileID: 358604152}
   actionDisplay: {fileID: 1251487506}
   ID: 1
   healthOutput: {fileID: 1696085386}
@@ -861,6 +962,7 @@ MonoBehaviour:
   gameManager: {fileID: 254129237}
   hand: {fileID: 829116546}
   deck: {fileID: 1268813730}
+  manaManager: {fileID: 670051489}
   actionDisplay: {fileID: 1268813731}
   ID: 0
   healthOutput: {fileID: 1079936767}
@@ -1126,7 +1228,7 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 93, y: -75}
+  m_AnchoredPosition: {x: 93, y: -49}
   m_SizeDelta: {x: 146, y: 39}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1696085386
@@ -1245,7 +1347,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -100, y: -50}
+  m_AnchoredPosition: {x: -100, y: -24}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986280347

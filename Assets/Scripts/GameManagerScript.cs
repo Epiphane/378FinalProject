@@ -61,6 +61,9 @@ public class GameManagerScript : MonoBehaviour {
 
 					// Tell players to draw
 					foreach (PlayerScript player in players) {
+						player.special = player.nextSpecial;
+						player.nextSpecial = 0;
+
 						player.Message (MESSAGE.DRAW);
 					}
 
@@ -160,11 +163,37 @@ public class GameManagerScript : MonoBehaviour {
 		Card playerCard = action [PLAYER_ID] [action_num];
 		Card aiCard = action [1] [action_num];
 
+		for (int i = players.Length - 1; i >= 0; i--) {
+			players[i].AffectCard(action[i][action_num] ,action_num);
+		}
+
+		// Calculate Combo stuff
+		playerCard.Combo (players[0].manaManager);
+		aiCard.Combo (players[1].manaManager);
+
+		// Do the actual battle
 		playerCard.Action (aiCard, players [PLAYER_ID], players [1]);
 		aiCard.Action (playerCard, players [1], players [PLAYER_ID]);
 
 		for (int i = players.Length - 1; i >= 0; i --) {
-			players [i].actionDisplay.Display (action [i] [action_num]);
+			Card card = action [i] [action_num];
+			players [i].actionDisplay.Display (card);
+
+			// Resolve special effects
+			switch (card.GetSpecial()) {
+			case Card.Special.ComboBreak:
+				players [1 - i].manaManager.Clear ();
+				break;
+			case Card.Special.FutureShield:
+				players [i].nextSpecial |= PlayerScript.FUTURE_SHIELD;
+				break;
+			case Card.Special.SeeOpponentHand:
+				players [i].nextSpecial |= PlayerScript.SEE_OPPONENT_HAND;
+				break;
+			case Card.Special.SunderArmor:
+				players [i].nextSpecial |= PlayerScript.SUNDER_ARMOR;
+				break;
+			}
 		}
 	}
 

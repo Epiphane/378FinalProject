@@ -8,8 +8,15 @@ public class PlayerScript : MonoBehaviour {
 	public GameManagerScript gameManager;
 	public CardHolderScript hand;
 	public DeckScript deck;
+	public ManaManagerScript manaManager;
 	public ActionDisplayScript actionDisplay;
 	public int ID;
+
+	public static int FUTURE_SHIELD = 1;
+	public static int SEE_OPPONENT_HAND = 2;
+	public static int SUNDER_ARMOR = 4;
+	public int special = 0;
+	public int nextSpecial = 0;
 
 	private int numActions = 0;
 	private List<Card> currentAction;
@@ -41,6 +48,18 @@ public class PlayerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	/* Apply special effects to a card */
+	public void AffectCard(Card card, int action) {
+		if ((special & FUTURE_SHIELD) > 0 && action == 0) {
+			card.stats.physicalDef += 2;
+		}
+
+		if ((special & SUNDER_ARMOR) > 0) {
+			card.stats.physicalAttack *= 2;
+			card.stats.magicalAttack *= 2;
+		}
 	}
 
 	public virtual void DrawCard(Card card) {
