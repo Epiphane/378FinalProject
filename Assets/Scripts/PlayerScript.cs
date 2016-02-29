@@ -6,22 +6,20 @@ public class PlayerScript : MonoBehaviour {
 
 	public GameManagerScript gameManager;
 	public CardHolderScript hand;
+	public DeckScript deck;
 	public int ID;
 
-	protected int numActions = 0;
+	private int numActions = 0;
+	private List<Card> currentAction;
 
 	// Use this for initialization
 	public virtual void Start () {
-		if (gameManager == null) {
-			GameObject GM = GameObject.Find ("GameManager");
+		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 
-			if (GM == null) {
-				Debug.LogError ("GameManager not found!");
-				return;
-			}
+		if (deck == null)
+			deck = GetComponent<DeckScript> ();
 
-			gameManager = GM.GetComponent<GameManagerScript> ();
-		}
+		currentAction = new List<Card> ();
 	}
 	
 	// Update is called once per frame
@@ -33,8 +31,40 @@ public class PlayerScript : MonoBehaviour {
 		hand.AddCard (card);
 	}
 
+	public virtual void PlayCard(Card card) {
+		currentAction.Add (card);
+		deck.AddCard (card);
+		hand.RemoveCard (card);
+
+		if (currentAction.Count == numActions) {
+			SendAction ();
+		}
+	}
+
+	protected void SendAction() {
+		gameManager.SetAction (ID, currentAction.ToArray ());
+		numActions = 0;
+	}
+
+	protected bool DoneChoosingActions() {
+		return numActions == 0;
+	}
+
 	/* For receiving information from the game state */
 	public virtual void Message(GameManagerScript.MESSAGE message, object data = null) {
-		Debug.Log ("Received message " + message);
+		switch (message) {
+		case GameManagerScript.MESSAGE.MAKE_ACTION:
+			if (numActions > 0)
+				Debug.LogError ("Received a new MAKE_ACTION message when I'm still choosing!");
+
+			numActions = (int)data;
+			currentAction.Clear ();
+			break;
+		case GameManagerScript.MESSAGE.DRAW:
+			if (deck.length > 0) {
+				hand.AddCard (deck.Draw ());
+			}
+			break;
+		}
 	}
 }

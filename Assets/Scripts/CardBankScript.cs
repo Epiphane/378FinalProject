@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 public class CardBankScript : CardHolderScript {
 	
-	private Deck deck;
+	private DeckScript deck;
 	private GameManagerScript game;
 
 	// Use this for initialization
 	public override void Awake () {
 		base.Awake ();
 
-		deck = new Deck ();
+		if (deck == null)
+			deck = GetComponent<DeckScript> ();
 
 		// For now, we're going to initialize a bank with 63 cards
 		// - 21 each of red, blue, green

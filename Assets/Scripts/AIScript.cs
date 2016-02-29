@@ -37,22 +37,16 @@ public class AIScript : PlayerScript {
 
 	/* Pick a card to play */
 	public void DoAction() {
-		// Pick {numActions} card to play
-		List<Card> choices = new List<Card>();
-
-		while (numActions-- > 0) {
+		while (!DoneChoosingActions()) {
 			int index = Random.Range (0, hand.Size);
-			Card choice = hand.cards [index];
-
-			hand.RemoveCard (choice);
-			choices.Add (choice);
+			PlayCard(hand.cards [index]);
 		}
-
-		gameManager.SetAction (ID, choices.ToArray ());
 	}
 
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data) {
+		base.Message (message, data);
+
 		switch (message) {
 		case GameManagerScript.MESSAGE.DRAW_NEW_CARD:
 			// Think for a bit before picking a random card
@@ -62,7 +56,6 @@ public class AIScript : PlayerScript {
 			break;
 		case GameManagerScript.MESSAGE.MAKE_ACTION:
 			// See above
-			numActions = (int)data;
 			Invoke ("DoAction", THINK_TIME);
 			break;
 		}

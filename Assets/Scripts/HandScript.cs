@@ -11,9 +11,7 @@ public class HandScript : CardHolderScript {
 	}
 
 	public override void CardSelected (Transform transform, Card card) {
-		if (OnPickCard (card)) {
-			RemoveCard (card);
-		}
+		OnPickCard (card);
 	}
 
 	public override void Reorganize () {

@@ -9,7 +9,7 @@ public class GameManagerScript : MonoBehaviour {
 	private enum STATE { DRAW_NEW_CARD, WAITING_ON_ACTION, RESOLVE_ACTIONS, ANIMATING_ACTION };
 	private static int COMP_WAIT_TIME = 100;
 
-	public enum MESSAGE { DRAW_NEW_CARD, MAKE_ACTION };
+	public enum MESSAGE { DRAW, DRAW_NEW_CARD, MAKE_ACTION };
 
 	public CardBankScript cardBank;
 	public PlayerScript[] players;
@@ -51,6 +51,12 @@ public class GameManagerScript : MonoBehaviour {
 					// Cycle the first turn
 					first_turn = (turn + players.Length - 1) % players.Length;
 					Flop ();
+
+					// Tell players to draw
+					foreach (PlayerScript player in players) {
+						player.Message (MESSAGE.DRAW);
+					}
+
 					SetState (STATE.DRAW_NEW_CARD);
 				} else {
 					SetState(STATE.RESOLVE_ACTIONS);

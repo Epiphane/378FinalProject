@@ -9,7 +9,7 @@ public class CardHolderScript : MonoBehaviour {
 	protected List<Card> _cards;
 	protected List<Transform> cardTransforms;
 
-	public delegate bool ShouldPickCard(Card card);
+	public delegate void ShouldPickCard(Card card);
 	public ShouldPickCard OnPickCard;
 
 	/* Calculated variables */

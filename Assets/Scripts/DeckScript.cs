@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
-public class Deck {
+public class DeckScript : MonoBehaviour {
 
+	public Text output;
 	private List<Card> cards;
 
 	public int length {
@@ -12,18 +14,28 @@ public class Deck {
 		}
 	}
 
-	public Deck() {
+	void Awake() {
 		cards = new List<Card> ();
+	}
+
+	void UpdateDisplay () {
+		if (output != null) {
+			output.text = "Deck: " + cards.Count;
+		}
 	}
 
 	public Card Draw () {
 		Card next = cards [0];
 		cards.RemoveAt (0);
+
+		UpdateDisplay ();
 		return next;
 	}
 
 	public void AddCard (Card card) {
 		cards.Add (card);
+
+		UpdateDisplay ();
 	}
 
 	public void Shuffle () {
