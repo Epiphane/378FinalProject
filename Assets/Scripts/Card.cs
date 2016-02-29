@@ -1,4 +1,6 @@
-﻿public class Card {
+﻿using UnityEngine;
+
+public class Card {
 	public enum Type { NONE, ATTACK, SPELL, BLOCK };
 	public enum Color { BLANK, RED, BLUE, GREEN };
 
@@ -7,18 +9,44 @@
 
 	private Type _type;
 	private Color _color;
+	private Stats _stats;
+
+	public Type type { get { return _type; } }
+	public Color color { get { return _color; } }
+	private Stats stats { get { return _stats; } }
 
 	public Card(Type type, Color color) {
 		this._type = type;
 		this._color = color;
+
+		this._stats = new Stats ();
+
+		switch (type) {
+		case Type.ATTACK:
+			_stats.physicalAttack = 2;
+			break;
+		case Type.SPELL:
+			_stats.magicalAttack = 1;
+			break;
+		case Type.BLOCK:
+			_stats.physicalDef = 16;
+			break;
+		}
 	}
 
-	public Type type {
-		get { return _type; }
+	/* Combat information */
+	private class Stats {
+		public int physicalAttack = 0;
+		public int magicalAttack = 0;
+		public int physicalDef = 0;
+		public int magicalDef = 0;
 	}
 
-	public Color color {
-		get { return _color; }
+	public void Action(Card other, PlayerScript actor, PlayerScript victim) {
+		Stats otherStats = other.stats;
+
+		victim.health -= Mathf.Max (0, stats.magicalAttack - otherStats.magicalDef)
+			+ Mathf.Max (0, stats.physicalAttack - otherStats.physicalDef);
 	}
 
 	public override string ToString () {

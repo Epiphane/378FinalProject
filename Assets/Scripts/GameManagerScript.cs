@@ -38,16 +38,23 @@ public class GameManagerScript : MonoBehaviour {
 
 		for (int i = 0; i < players.Length; i++) {
 			players [i].ID = i;
+			players [i].health = 16;
 		}
 	}
 
 	void Update() {
 		if (state == STATE.RESOLVE_ACTIONS) {
+			ResolveNextAction ();
+
 			SetState(STATE.ANIMATING_ACTION);
 			counter = COMP_WAIT_TIME;
 		} else if (state == STATE.ANIMATING_ACTION) {
 			if (counter-- <= 0) {
 				if (++action_num == NUM_ACTIONS) {
+					for (int i = players.Length - 1; i >= 0; i --) {
+						players [i].actionDisplay.Clear ();
+					}
+
 					// Cycle the first turn
 					first_turn = (turn + players.Length - 1) % players.Length;
 					Flop ();
@@ -147,6 +154,18 @@ public class GameManagerScript : MonoBehaviour {
 
 		// Not your turn
 		return false;
+	}
+
+	void ResolveNextAction () {
+		Card playerCard = action [PLAYER_ID] [action_num];
+		Card aiCard = action [1] [action_num];
+
+		playerCard.Action (aiCard, players [PLAYER_ID], players [1]);
+		aiCard.Action (playerCard, players [1], players [PLAYER_ID]);
+
+		for (int i = players.Length - 1; i >= 0; i --) {
+			players [i].actionDisplay.Display (action [i] [action_num]);
+		}
 	}
 
 	public void SetAction(int player, Card[] cards) {

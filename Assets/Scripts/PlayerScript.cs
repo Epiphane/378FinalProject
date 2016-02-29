@@ -1,16 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour {
 
 	public GameManagerScript gameManager;
 	public CardHolderScript hand;
 	public DeckScript deck;
+	public ActionDisplayScript actionDisplay;
 	public int ID;
 
 	private int numActions = 0;
 	private List<Card> currentAction;
+
+	public Text healthOutput;
+	private int _health = 20;
+
+	public int health {
+		get {
+			return _health;
+		}
+		set {
+			_health = value;
+			if (healthOutput != null)
+				healthOutput.text = value.ToString();
+		}
+	}
 
 	// Use this for initialization
 	public virtual void Start () {
