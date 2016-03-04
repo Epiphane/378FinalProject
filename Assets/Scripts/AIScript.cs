@@ -9,8 +9,8 @@ public class AIScript : PlayerScript {
 	private static int THINK_TIME = 1;
 
 	// Use this for initialization
-	public override void Start () {
-		base.Start ();
+	public override void Awake () {
+		base.Awake ();
 
 		if (cardBank == null) {
 			GameObject CB = GameObject.Find ("CardBank");
@@ -37,10 +37,11 @@ public class AIScript : PlayerScript {
 
 	/* Pick a card to play */
 	public void DoAction() {
-		while (!DoneChoosingActions()) {
-			int index = Random.Range (0, hand.Size);
-			PlayCard(hand.cards [index]);
-		}
+		this.action = PlayerAction.GetRandom ();
+	}
+
+	public void ChooseAugmentation() {
+		PlayAugmentation (hand.cards [Random.Range (0, hand.cards.Count)]);
 	}
 
 	/* For receiving information from the game state */
@@ -54,7 +55,11 @@ public class AIScript : PlayerScript {
 			// Ask Thomas if you want to know why, its gross
 			Invoke ("PickCard", THINK_TIME);
 			break;
-		case GameManagerScript.MESSAGE.MAKE_ACTION:
+		case GameManagerScript.MESSAGE.CHOOSE_AUGMENTATION:
+			// See above
+			Invoke ("ChooseAugmentation", THINK_TIME);
+			break;
+		case GameManagerScript.MESSAGE.CHOOSE_ACTION:
 			// See above
 			Invoke ("DoAction", THINK_TIME);
 			break;

@@ -13,21 +13,10 @@ public class CardBankScript : CardHolderScript {
 
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
-
-		// For now, we're going to initialize a bank with 63 cards
-		// - 21 each of red, blue, green
-		// - 21 each of atk, spell, block
-		// Giving us 7 of each type of card
-		for (int i = 0; i < Card.colors.Length; i++) {
-			Card.Color color = Card.colors [i];
-
-			for (int j = 0; j < Card.types.Length; j++) {
-				Card.Type type = Card.types [j];
-
-				// Create 7 cards
-				for (int n = 0; n < 7; n++) {
-					deck.AddCard (new Card (type, color));
-				}
+		
+		for (int i = 0; i < Card.cards.Length; i++) {
+			for (int n = 0; n < 6; n++) {
+				deck.AddCard (Card.cards [i].Clone ());
 			}
 		}
 

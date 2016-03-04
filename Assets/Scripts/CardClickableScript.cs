@@ -11,12 +11,13 @@ public class CardClickableScript : MonoBehaviour {
 	}
 
 	void OnMouseEnter() {
+		Debug.Log ("SIUHF");
 	}
 
 	void OnMouseExit() {
 	}
 
-	void OnMouseUp() {
+	public void OnMouseUp() {
 		// Are we in a hand?
 		CardHolderScript parent = transform.parent.GetComponent<CardHolderScript> ();
 

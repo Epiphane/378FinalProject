@@ -8,19 +8,14 @@ public class PlayerScript : MonoBehaviour {
 	public GameManagerScript gameManager;
 	public CardHolderScript hand;
 	public DeckScript deck;
-	public ManaManagerScript manaManager;
 	public ActionDisplayScript actionDisplay;
 	public int ID;
 
-	public static int FUTURE_SHIELD = 1;
-	public static int SEE_OPPONENT_HAND = 2;
-	public static int SUNDER_ARMOR = 4;
-	public int special = 0;
-	public int nextSpecial = 0;
+	/* Augmentation for the current round */
+	public Card augmentation = null;
+	public PlayerAction action = null;
 
-	private int numActions = 0;
-	private List<Card> currentAction;
-
+	/* Health GUI display */
 	public Text healthOutput;
 	private int _health = 20;
 
@@ -36,13 +31,17 @@ public class PlayerScript : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	public virtual void Start () {
+	public virtual void Awake () {
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
 
-		currentAction = new List<Card> ();
+		// Create a basic deck to start with
+		for (int i = 0; i < Card.cards.Length; i ++)
+			deck.AddCard(Card.cards[i].Clone());
+
+		deck.Shuffle ();
 	}
 	
 	// Update is called once per frame
@@ -50,50 +49,22 @@ public class PlayerScript : MonoBehaviour {
 	
 	}
 
-	/* Apply special effects to a card */
-	public void AffectCard(Card card, int action) {
-		if ((special & FUTURE_SHIELD) > 0 && action == 0) {
-			card.stats.physicalDef += 2;
-		}
-
-		if ((special & SUNDER_ARMOR) > 0) {
-			card.stats.physicalAttack *= 2;
-			card.stats.magicalAttack *= 2;
-		}
-	}
-
 	public virtual void DrawCard(Card card) {
 		hand.AddCard (card);
 	}
 
-	public virtual void PlayCard(Card card) {
-		currentAction.Add (card);
+	public virtual void PlayAugmentation(Card card) {
 		deck.AddCard (card);
 		hand.RemoveCard (card);
 
-		if (currentAction.Count == numActions) {
-			SendAction ();
-		}
-	}
-
-	protected void SendAction() {
-		gameManager.SetAction (ID, currentAction.ToArray ());
-		numActions = 0;
-	}
-
-	protected bool DoneChoosingActions() {
-		return numActions == 0;
+		gameManager.PlayedAugmentation (ID);
 	}
 
 	/* For receiving information from the game state */
 	public virtual void Message(GameManagerScript.MESSAGE message, object data = null) {
 		switch (message) {
-		case GameManagerScript.MESSAGE.MAKE_ACTION:
-			if (numActions > 0)
-				Debug.LogError ("Received a new MAKE_ACTION message when I'm still choosing!");
-
-			numActions = (int)data;
-			currentAction.Clear ();
+		case GameManagerScript.MESSAGE.CHOOSE_ACTION:
+			Debug.Log ("choose action!");
 			break;
 		case GameManagerScript.MESSAGE.DRAW:
 			if (deck.length > 0) {
