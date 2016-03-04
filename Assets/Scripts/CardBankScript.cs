@@ -35,12 +35,11 @@ public class CardBankScript : CardHolderScript {
 
 	public void Flop (int amountToDraw) {
 		float yoffset = Mathf.Floor (amountToDraw / 4);// * 1.4f;
-		Debug.Log (deck);
 
 		while (amountToDraw-- > 0) {
 			GameObject newCard = AddCard (deck.Draw ());
 
-			newCard.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 2.6f, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
+			newCard.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 100, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
 		}
 	}
 

@@ -4,30 +4,28 @@ using System.Collections;
 public class PlayerAction {
 
 	public static PlayerAction[] actions = {
-		new PlayerAction("Attack", 4, 0, 0, 0, 0),
-		new PlayerAction("Tech", 0, 0, 2, 0, 0),
-		new PlayerAction("Counter", 0, 4, 0, 0, 0),
-		new PlayerAction("Advance", 0, 0, 0, 0, 3)
+		new PlayerAction("Attack", 4, 0, 0, 0),
+		new PlayerAction("Tech", 0, 2, 0, 0),
+		new PlayerAction("Counter", 0, 0, 2, 0),
+		new PlayerAction("Advance", 0, 0, 0, 3)
 	};
 
 	public string name;
 	public int physicalAttack = 0;
-	public int physicalDefense = 0;
 	public int techAttack = 0;
-	public int techDefense = 0;
+	public int counterAttack = 0;
 	public int advancement = 0;
 
-	public PlayerAction(string name, int pAtk, int pDef, int tAtk, int tDef, int adv) {
+	public PlayerAction(string name, int pAtk, int tAtk, int cAtk, int adv) {
 		this.name = name;
 		physicalAttack = pAtk;
-		physicalDefense = pDef;
 		techAttack = tAtk;
-		techDefense = tDef;
+		counterAttack = cAtk;
 		advancement = adv;
 	}
 
 	public PlayerAction Clone() {
-		return new PlayerAction (name, physicalAttack, physicalDefense, techAttack, techDefense, advancement);
+		return new PlayerAction (name, physicalAttack, techAttack, counterAttack, advancement);
 	}
 
 	public static PlayerAction GetRandom() {

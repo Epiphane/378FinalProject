@@ -54,18 +54,22 @@ public class PlayerScript : MonoBehaviour {
 	}
 
 	public virtual void PlayAugmentation(Card card) {
+		this.augmentation = card;
 		deck.AddCard (card);
 		hand.RemoveCard (card);
 
 		gameManager.PlayedAugmentation (ID);
 	}
 
+	public virtual void PlayAction(PlayerAction action) {
+		this.action = action;
+
+		gameManager.PlayedAction (ID);
+	}
+
 	/* For receiving information from the game state */
 	public virtual void Message(GameManagerScript.MESSAGE message, object data = null) {
 		switch (message) {
-		case GameManagerScript.MESSAGE.CHOOSE_ACTION:
-			Debug.Log ("choose action!");
-			break;
 		case GameManagerScript.MESSAGE.DRAW:
 			if (deck.length > 0) {
 				hand.AddCard (deck.Draw ());

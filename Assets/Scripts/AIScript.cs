@@ -37,7 +37,7 @@ public class AIScript : PlayerScript {
 
 	/* Pick a card to play */
 	public void DoAction() {
-		this.action = PlayerAction.GetRandom ();
+		this.PlayAction (PlayerAction.GetRandom ());
 	}
 
 	public void ChooseAugmentation() {

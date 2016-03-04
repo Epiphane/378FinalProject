@@ -177,6 +177,18 @@ Prefab:
       propertyPath: m_Text
       value: Tech
       objectReference: {fileID: 0}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1268813729}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: tech
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
   m_IsPrefabParent: 0
@@ -357,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad1edce517a4b4051a9d612cfd01e3cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardBank: {fileID: 1514591382}
+  cardBank: {fileID: 1346839737}
   players:
   - {fileID: 1268813729}
   - {fileID: 1251487503}
@@ -562,6 +574,7 @@ RectTransform:
   - {fileID: 1449462322}
   - {fileID: 10345559}
   - {fileID: 427012083}
+  - {fileID: 1346839736}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 0}
@@ -1026,6 +1039,18 @@ Prefab:
       propertyPath: m_Text
       value: Counter
       objectReference: {fileID: 0}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1268813729}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: counter
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
   m_IsPrefabParent: 0
@@ -1184,7 +1209,7 @@ MonoBehaviour:
   actionDisplay: {fileID: 1251487506}
   ID: 1
   healthOutput: {fileID: 1696085386}
-  cardBank: {fileID: 1514591382}
+  cardBank: {fileID: 0}
 --- !u!114 &1251487504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1267,6 +1292,101 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 133318, guid: 18bfb8eff51a74720b26ef2cc1493b17, type: 2}
+--- !u!1 &1346839735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1346839736}
+  - 222: {fileID: 1346839740}
+  - 114: {fileID: 1346839739}
+  - 114: {fileID: 1346839738}
+  - 114: {fileID: 1346839737}
+  m_Layer: 5
+  m_Name: CardBank
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1346839736
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346839735}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.55, y: 0.55, z: 1}
+  m_Children: []
+  m_Father: {fileID: 712674310}
+  m_RootOrder: 9
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 263, y: 0}
+  m_SizeDelta: {x: 187.5, y: 262.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1346839737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346839735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be3265605d0140f086fd01ff8e774ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardPrefab: {fileID: 127468, guid: 7416f6255e0df497d8bec789df9e0e1c, type: 2}
+  deck: {fileID: 1346839738}
+  game: {fileID: 254129237}
+--- !u!114 &1346839738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346839735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ffb8839e10ed42518fd3bc1eb76682a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  output: {fileID: 0}
+--- !u!114 &1346839739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346839735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300008, guid: 80615c3c91d124492aa9ee2d0dac5119, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1346839740
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346839735}
 --- !u!1001 &1437859723
 Prefab:
   m_ObjectHideFlags: 0
@@ -1418,8 +1538,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1514591384}
   - 212: {fileID: 1514591383}
-  - 114: {fileID: 1514591382}
-  - 114: {fileID: 1514591385}
   m_Layer: 0
   m_Name: CardBank
   m_TagString: Untagged
@@ -1427,20 +1545,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1514591382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1514591381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8be3265605d0140f086fd01ff8e774ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 133318, guid: 18bfb8eff51a74720b26ef2cc1493b17, type: 2}
-  deck: {fileID: 1514591385}
-  game: {fileID: 254129237}
 --- !u!212 &1514591383
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1483,18 +1587,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
---- !u!114 &1514591385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1514591381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ffb8839e10ed42518fd3bc1eb76682a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  output: {fileID: 0}
 --- !u!1001 &1593804528
 Prefab:
   m_ObjectHideFlags: 0
@@ -1812,6 +1904,10 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1268813729}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
   m_IsPrefabParent: 0

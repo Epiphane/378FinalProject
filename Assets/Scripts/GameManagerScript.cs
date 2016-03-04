@@ -22,7 +22,7 @@ public class GameManagerScript : MonoBehaviour {
 	private int counter;
 
 	/* State machine for the game */
-	public enum STATE { DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, RESOLVE_ACTIONS, ANIMATING_ACTION };
+	public enum STATE { DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION };
 	public STATE state { get; private set; }
 
 	void Awake () {
@@ -48,9 +48,6 @@ public class GameManagerScript : MonoBehaviour {
 	void Update() {
 		if (state == STATE.RESOLVE_ACTIONS) {
 			ResolveNextAction ();
-
-			SetState(STATE.ANIMATING_ACTION);
-			counter = COMP_WAIT_TIME;
 		} else if (state == STATE.ANIMATING_ACTION) {
 			if (counter-- <= 0) {
 				for (int i = players.Length - 1; i >= 0; i --) {
@@ -61,16 +58,7 @@ public class GameManagerScript : MonoBehaviour {
 				first_turn = (turn + players.Length - 1) % players.Length;
 				Flop ();
 
-				foreach (PlayerScript player in players) {
-					// Reset player
-					player.augmentation = null;
-					player.action = null;
-
-					// Tell player it's time to draw
-					player.Message (MESSAGE.DRAW);
-				}
-
-				SetState (STATE.DRAW_NEW_CARD);
+				SetState (STATE.WAITING_ON_DISCARDS);
 			}
 		}
 	}
@@ -81,6 +69,15 @@ public class GameManagerScript : MonoBehaviour {
 
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
+			foreach (PlayerScript player in players) {
+				// Reset player
+				player.augmentation = null;
+				player.action = null;
+
+				// Tell player it's time to draw
+				player.Message (MESSAGE.DRAW);
+			}
+
 			players [turn].Message (MESSAGE.DRAW_NEW_CARD);
 			break;
 		case STATE.WAITING_ON_ACTION:
@@ -99,6 +96,9 @@ public class GameManagerScript : MonoBehaviour {
 			break;
 		case STATE.WAITING_ON_AUGMENTATION:
 			gameStatus.text = "Waiting on player " + turn + " to choose augmentation";
+			break;
+		case STATE.WAITING_ON_DISCARDS:
+			gameStatus.text = "Discard down to 1 card!";
 			break;
 		case STATE.WAITING_ON_ACTION:
 			gameStatus.text = "Waiting on player actions";
@@ -139,7 +139,7 @@ public class GameManagerScript : MonoBehaviour {
 			if (turn == first_turn && cardBank.GetAvailableCards().Count - 1 < players.Length) {
 				cardBank.Clear ();
 
-				SetState (STATE.WAITING_ON_ACTION);
+				SetState (STATE.WAITING_ON_AUGMENTATION);
 			} else {
 				// Message the player
 				// Calling setState here so that it messages the player
@@ -164,6 +164,8 @@ public class GameManagerScript : MonoBehaviour {
 			return;
 		}
 
+		Debug.Log ("PLayer " + player_id + " played " + players [player_id].augmentation.name);
+
 		// Next turn...
 		turn = (turn + 1) % players.Length;
 
@@ -177,36 +179,73 @@ public class GameManagerScript : MonoBehaviour {
 		}
 	}
 
+	public void PlayedAction (int player_id) {
+		// Check all players
+		foreach (PlayerScript player in players) {
+			if (player.action == null) {
+				return;
+			}
+		}
+
+		// All players chose an action!
+		SetState(STATE.RESOLVE_ACTIONS);
+	}
+
 	void ResolveNextAction () {
-//		Card playerCard = action [PLAYER_ID] [action_num];
-//		Card aiCard = action [1] [action_num];
-//
-//		for (int i = players.Length - 1; i >= 0; i--) {
-//			players[i].AffectCard(action[i][action_num] ,action_num);
-//		}
-//
-//		// Calculate Combo stuff
-//		playerCard.Combo (players[0].manaManager);
-//		aiCard.Combo (players[1].manaManager);
-//
-//		// Do the actual battle
-//		playerCard.Action (aiCard, players [PLAYER_ID], players [1]);
-//		aiCard.Action (playerCard, players [1], players [PLAYER_ID]);
-//
-//		for (int i = players.Length - 1; i >= 0; i --) {
-//			Card card = action [i] [action_num];
-//			players [i].actionDisplay.Display (card);
-//
-//			// Game over?
-//			if (players [i].health <= 0) {
-//				if (players [i].health < players [1 - i].health) {
-//					PlayerPrefs.SetInt ("Winner", 2 - i);
-//				} else if (players [i].health == players [1 - i].health) {
-//					PlayerPrefs.SetInt ("Winner", -1);
-//				}
-//
-//				SceneManager.LoadScene ("GameOver");
-//			}
-//		}
+		Debug.Log ("Player 2 action: " + players [1].action.name);
+
+		for (int i = 0; i < players.Length; i ++) {
+			PlayerScript player = players [i];
+
+			if (player.augmentation.BeforeAugmentation != null)
+				player.augmentation.BeforeAugmentation (player.augmentation, players[1 - i].augmentation);
+		}
+
+		for (int i = 0; i < players.Length; i ++) {
+			PlayerScript player = players [i];
+
+			if (player.augmentation.BeforeAction != null)
+				player.augmentation.BeforeAction (player.action);
+		}
+
+		// Do stuff
+		Card.ActionResult[] results = new Card.ActionResult[players.Length];
+		results [0] = new Card.ActionResult ();
+		results [1] = new Card.ActionResult ();
+
+		for (int i = 0; i < players.Length; i ++) {
+			PlayerAction playerAction = players [i].action;
+			PlayerAction otherAction = players [1 - i].action;
+
+			int damage = playerAction.techAttack + playerAction.physicalAttack;
+
+			// Special case
+			if (playerAction.name == "Attack" && otherAction.name == "Counter") {
+				damage = 0;
+			} else if (playerAction.name == "Counter" && otherAction.name == "Attack") {
+				damage = playerAction.counterAttack;
+			}
+
+			results [i].damage = damage;
+			results [1 - i].damageToSelf = damage;
+		}
+
+		for (int i = 0; i < players.Length; i ++) {
+			PlayerScript player = players [i];
+
+			if (player.augmentation.AfterAction != null)
+				player.augmentation.AfterAction (results[i], player, players[1 - i]);
+		}
+
+		for (int i = 0; i < players.Length; i ++) {
+			PlayerScript player = players [i];
+			Card.ActionResult result = results [i];
+
+			Debug.Log (result.damage + " --- " + result.damageToSelf);
+			player.health -= result.damageToSelf;
+		}
+
+		SetState(STATE.ANIMATING_ACTION);
+		counter = COMP_WAIT_TIME;
 	}
 }
