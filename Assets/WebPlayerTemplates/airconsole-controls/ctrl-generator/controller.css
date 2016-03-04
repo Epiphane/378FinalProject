@@ -88,3 +88,12 @@ body {
   max-height: 300px;
   position: relative;
 }
+
+
+/* MY STUFF */
+.card {
+    position: relative;
+    width: 30%;
+    overflow: hidden;
+    float: left;
+}
