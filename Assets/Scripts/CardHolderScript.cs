@@ -46,7 +46,7 @@ public class CardHolderScript : MonoBehaviour {
 
 			// Set card to random type
 			newCard.GetComponent<CardDisplayScript> ().card = card;
-			newCard.transform.parent = transform;
+			newCard.transform.SetParent (transform);
 
 			cardTransforms.Add (newCard.transform);
 		}

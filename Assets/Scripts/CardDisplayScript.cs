@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CardDisplayScript : MonoBehaviour {
 	/* Objects to modify */
-	private SpriteRenderer cardType;
 	private SpriteRenderer cardFrame;
+	public Text description;
 
 	/* Card object */
 	private Card _card = null;
@@ -12,7 +13,7 @@ public class CardDisplayScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		cardFrame = transform.FindChild ("Frame").GetComponent<SpriteRenderer>();
-		cardType = transform.FindChild ("Display").GetComponent<SpriteRenderer>();
+		description = transform.FindChild ("Description").GetComponent<Text>();
 
 		if (_card != null)
 			UpdateDisplay ();
@@ -30,13 +31,12 @@ public class CardDisplayScript : MonoBehaviour {
 	}
 
 	void UpdateDisplay() {
-		// Set type image
-		if (cardType != null)
-			cardType.sprite = CardDisplayManager.instance.DisplayType (_card.type);
-
 		// Set frame
 		if (cardFrame != null)
 			cardFrame.sprite = CardDisplayManager.instance.DisplayColor (_card.color);
+
+		if (description != null)
+			description.text = card.description;
 	}
 	
 	// Update is called once per frame

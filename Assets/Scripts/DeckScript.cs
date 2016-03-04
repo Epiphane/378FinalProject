@@ -44,15 +44,4 @@ public class DeckScript : MonoBehaviour {
 			cards[n] = value;
 		}
 	}
-
-	public static Card RandomCard() {
-		// Decide on a type
-		Card.Type t = Card.types[Random.Range (0, Card.types.Length)];
-
-		// Decide on a color
-		Card.Color c = Card.colors[Random.Range (0, Card.colors.Length)];
-
-		return new Card (t, c);
-	}
-
 }

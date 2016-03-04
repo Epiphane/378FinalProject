@@ -56,20 +56,4 @@ public class CardDisplayManager : MonoBehaviour {
 			return blankFrame;
 		}
 	}
-
-	public Sprite DisplayType (Card.Type type) {
-		switch (type) {
-		case Card.Type.NONE:
-			return null;
-		case Card.Type.ATTACK:
-			return attack;
-		case Card.Type.SPELL:
-			return spell;
-		case Card.Type.BLOCK:
-			return block;
-		default:
-			Debug.LogError ("Card type not found: " + type);
-			return null;
-		}
-	}
 }

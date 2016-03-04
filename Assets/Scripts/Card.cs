@@ -1,131 +1,70 @@
 ﻿using UnityEngine;
 
 public class Card {
-	public enum Type { NONE, ATTACK, SPELL, BLOCK };
 	public enum Color { BLANK, RED, BLUE, GREEN };
-	public enum Special { None, Counter, Double, SeeOpponentHand, ComboBreak, SunderArmor, Heal, FutureShield };
 
-	public static Type[] types = { Type.ATTACK, Type.SPELL, Type.BLOCK };
-	public static Color[] colors = { Color.BLUE, Color.RED, Color.GREEN };
+	public string name { get; private set; }
+	public string description { get; private set; }
+	public Color color { get; private set; }
 
-	private Type _type;
-	private Color _color;
-	private Stats _stats;
-	private Special special = Special.None;
-
-	public Type type { get { return _type; } }
-	public Color color { get { return _color; } }
-	public Stats stats { get { return _stats; } }
-	public Special GetSpecial() { return special; }
-
-	public Card(Type type, Color color) {
-		this._type = type;
-		this._color = color;
-
-		this._stats = new Stats ();
-
-		switch (type) {
-		case Type.ATTACK:
-			_stats.physicalAttack = 2;
-			break;
-		case Type.SPELL:
-			_stats.magicalAttack = 1;
-			break;
-		case Type.BLOCK:
-			_stats.physicalDef = 16;
-			break;
-		}
+	public class ActionResult {
+		public int damage = 0;
+		public int damageToSelf = 0;
+		public int advancement = 0;
 	}
 
-	/* Combat information */
-	public class Stats {
-		public int physicalAttack = 0;
-		public int magicalAttack = 0;
-		public int physicalDef = 0;
-		public int magicalDef = 0;
+	public delegate void BeforeAugmentationHook(Card augmentation, Card other);
+	public BeforeAugmentationHook BeforeAugmentation;
+
+	public delegate void BeforeActionHook(PlayerAction action);
+	public BeforeActionHook BeforeAction;
+
+	public delegate void AfterActionHook(ActionResult result, PlayerScript player, PlayerScript other);
+	public AfterActionHook AfterAction;
+
+	public Card(string name, string description, Color color, BeforeAugmentationHook BeforeAugmentation,
+		BeforeActionHook BeforeAction, AfterActionHook AfterAction) {
+		this.name = name;
+		this.color = color;
+		this.description = description;
+
+		this.BeforeAugmentation = BeforeAugmentation;
+		this.BeforeAction = BeforeAction;
+		this.AfterAction = AfterAction;
 	}
 
-	public void Combo(ManaManagerScript manaManager) {
-		bool combo = manaManager.Increment (color);
-
-		// Do combo things!
-		if (combo) {
-			if (color == Color.RED) {
-				if (type == Type.ATTACK) {
-					stats.physicalAttack *= 3;
-				} else if (type == Type.SPELL) {
-					stats.magicalAttack = 3;
-				} else if (type == Type.BLOCK) {
-					special = Special.Counter;
-				}
-			} else if (color == Color.GREEN) {
-				if (type == Type.ATTACK) {
-					special = Special.SunderArmor;
-				} else if (type == Type.SPELL) {
-					special = Special.Heal;
-				} else if (type == Type.BLOCK) {
-					special = Special.FutureShield;
-				}
-			} else if (color == Color.BLUE) {
-				if (type == Type.ATTACK) {
-					special = Special.Double;
-				} else if (type == Type.SPELL) {
-					special = Special.SeeOpponentHand;
-				} else if (type == Type.BLOCK) {
-					special = Special.ComboBreak;
-				}
-			}
-		}
-	}
-
-	public void Action(Card other, PlayerScript actor, PlayerScript victim) {
-		Stats otherStats = other.stats;
-
-		int damage = Mathf.Max (0, stats.magicalAttack - otherStats.magicalDef)
-		             + Mathf.Max (0, stats.physicalAttack - otherStats.physicalDef);
-
-		// Calculate normal attack
-		if (other.special == Special.Counter) {
-			actor.health -= 2 * stats.physicalAttack;
-		} else {
-			victim.health -= damage;
-		}
-
-		// Instant special effects
-		if (special == Special.Double) {
-			victim.health -= (stats.magicalAttack + stats.physicalAttack);
-		} else if (special == Special.Heal) {
-			actor.health += 2;
-		}
+	public Card Clone () {
+		return new Card (name, description, color, BeforeAugmentation, BeforeAction, AfterAction);
 	}
 
 	public override string ToString () {
-		string t = "Typeless", c = "Colorless";
-
-		switch (type) {
-		case Type.ATTACK:
-			t = "Attack";
-			break;
-		case Type.SPELL:
-			t = "Spell";
-			break;
-		case Type.BLOCK:
-			t = "Block";
-			break;
-		}
-
-		switch (color) {
-		case Color.RED:
-			c = "Red";
-			break;
-		case Color.BLUE:
-			c = "Blue";
-			break;
-		case Color.GREEN:
-			c = "Green";
-			break;
-		}
-
-		return t + " " + c;
+		return name;
 	}
+
+	public static Card[] cards = {
+		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
+			other.health -= result.damageToSelf;
+			Debug.Log("Dealing " + result.damageToSelf + " back");
+		}),
+		new Card ("Kindness", "Heal 2 after this turn", Color.GREEN, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
+			player.health += 2;
+			Debug.Log("Healing 2");
+		}),
+		new Card ("Bloodlust", "Deal double damage", Color.RED, null, (PlayerAction action) => {
+			action.physicalAttack *= 2;
+			action.techAttack *= 2;
+		}, null),
+		new Card ("Feast", "Heal half the damage you deal", Color.RED, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
+			player.health += (int) Mathf.Floor(result.damage / 2);
+			Debug.Log("Healing " + (int) Mathf.Floor(result.damage / 2));
+		}),
+		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
+			augmentation.BeforeAction = other.BeforeAction;
+			augmentation.AfterAction = other.AfterAction;
+		}, null, null),
+		new Card ("Mad Hacks", "Cancel your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
+			other.BeforeAction = null;
+			other.AfterAction = null;
+		}, null, null),
+	};
 }

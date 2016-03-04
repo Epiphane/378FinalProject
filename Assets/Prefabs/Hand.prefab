@@ -23,8 +23,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162864}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 21, y: -233, z: 0}
+  m_LocalScale: {x: 1.7699115, y: 1.7699115, z: 1.7699115}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -39,8 +39,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 445713358afd24ddb87fcd92ea0475f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 133318, guid: 18bfb8eff51a74720b26ef2cc1493b17, type: 2}
-  fan: 1
+  cardPrefab: {fileID: 127468, guid: 7416f6255e0df497d8bec789df9e0e1c, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
