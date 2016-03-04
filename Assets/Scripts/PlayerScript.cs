@@ -55,10 +55,14 @@ public class PlayerScript : MonoBehaviour {
 
 	public virtual void PlayAugmentation(Card card) {
 		this.augmentation = card;
-		deck.AddCard (card);
-		hand.RemoveCard (card);
+		Discard (card);
 
 		gameManager.PlayedAugmentation (ID);
+	}
+
+	public void Discard (Card card) {
+		deck.AddCard (card);
+		hand.RemoveCard (card);
 	}
 
 	public virtual void PlayAction(PlayerAction action) {

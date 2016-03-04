@@ -18,6 +18,10 @@ public class UnityPlayerScript : PlayerScript {
 	public void PickCard(Card card) {
 		if (gameManager.CanPickAugmentation (ID)) {
 			PlayAugmentation (card);
+		} else if (gameManager.ShouldDiscard (ID)) {
+			Discard (card);
+
+			gameManager.Discarded ();
 		}
 	}
 

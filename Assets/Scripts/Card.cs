@@ -44,9 +44,11 @@ public class Card {
 	public static Card[] cards = {
 		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
 			other.health -= result.damageToSelf;
+			Debug.Log("Dealing " + result.damageToSelf + " back");
 		}),
 		new Card ("Kindness", "Heal 2 after this turn", Color.GREEN, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
 			player.health += 2;
+			Debug.Log("Healing 2");
 		}),
 		new Card ("Bloodlust", "Deal double damage", Color.RED, null, (PlayerAction action) => {
 			action.physicalAttack *= 2;
@@ -54,6 +56,7 @@ public class Card {
 		}, null),
 		new Card ("Feast", "Heal half the damage you deal", Color.RED, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
 			player.health += (int) Mathf.Floor(result.damage / 2);
+			Debug.Log("Healing " + (int) Mathf.Floor(result.damage / 2));
 		}),
 		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
 			augmentation.BeforeAction = other.BeforeAction;

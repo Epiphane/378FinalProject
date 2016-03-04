@@ -44,6 +44,15 @@ public class AIScript : PlayerScript {
 		PlayAugmentation (hand.cards [Random.Range (0, hand.cards.Count)]);
 	}
 
+	public void DiscardToOne() {
+		while (hand.Size > 1) {
+			Discard(hand.cards [0]);
+			Debug.Log ("Discarded 1");
+		}
+
+		gameManager.Discarded ();
+	}
+
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data) {
 		base.Message (message, data);
@@ -62,6 +71,9 @@ public class AIScript : PlayerScript {
 		case GameManagerScript.MESSAGE.CHOOSE_ACTION:
 			// See above
 			Invoke ("DoAction", THINK_TIME);
+			break;
+		case GameManagerScript.MESSAGE.DISCARD:
+			Invoke ("DiscardToOne", THINK_TIME);
 			break;
 		}
 	}

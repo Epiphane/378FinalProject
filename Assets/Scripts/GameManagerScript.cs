@@ -8,7 +8,7 @@ public class GameManagerScript : MonoBehaviour {
 	
 	private static int COMP_WAIT_TIME = 100;
 
-	public enum MESSAGE { DRAW, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
+	public enum MESSAGE { DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
 	public CardBankScript cardBank;
 	public PlayerScript[] players;
@@ -56,7 +56,6 @@ public class GameManagerScript : MonoBehaviour {
 
 				// Cycle the first turn
 				first_turn = (turn + players.Length - 1) % players.Length;
-				Flop ();
 
 				SetState (STATE.WAITING_ON_DISCARDS);
 			}
@@ -69,16 +68,13 @@ public class GameManagerScript : MonoBehaviour {
 
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
-			foreach (PlayerScript player in players) {
-				// Reset player
-				player.augmentation = null;
-				player.action = null;
-
-				// Tell player it's time to draw
-				player.Message (MESSAGE.DRAW);
-			}
-
 			players [turn].Message (MESSAGE.DRAW_NEW_CARD);
+			break;
+		case STATE.WAITING_ON_DISCARDS:
+			foreach (PlayerScript player in players) {
+				// Tell player it's time to draw
+				player.Message (MESSAGE.DISCARD, 1);
+			}
 			break;
 		case STATE.WAITING_ON_ACTION:
 			// Tell all players to move
@@ -131,6 +127,7 @@ public class GameManagerScript : MonoBehaviour {
 			Debug.LogError ("You shouldn't be able to draw new cards right now");
 		}
 
+		Debug.Log ("Player " + player + " draws " + card);
 		if (player == turn) {
 			players [player].DrawCard (card);
 
@@ -139,6 +136,7 @@ public class GameManagerScript : MonoBehaviour {
 			if (turn == first_turn && cardBank.GetAvailableCards().Count - 1 < players.Length) {
 				cardBank.Clear ();
 
+				players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
 				SetState (STATE.WAITING_ON_AUGMENTATION);
 			} else {
 				// Message the player
@@ -241,11 +239,36 @@ public class GameManagerScript : MonoBehaviour {
 			PlayerScript player = players [i];
 			Card.ActionResult result = results [i];
 
-			Debug.Log (result.damage + " --- " + result.damageToSelf);
+			Debug.Log ("Dealing " + result.damageToSelf + " damage to player " + i);
 			player.health -= result.damageToSelf;
 		}
 
 		SetState(STATE.ANIMATING_ACTION);
 		counter = COMP_WAIT_TIME;
+	}
+
+	/* Confirm that all players have discarded */
+	public bool ShouldDiscard (int player_id) {
+		return state == STATE.WAITING_ON_DISCARDS && players [player_id].hand.Size > 1;
+	}
+
+	public void Discarded() {
+		foreach (PlayerScript player in players) {
+			if (player.hand.Size > 1) {
+				UpdateStatus ();
+				return;
+			}
+		}
+
+		foreach (PlayerScript player in players) {
+			// Reset player
+			player.augmentation = null;
+			player.action = null;
+
+			// Tell player it's time to draw
+			player.Message (MESSAGE.DRAW);
+		}
+
+		Flop ();
 	}
 }
