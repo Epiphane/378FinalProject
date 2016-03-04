@@ -77,6 +77,7 @@ public class PlayerScript : MonoBehaviour {
 		case GameManagerScript.MESSAGE.DRAW:
 			if (deck.length > 0) {
 				hand.AddCard (deck.Draw ());
+				AirconsoleLogic.SendCards (ID, hand.cards);
 			}
 			break;
 		}

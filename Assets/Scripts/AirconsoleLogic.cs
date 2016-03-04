@@ -123,21 +123,22 @@ public class AirconsoleLogic : MonoBehaviour {
 		var result_string = "{ \"newCards\": [ ";
 		foreach (Card card in cards) {
 			var color = Card.ColorToString (card.color);
-			result_string += "{\"color\": \"" + card.color + "\", \"words\": \"" + card.description + "\"  }, "
+			result_string += "{\"color\": \"" + card.color + "\", \"words\": \"" + card.description + "\"  }, ";
 		}
 
 		result_string += "] }";
 
-		AirConsole.instance.Message (id, "{ \"newCards\": [ " +
-			"{\"color\": \"" + color1 + "\", \"words\": \"" + card1 + "\"  }, " +
-			"{\"color\": \"" + color2 + "\", \"words\": \"" + card2 + "\"  }, " +
-			"{\"color\": \"" + color3 + "\", \"words\": \"" + card3 + "\"  }         ] }" );
+		AirConsole.instance.Message (id, result_string );
 	}
 
 	public static void CardWasTaken(int player, int cardNdx) {
 		var id = PlayerNum_to_id (player);
 
 		AirConsole.instance.Message (id, "{ \"cardWasTaken\": " + cardNdx + " }");
+	}
+
+	public static void SyncState() {
+
 	}
 
 

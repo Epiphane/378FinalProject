@@ -36,19 +36,15 @@ public class CardBankScript : CardHolderScript {
 	public void Flop (int amountToDraw) {
 		float yoffset = Mathf.Floor (amountToDraw / 4);// * 1.4f;
 
-		List<string> cardStrings = new List<string> ();
+		List<Card> cards = new List<Card> ();
 
 		while (amountToDraw-- > 0) {
-			GameObject newCard = AddCard (deck.Draw ());
+			Card newCard = deck.Draw ();
+			GameObject newCardObject = AddCard (newCard);
+			cards.Add (newCard);
 
-			cardStrings.Add(newCard.GetComponent<CardDisplayScript> ().card.description);
-
-			newCard.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 100, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
+			newCardObject.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 100, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
 		}
-
-		// Send the flop to the controllers
-		AirconsoleLogic.SendCards(0, cardStrings[0], cardStrings[1], cardStrings[2], "blue", "blue", "blue");
-		AirconsoleLogic.SendCards(1, cardStrings[0], cardStrings[1], cardStrings[2], "blue", "blue", "blue");
 	}
 
 	public override void Reorganize () {
