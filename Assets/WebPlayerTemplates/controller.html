@@ -184,25 +184,25 @@ for (var ndx = 0; ndx < 3; ndx++) {
 }
 
 airconsole.onMessage = function(from, data) {
-    // data = JSON.parse(data);
-    if (from === AirConsole.SCREEN) {
+  // data = JSON.parse(data);
+  if (from === AirConsole.SCREEN) {
 
-                cards[0].removeClass("red");
-                cards[0].removeClass("green");
-                cards[0].removeClass("blue");
-                cards[0].addClass("red");
+    // It's 
+    if (data.newCards) {
+      for (var ndx = 0; ndx < data.newCards.length; ndx++) {
+        cards_text[ndx].html(data.newCards[ndx].words);
 
-        if (data.newCards) {
-            for (var ndx = 0; ndx < data.newCards.length; ndx++) {
-                cards_text[ndx].html(data.newCards[ndx].words);
-
-                cards[ndx].removeClass("red");
-                cards[ndx].removeClass("green");
-                cards[ndx].removeClass("blue");
-                cards[ndx].addClass(data.newCards[ndx].color);
-            }
-        }
+        cards[ndx].removeClass("red");
+        cards[ndx].removeClass("green");
+        cards[ndx].removeClass("blue");
+        cards[ndx].addClass(data.newCards[ndx].color);
+      }
     }
+
+    if (data.doAction) {
+
+    }
+  }
 }
 
 CtrlGenerator.setAirConsole(airconsole);
