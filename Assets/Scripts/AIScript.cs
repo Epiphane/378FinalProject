@@ -47,7 +47,6 @@ public class AIScript : PlayerScript {
 	public void DiscardToOne() {
 		while (hand.Size > 1) {
 			Discard(hand.cards [0]);
-			Debug.Log ("Discarded 1");
 		}
 
 		gameManager.Discarded ();

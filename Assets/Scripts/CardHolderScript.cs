@@ -38,6 +38,10 @@ public class CardHolderScript : MonoBehaviour {
 	
 	}
 
+	public virtual Vector3 StartingPoint() {
+		return transform.position;
+	}
+
 	public virtual GameObject AddCard(Card card) {
 		GameObject newCard = null;
 
@@ -47,6 +51,7 @@ public class CardHolderScript : MonoBehaviour {
 			// Set card to random type
 			newCard.GetComponent<CardDisplayScript> ().card = card;
 			newCard.transform.SetParent (transform);
+			newCard.transform.position = StartingPoint();
 
 			cardTransforms.Add (newCard.transform);
 		}

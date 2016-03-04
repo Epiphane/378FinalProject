@@ -29,6 +29,6 @@ public class PlayerAction {
 	}
 
 	public static PlayerAction GetRandom() {
-		return actions [Random.Range (0, actions.Length)].Clone();
+		return actions [Random.Range (0, actions.Length - 1)].Clone();
 	}
 }

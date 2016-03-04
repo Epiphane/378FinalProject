@@ -36,13 +36,13 @@ public class UnityPlayerScript : PlayerScript {
 			this.PlayAction (PlayerAction.actions [3].Clone ());
 		}
 
-		actions.transform.position = new Vector3 (1000, 0, 0);
+		actions.transform.position = new Vector3 (10000, 0, 0);
 	}
 
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data = null) {
 		base.Message (message, data);
-		actions.transform.position = new Vector3 (1000, 0, 0);
+		actions.transform.position = new Vector3 (10000, 0, 0);
 
 		switch (message) {
 		case GameManagerScript.MESSAGE.CHOOSE_ACTION:
