@@ -64,7 +64,26 @@
 <script type="text/javascript" src="airconsole-controls/swipe-pattern/swipe-pattern.js"></script>
 <script type="text/javascript" src="airconsole-controls/ctrl-generator/ctrl-generator.js"></script>
 <script type="text/javascript">
+
+
+
 var airconsole = new AirConsole({orientation: AirConsole.ORIENTATION_LANDSCAPE});
+
+
+
+airconsole.onMessage = function(from, data) {
+    data = JSON.parse(data);
+    if (from === AirConsole.SCREEN) {
+
+    }
+}
+
+function lol() {
+    CtrlGenerator.generate({"left":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"DUMB","key":"attack","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"COUNTER","key":"counter","on_up_message":false}],"middle":[],"right":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"TECH","key":"tech","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ADVANCE","key":"advance","on_up_message":false}]});
+}
+
+setTimeout(lol, 4000);
+
 CtrlGenerator.setAirConsole(airconsole);
 CtrlGenerator.generate({"left":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ATTACK","key":"attack","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"COUNTER","key":"counter","on_up_message":false}],"middle":[],"right":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"TECH","key":"tech","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ADVANCE","key":"advance","on_up_message":false}]});
 </script></body></html>
