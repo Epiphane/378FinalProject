@@ -2,21 +2,102 @@
 <head>
 <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/><link rel="stylesheet" href="airconsole-controls/button/button.css">
 <link rel="stylesheet" href="airconsole-controls/dpad/dpad.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <link rel="stylesheet" href="airconsole-controls/joystick/joystick.css">
 <link rel="stylesheet" href="airconsole-controls/ctrl-generator/controller.css">
+
+<style>
+    .green {
+        background-image: url('card_green.png');
+    }
+
+    .red {
+        background-image: url('card_red.png');
+    }
+
+    .blue {
+        background-image: url('card_blue.png');
+    }
+
+    .button-active {
+       top: 5px;
+    }
+
+
+    .card {
+       position: relative;
+       width: 30%;
+       float: left;
+       background-size: contain;
+       background-repeat: no-repeat;
+       background-position: 50% 50%;
+
+       text-align: center;
+    }
+
+    .card div {
+        position: absolute;
+        top: 46%;
+        width: 100%;
+        text-align: center;
+
+        font-size: 16px;
+    }
+
+    .left.card {
+        margin-left: 1%;
+    }
+
+    .middle.card {
+        margin-left: 3%;
+        margin-right: 3%;
+    }
+
+    .right.card {
+        margin-right: 1%;
+    }
+
+    #container { display:block; }
+    @media only screen and (orientation:portrait){
+      #container {
+        height: 100vw;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        transform: rotate(90deg);
+      }
+    }
+    @media only screen and (orientation:landscape){
+      #container {
+         -webkit-transform: rotate(0deg);
+         -moz-transform: rotate(0deg);
+         -o-transform: rotate(0deg);
+         -ms-transform: rotate(0deg);
+         transform: rotate(0deg);
+      }
+    }
+</style>
+
 </head>
 <body>
 
-    <div class="gamepad_container">
+    <div class="gamepad_container" style="display:none">
       <div id="left" class="left"></div>
       <div id="middle" class="middle"></div>
       <div id="right" class="right"></div>
     </div>
 
-    <div class="card_display">
-        <div id="left_card" class="card"></div>
-        <div id="middle_card" class="card"></div>
-        <div id="right_card" class="card"></div>
+    <div class="gamepad_container container">
+        <div id="left" class="left card green">
+            <div>Here I am! asdf asdf asdf</div>
+        </div>
+        <div id="middle" class="middle card red">
+            <div>I am the best!</div>
+        </div>
+        <div id="right" class="right card blue">
+            <div>Oh yeah</div>
+        </div>
     </div>
 
 
@@ -74,14 +155,52 @@
 
 
 var airconsole = new AirConsole({orientation: AirConsole.ORIENTATION_LANDSCAPE});
+var rate_limiter = new RateLimiter(airconsole);
 
+// Grab each of the user's cards and put them in an array
+var cards_text = [$("#left.card div"), $("#middle.card div"), $("#right.card div")];
+var cards = [$("#left.card"), $("#middle.card"), $("#right.card")];
 
+// Sends a rate-limited message over to AirConsole.
+function sendInputEvent(ndx) {
+  var message = {};
+  message[ndx] = true;
+
+  rate_limiter.message(airconsole.SCREEN, message);
+
+  console.log("NICE: " + ndx)
+}
+
+// Go through the cards, and turn them all into buttons! With magic.
+for (var ndx = 0; ndx < 3; ndx++) {
+    (function (ndx) {
+      var params = {
+          down: function() {
+              sendInputEvent("chose_card" + ndx);
+          }
+      }
+      var dummy = new Button(cards[ndx][0], params);
+    })(ndx);
+}
 
 airconsole.onMessage = function(from, data) {
-    data = JSON.parse(data);
+    // data = JSON.parse(data);
     if (from === AirConsole.SCREEN) {
-        if (data.getNewCards) {
 
+                cards[0].removeClass("red");
+                cards[0].removeClass("green");
+                cards[0].removeClass("blue");
+                cards[0].addClass("red");
+
+        if (data.newCards) {
+            for (var ndx = 0; ndx < data.newCards.length; ndx++) {
+                cards_text[ndx].html(data.newCards[ndx].words);
+
+                cards[ndx].removeClass("red");
+                cards[ndx].removeClass("green");
+                cards[ndx].removeClass("blue");
+                cards[ndx].addClass(data.newCards[ndx].color);
+            }
         }
     }
 }

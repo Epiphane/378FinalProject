@@ -91,3 +91,9 @@ body {
 
 
 /* MY STUFF */
+.card {
+    position: relative;
+    width: 30%;
+    overflow: hidden;
+    float: left;
+}
