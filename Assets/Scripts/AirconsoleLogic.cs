@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NDream.AirConsole;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
 
 public class AirconsoleLogic : MonoBehaviour {
@@ -17,12 +18,16 @@ public class AirconsoleLogic : MonoBehaviour {
 		AirConsole.instance.onDisconnect += OnDisconnect;
 	}
 
+	public static int player0_id = -1;
+	public static int player1_id = -1;
+
 	void Start() {
 		if (AirConsole.instance.IsAirConsoleUnityPluginReady ()) {
 			List<int> ids = AirConsole.instance.GetControllerDeviceIds ();
 
 			ids.ForEach ((device_id) => {
 				OnConnect (device_id);
+
 				// TODO: lobby logic
 //				if (activePlayers.ContainsKey(device_id)) {
 //					AirConsole.instance.Message(device_id, "{\"controller\":true}");
@@ -49,9 +54,17 @@ public class AirconsoleLogic : MonoBehaviour {
 			// No more space! Gotta wait brooooo
 			//			AirConsole.instance.Message (device_id, "{\"lobby\":true}");
 //			return;
-//		}
+		//		}
+		if (player0_id == -1) {
+			player0_id = device_id;
+		} else if (player1_id == -1) {
+			player1_id = device_id;
+		}
 
-
+		AirConsole.instance.Message (device_id, "{ \"newCards\": [ " +
+			"{\"color\": \"blue\", \"words\": \"Copy your opponents augmentation\"  }, " +
+			"{\"color\": \"blue\", \"words\": \"Cancel your opponents augmentation\"}, " +
+			"{\"color\": \"red\",  \"words\": \"Double damage\"  }         ] }");
 
 //		AirConsole.instance.Message (device_id, ColorToJSONMessage(possibleColors[0]));
 //		AirConsole.instance.Message (device_id, "{\"controller\":true}");
@@ -70,14 +83,61 @@ public class AirconsoleLogic : MonoBehaviour {
 	/// <param name="from">From.</param>
 	/// <param name="data">Data.</param>
 	void OnMessage(int device_id, JToken data) {
-		int active_player = AirConsole.instance.ConvertDeviceIdToPlayerNumber(device_id);
+		int active_player = AirConsole.instance.ConvertDeviceIdToPlayerNumber (device_id);
 
 		print (data);
+		if (data ["chose_card0"] != null) {
+			// Chose card 0
+		} else if (data ["chose_card1"] != null) {
+			// Chose card 1
+		} else if (data ["chose_card2"] != null) {
+			// Chose card 2
+		} else if (data ["attack"] != null) {
 
-		if (data ["chose_card1"] != null) {
-			print("CHOSE CARD 1, DUH!");
+		} else if (data ["counter"] != null) {
+
+		} else if (data ["tech"] != null) {
+
+		} else if (data ["advance"] != null) {
+
+		}
+	}
+
+	public static void AskPlayerForAction(int player) {
+		AirConsole.instance.Message (PlayerNum_to_id(player), "{ \"doAction\": true }");
+	}
+
+	public static int PlayerNum_to_id(int player) {
+		var id = 0;
+		if (player == 0) {
+			id = player0_id; // TODO: change this to real, un-bad stuff
+		} else {
+			id = player1_id;
+		}
+		return id;
+	}
+
+	public static void SendCards(int player, List<Card> cards) {
+		var id = PlayerNum_to_id (player);
+
+		var result_string = "{ \"newCards\": [ ";
+		foreach (Card card in cards) {
+			var color = Card.ColorToString (card.color);
+			result_string += "{\"color\": \"" + card.color + "\", \"words\": \"" + card.description + "\"  }, "
 		}
 
+		result_string += "] }";
+
+		AirConsole.instance.Message (id, "{ \"newCards\": [ " +
+			"{\"color\": \"" + color1 + "\", \"words\": \"" + card1 + "\"  }, " +
+			"{\"color\": \"" + color2 + "\", \"words\": \"" + card2 + "\"  }, " +
+			"{\"color\": \"" + color3 + "\", \"words\": \"" + card3 + "\"  }         ] }" );
+	}
+
+	public static void CardWasTaken(int player, int cardNdx) {
+		var id = PlayerNum_to_id (player);
+
+		AirConsole.instance.Message (id, "{ \"cardWasTaken\": " + cardNdx + " }");
 	}
 
 

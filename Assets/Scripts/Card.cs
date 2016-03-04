@@ -7,6 +7,22 @@ public class Card {
 	public string description { get; private set; }
 	public Color color { get; private set; }
 
+	public static string ColorToString (Color color) {
+		switch (color) {
+		case Color.BLUE:
+			return "blue";
+			break;
+		case Color.RED:
+			return "red";
+			break;
+		case Color.GREEN:
+			return "green";
+			break;
+		}
+
+		return "ded";
+	}
+
 	public class ActionResult {
 		public int damage = 0;
 		public int damageToSelf = 0;

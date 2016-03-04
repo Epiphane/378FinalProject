@@ -19,6 +19,10 @@
         background-image: url('card_blue.png');
     }
 
+    .ded {
+        background-image: url('card_gray.png');
+    }
+
     .button-active {
        top: 5px;
     }
@@ -82,13 +86,13 @@
 </head>
 <body>
 
-    <div class="gamepad_container" style="display:none">
+    <div id="action_container" class="gamepad_container" style="display:none">
       <div id="left" class="left"></div>
       <div id="middle" class="middle"></div>
       <div id="right" class="right"></div>
     </div>
 
-    <div class="gamepad_container container">
+    <div id="card_container" class="gamepad_container container">
         <div id="left" class="left card green">
             <div>Here I am! asdf asdf asdf</div>
         </div>
@@ -166,7 +170,7 @@ function sendInputEvent(ndx) {
   var message = {};
   message[ndx] = true;
 
-  rate_limiter.message(airconsole.SCREEN, message);
+  rate_limiter.message(AirConsole.SCREEN, message);
 
   console.log("NICE: " + ndx)
 }
@@ -183,24 +187,42 @@ for (var ndx = 0; ndx < 3; ndx++) {
     })(ndx);
 }
 
-airconsole.onMessage = function(from, data) {
-  // data = JSON.parse(data);
-  if (from === AirConsole.SCREEN) {
+function changeCardColor(card, newColor) {
+  card.removeClass("red");
+  card.removeClass("green");
+  card.removeClass("blue");
+  card.removeClass("ded");
+  card.addClass(newColor);
+}
 
-    // It's 
+airconsole.onMessage = function(senderID, data) {
+  data = JSON.parse(data);
+  if (senderID === AirConsole.SCREEN) {
+
+    console.log("THANK yoU FOR NOTICING ME SEMPAI: " + senderID);
+    console.log(data);
+    
+
+    // It's time for the user to choose from 3 cards.
     if (data.newCards) {
       for (var ndx = 0; ndx < data.newCards.length; ndx++) {
+        $("#action_container").hide(0);
+        $("#card_container").show(0);
+
         cards_text[ndx].html(data.newCards[ndx].words);
 
-        cards[ndx].removeClass("red");
-        cards[ndx].removeClass("green");
-        cards[ndx].removeClass("blue");
-        cards[ndx].addClass(data.newCards[ndx].color);
+        changeCardColor(cards[ndx], data.newCards[ndx].color);
       }
     }
 
+    // It's time for the user to choose from the 4 actions
     if (data.doAction) {
+      $("#action_container").show(0);
+      $("#card_container").hide(0);
+    }
 
+    if (data.cardWasTaken) {
+      changeCardColor(cards[data.cardWasTaken], "ded");
     }
   }
 }
