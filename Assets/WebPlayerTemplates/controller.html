@@ -205,12 +205,14 @@ airconsole.onMessage = function(senderID, data) {
 
     // It's time for the user to choose from 3 cards.
     if (data.newCards) {
+      $(".card").hide(0);
+
       for (var ndx = 0; ndx < data.newCards.length; ndx++) {
         $("#action_container").hide(0);
         $("#card_container").show(0);
 
+        cards[ndx].show(0);
         cards_text[ndx].html(data.newCards[ndx].words);
-
         changeCardColor(cards[ndx], data.newCards[ndx].color);
       }
     }
