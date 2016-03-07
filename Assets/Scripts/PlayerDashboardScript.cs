@@ -72,6 +72,9 @@ public class PlayerDashboardScript : MonoBehaviour {
 			augmentationState = 0;
 
 			((RectTransform)augmentation.transform).localPosition = new Vector2 (5, -45);
+		} else if (augmentationState < 2 && player.gameManager.state == GameManagerScript.STATE.RESOLVE_ACTIONS) {
+			augmentationState = 2;
+			augmentation.transform.localPosition = new Vector2 (5, -17);
 		}
 	}
 
