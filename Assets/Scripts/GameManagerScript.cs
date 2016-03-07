@@ -73,6 +73,8 @@ public class GameManagerScript : MonoBehaviour {
 		state = newState;
 		UpdateStatus ();
 
+		print ("State changed to " + newState);
+
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
 			players [turn].Message (MESSAGE.DRAW_NEW_CARD);

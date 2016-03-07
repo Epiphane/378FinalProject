@@ -67,12 +67,22 @@ public class AirconsoleLogic : MonoBehaviour {
 	void ChoseCard(int device_id, int ndx) {
 		GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
 
-		if (device_id == player0_id) {
-			Card selectedCard = manager.players [0].hand.cards [ndx];
-			manager.players [0].hand.CardSelected (null, selectedCard);
-		} else if (device_id == player1_id) {
-			Card selectedCard = manager.players [1].hand.cards [ndx];
-			manager.players [1].hand.CardSelected (null, selectedCard);
+		if (manager.state == GameManagerScript.STATE.WAITING_ON_AUGMENTATION || manager.state == GameManagerScript.STATE.WAITING_ON_DISCARDS) {
+			if (device_id == player0_id) {
+				Card selectedCard = manager.players [0].hand.cards [ndx];
+				manager.players [0].hand.CardSelected (null, selectedCard);
+			} else if (device_id == player1_id) {
+				Card selectedCard = manager.players [1].hand.cards [ndx];
+				manager.players [1].hand.CardSelected (null, selectedCard);
+			}
+		} else if (manager.state == GameManagerScript.STATE.DRAW_NEW_CARD) {
+			if (device_id == player0_id) {
+				Card selectedCard = manager.cardBank.cards[ndx];
+				manager.cardBank.PickCard (0, selectedCard);
+			} else if (device_id == player1_id) {
+				Card selectedCard = manager.cardBank.cards[ndx];
+				manager.cardBank.PickCard (1, selectedCard);
+			}
 		}
 			
 	}
@@ -129,18 +139,19 @@ public class AirconsoleLogic : MonoBehaviour {
 		var id = PlayerNum_to_id (player);
 
 		var result_string = "{ \"newCards\": [ ";
-		foreach (Card card in cards) {
+		for (int ndx = 0; ndx < cards.Count; ndx++) {
+			var card = cards [ndx];
 			// Remove trailing comma, it screws up JSON parsing which is DUMB.
-			var separator_comma = (card == cards.Last()) ? "" : ",";
+			var separator_comma = (ndx == cards.Count - 1) ? "" : ",";
 			var color = Card.ColorToString (card.color);
 			result_string += "{\"color\": \"" + color + "\", \"words\": \"" + card.description + "\"  }" + separator_comma;
 		}
 
 		result_string += "] }";
 
-		AirConsole.instance.Message (id, result_string );
-
 		print ("Sending cardstring: " + result_string);
+
+		AirConsole.instance.Message (id, result_string );
 	}
 
 	public static void CardWasTaken(int player, int cardNdx) {
@@ -177,7 +188,8 @@ public class AirconsoleLogic : MonoBehaviour {
 					print ("Sending " + player.ID + " the cards " + player.hand.cards.Count);
 					break;
 				case GameManagerScript.STATE.DRAW_NEW_CARD:
-					SendCards (player.ID, manager.floppedCards);
+					SendCards (player.ID, manager.cardBank.cards);
+					print ("flopping " + player.ID + " the cards " + manager.cardBank.cards.Count);
 					break;
 				case GameManagerScript.STATE.WAITING_ON_ACTION:
 					AskPlayerForAction (player.ID);

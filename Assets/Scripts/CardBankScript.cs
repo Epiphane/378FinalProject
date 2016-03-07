@@ -65,6 +65,8 @@ public class CardBankScript : CardHolderScript {
 		if (game.DrawCard (player_id, card)) {
 			RemoveCard (card);
 		}
+
+		AirconsoleLogic.SyncState ();
 	}
 
 	public override void CardSelected (Transform transform, Card card) {
