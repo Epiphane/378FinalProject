@@ -139,6 +139,12 @@ public class AirconsoleLogic : MonoBehaviour {
 
 	public static void SyncState() {
 		// Loop through the human players
+
+		PlayerScript[] players = GameObject.FindObjectsOfType<PlayerScript>();
+
+		foreach (var player in players) {
+			print ("Gotcha " + player);
+		}
 	}
 
 

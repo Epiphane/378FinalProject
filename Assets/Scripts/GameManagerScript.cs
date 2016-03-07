@@ -86,6 +86,8 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void UpdateStatus() {
+		AirconsoleLogic.SyncState ();
+
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
 			gameStatus.text = "Waiting on player " + turn + " to draw a card";
