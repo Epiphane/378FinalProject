@@ -1442,6 +1442,14 @@ Prefab:
       propertyPath: m_FillAmount
       value: 0.42
       objectReference: {fileID: 0}
+    - target: {fileID: 22432550, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -17
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447260, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
+      propertyPath: m_Text
+      value: Dingus
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
   m_IsPrefabParent: 0

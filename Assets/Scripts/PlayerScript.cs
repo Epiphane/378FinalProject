@@ -15,21 +15,17 @@ public class PlayerScript : MonoBehaviour {
 	/* Augmentation for the current round */
 	public Card augmentation = null;
 	public PlayerAction action = null;
+	public PlayerSchool school = PlayerSchool.schools[0].Clone();
 
 	/* Health GUI display */
 	public int health = GameManagerScript.INITIAL_HEALTH;
 	public int max_health = GameManagerScript.INITIAL_HEALTH;
-
-	/* Advancement points */
-	public int advancement = 24;
 
 	// Use this for initialization
 	public virtual void Awake () {
 		// Set up the dashboard's reference
 		if (dashboard != null)
 			dashboard.player = this;
-
-		advancement = 0;
 
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 

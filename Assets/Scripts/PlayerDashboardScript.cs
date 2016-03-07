@@ -39,11 +39,11 @@ public class PlayerDashboardScript : MonoBehaviour {
 			UpdateBar (healthBar, health_display, health, player.max_health, Vector2.zero);
 		}
 
-		if (advancement != player.advancement) {
-			advancement += (player.advancement - advancement) / 3.0f;
+		if (advancement != player.school.advancement) {
+			advancement += (player.school.advancement - advancement) / 3.0f;
 
-			if (Mathf.Abs (advancement - player.advancement) < 0.1)
-				advancement = player.advancement;
+			if (Mathf.Abs (advancement - player.school.advancement) < 0.1)
+				advancement = player.school.advancement;
 
 			if (advancement >= 6)
 				advancementLevel1.color = Color.yellow;
