@@ -82,13 +82,13 @@
 </head>
 <body>
 
-    <div class="gamepad_container" style="display:none">
+    <div id="action_container" class="gamepad_container" style="display:none">
       <div id="left" class="left"></div>
       <div id="middle" class="middle"></div>
       <div id="right" class="right"></div>
     </div>
 
-    <div class="gamepad_container container">
+    <div id="card_container" class="gamepad_container container">
         <div id="left" class="left card green">
             <div>Here I am! asdf asdf asdf</div>
         </div>
@@ -186,8 +186,10 @@ for (var ndx = 0; ndx < 3; ndx++) {
 airconsole.onMessage = function(from, data) {
   // data = JSON.parse(data);
   if (from === AirConsole.SCREEN) {
+    $("#action_container").hide(0);
+    $("#card_container").show(0);
 
-    // It's 
+    // It's time for the user to choose from 3 cards.
     if (data.newCards) {
       for (var ndx = 0; ndx < data.newCards.length; ndx++) {
         cards_text[ndx].html(data.newCards[ndx].words);
@@ -199,8 +201,10 @@ airconsole.onMessage = function(from, data) {
       }
     }
 
+    // It's time for the user to choose from the 4 actions
     if (data.doAction) {
-
+      $("#action_container").show(0);
+      $("#card_container").hide(0);
     }
   }
 }

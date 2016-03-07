@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * Simple transformation component that allows you to move a GameObject
+ * from point A to point B smoothly. You can either call:
+ * 
+ * component.MoveTo(destination, time)
+ * 
+ * or
+ * 
+ * component.Record();
+ *   // do transformation changes...
+ * component.StartTransition(time);
+ */
 public class UISmoothTransformScript : MonoBehaviour {
 
 	private Vector3 startPos, endPos;
 	private Quaternion startRot, endRot;
 	private float timeElapsed, transition;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
 	void Update () {
