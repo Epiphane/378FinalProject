@@ -9,6 +9,7 @@ public class PlayerScript : MonoBehaviour {
 	public CardHolderScript hand;
 	public DeckScript deck;
 	public ActionDisplayScript actionDisplay;
+	public PlayerDashboardScript dashboard;
 	public int ID;
 
 	/* Augmentation for the current round */
@@ -17,7 +18,8 @@ public class PlayerScript : MonoBehaviour {
 
 	/* Health GUI display */
 	public Text healthOutput;
-	private int _health = 20;
+	private int _health = GameManagerScript.INITIAL_HEALTH;
+	public int max_health = GameManagerScript.INITIAL_HEALTH;
 
 	public int health {
 		get {
@@ -32,6 +34,10 @@ public class PlayerScript : MonoBehaviour {
 
 	// Use this for initialization
 	public virtual void Awake () {
+		// Set up the dashboard's reference
+		if (dashboard != null)
+			dashboard.player = this;
+
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 
 		if (deck == null)

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GameManagerScript : MonoBehaviour {
 	
 	private static int COMP_WAIT_TIME = 100;
+	public static int INITIAL_HEALTH = 20;
 
 	public enum MESSAGE { DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
@@ -37,7 +38,8 @@ public class GameManagerScript : MonoBehaviour {
 
 		for (int i = 0; i < players.Length; i++) {
 			players [i].ID = i;
-			players [i].health = 35;
+			players [i].health = INITIAL_HEALTH;
+			players [i].max_health = INITIAL_HEALTH;
 
 			// Tell players to draw an initial hand
 			for (int n = 0; n < 3; n ++)
