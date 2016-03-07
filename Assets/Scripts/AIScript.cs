@@ -2,16 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+ * PlayerScript that manages AI decision making. Right now it just
+ * simply chooses everything randomly, but we can add strategy in
+ * here at any time
+ */
 public class AIScript : PlayerScript {
-	
+
+	// Reference to the Deck that lays out new cards, so we can see them
 	public CardBankScript cardBank;
 
+	// Wait a second before making decisions
 	private static int THINK_TIME = 1;
 
 	// Use this for initialization
-	public override void Awake () {
-		base.Awake ();
-
+	public void Start () {
 		if (cardBank == null) {
 			GameObject CB = GameObject.Find ("CardBank");
 
@@ -23,27 +28,25 @@ public class AIScript : PlayerScript {
 			cardBank = CB.GetComponent<CardBankScript> ();
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
+	// Pick a card, any card! (from the Flop)
 	public void PickCard() {
 		List<Card> options = cardBank.GetAvailableCards ();
 
 		cardBank.PickCard (ID, options [Random.Range (0, options.Count)]);
 	}
 
-	/* Pick a card to play */
+	// Choose an action to make
 	public void DoAction() {
 		this.PlayAction (PlayerAction.GetRandom ());
 	}
 
+	// Choose an augmentation to play
 	public void ChooseAugmentation() {
 		PlayAugmentation (hand.cards [Random.Range (0, hand.cards.Count)]);
 	}
 
+	// Discard extra cards in your hand!
 	public void DiscardToOne() {
 		while (hand.Size > 1) {
 			Discard(hand.cards [0]);
