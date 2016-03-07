@@ -33,18 +33,20 @@ public class CardBankScript : CardHolderScript {
 		game = GM.GetComponent<GameManagerScript> ();
 	}
 
-	public void Flop (int amountToDraw) {
+	public List<Card> Flop (int amountToDraw) {
 		float yoffset = Mathf.Floor (amountToDraw / 4);// * 1.4f;
 
 		List<Card> cards = new List<Card> ();
 
-		while (amountToDraw-- > 0) {
+		while (amountToDraw-- > 0) { // TODO: also stop if the deck runs out
 			Card newCard = deck.Draw ();
 			GameObject newCardObject = AddCard (newCard);
 			cards.Add (newCard);
 
 			newCardObject.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 100, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
 		}
+
+		return cards;
 	}
 
 	public override void Reorganize () {

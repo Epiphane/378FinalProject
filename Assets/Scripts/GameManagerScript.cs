@@ -15,6 +15,9 @@ public class GameManagerScript : MonoBehaviour {
 	public Card[] augmentations;
 	public Text gameStatus;
 
+	/* The cards currently flopped out. Hurry up and choose one already! */
+	public List<Card> floppedCards;
+
 	/* Whose turn was first, and who is going now? */
 	private int first_turn, turn;
 
@@ -22,7 +25,7 @@ public class GameManagerScript : MonoBehaviour {
 	private int counter;
 
 	/* State machine for the game */
-	public enum STATE { DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION };
+	public enum STATE { DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION, GAME_OVER };
 	public STATE state { get; private set; }
 
 	void Awake () {
@@ -49,6 +52,10 @@ public class GameManagerScript : MonoBehaviour {
 		if (state == STATE.RESOLVE_ACTIONS) {
 			ResolveNextAction ();
 		} else if (state == STATE.ANIMATING_ACTION) {
+			for (int i = players.Length - 1; i >= 0; i--) {
+				players [i].actionDisplay.DisplayAction (players [i].action);
+			}
+
 			if (counter-- <= 0) {
 				for (int i = players.Length - 1; i >= 0; i --) {
 					players [i].actionDisplay.Clear ();
@@ -83,10 +90,11 @@ public class GameManagerScript : MonoBehaviour {
 			}
 			break;
 		}
+
+		AirconsoleLogic.SyncState ();
 	}
 
 	void UpdateStatus() {
-		AirconsoleLogic.SyncState ();
 
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
@@ -107,6 +115,8 @@ public class GameManagerScript : MonoBehaviour {
 		case STATE.ANIMATING_ACTION:
 			gameStatus.text = "Animating actions";
 			break;
+		case STATE.GAME_OVER:
+			break;
 		default:
 			Debug.LogError ("State unaccounted for: " + state);
 			gameStatus.text = "Error!";
@@ -119,7 +129,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void Flop (int count) {
-		cardBank.Flop (count);
+		floppedCards = cardBank.Flop (count);
 		turn = first_turn;
 		SetState (STATE.DRAW_NEW_CARD);
 	}
@@ -164,7 +174,7 @@ public class GameManagerScript : MonoBehaviour {
 			return;
 		}
 
-		Debug.Log ("PLayer " + player_id + " played " + players [player_id].augmentation.name);
+		players [player_id].GetComponent<ActionDisplayScript> ().DisplayAugmentation (players [player_id].augmentation);
 
 		// Next turn...
 		turn = (turn + 1) % players.Length;
@@ -241,12 +251,24 @@ public class GameManagerScript : MonoBehaviour {
 			PlayerScript player = players [i];
 			Card.ActionResult result = results [i];
 
-			Debug.Log ("Dealing " + result.damageToSelf + " damage to player " + i);
 			player.health -= result.damageToSelf;
 		}
 
-		SetState(STATE.ANIMATING_ACTION);
-		counter = COMP_WAIT_TIME;
+		if (players [0].health > 0 && players [1].health > 0) {
+			SetState (STATE.ANIMATING_ACTION);
+			counter = COMP_WAIT_TIME;
+		}
+		else {
+			// Someeebody lost
+			SetState (STATE.GAME_OVER);
+
+			if (players [0].health < players [1].health)
+				gameStatus.text = "Opponent wins!";
+			else if (players [0].health == players [1].health)
+				gameStatus.text = "Tie game!";
+			else
+				gameStatus.text = "You win!";
+		}
 	}
 
 	/* Confirm that all players have discarded */
