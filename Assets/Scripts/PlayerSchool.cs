@@ -11,7 +11,7 @@ public class PlayerSchool {
 	// Hooks for the GameManager!
 	public delegate void BeforeAugmentationHook(Card augmentation, Card other);
 	public delegate void BeforeActionHook(PlayerAction action);
-	public delegate void AfterActionHook(Card.ActionResult result, PlayerScript player, PlayerScript other);
+	public delegate void AfterActionHook(Card.ActionResult result, Card.ActionResult other);
 
 	public class Level {
 		public string description;
@@ -49,10 +49,10 @@ public class PlayerSchool {
 		}
 	}
 
-	public void AfterAction(Card.ActionResult result, PlayerScript player, PlayerScript other) {
+	public void AfterAction(Card.ActionResult result, Card.ActionResult other) {
 		for (int i = 0; i < 3 && i * 6 <= advancement; i ++) {
 			if (this.levels [i].AfterAction != null)
-				this.levels [i].AfterAction (result, player, other);
+				this.levels [i].AfterAction (result, other);
 		}
 	}
 

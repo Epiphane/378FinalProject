@@ -13,6 +13,7 @@ public class PlayerAction {
 	public string name;
 	public int physicalAttack = 0;
 	public int techAttack = 0;
+	public int defense = 0;
 	public int counterAttack = 0;
 	public int advancement = 0;
 
