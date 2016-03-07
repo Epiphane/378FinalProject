@@ -79,7 +79,7 @@ public class PlayerSchool {
 			}, null),
 			new Level ("Nothing", null, null, null)
 		}),
-		new PlayerSchool ("School of Tactics", Color.red, new Level[] {
+		new PlayerSchool ("School of Tactics", Color.blue, new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("Always choose first augmentation", null, (PlayerAction action) => {
 				// TODO
@@ -93,7 +93,7 @@ public class PlayerSchool {
 			}, null),
 			new Level ("Your opponent plays their augmentation first", null, null, null)
 		}),
-		new PlayerSchool ("School of Focus", Color.red, new Level[] {
+		new PlayerSchool ("School of Focus", Color.green, new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("+1 AP on advance", null, (PlayerAction action) => {
 				if (action.name == "Advance")
