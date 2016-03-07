@@ -138,7 +138,7 @@ public class AirconsoleLogic : MonoBehaviour {
 	}
 
 	public static void SyncState() {
-
+		// Loop through the human players
 	}
 
 

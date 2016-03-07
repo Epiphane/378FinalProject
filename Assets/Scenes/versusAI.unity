@@ -1533,6 +1533,45 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1449462321}
   m_Script: {fileID: 11500000, guid: 445713358afd24ddb87fcd92ea0475f9, type: 3}
+--- !u!1 &1502434452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1502434454}
+  - 114: {fileID: 1502434453}
+  m_Layer: 0
+  m_Name: AirConsoleLogic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1502434453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1502434452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12e00ea4dbce74d43abfec65118fcba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1502434454
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1502434452}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6, y: 2.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
 --- !u!1001 &1593804528
 Prefab:
   m_ObjectHideFlags: 0
@@ -1756,7 +1795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37d83ebce05ad74683fd3228dde9e7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  browserStartMode: 2
+  browserStartMode: 0
   controllerHtml: {fileID: 102900000, guid: 28b53290b04ef468a936a6b5dfc7933a, type: 3}
   autoScaleCanvas: 1
 --- !u!4 &1716141190
