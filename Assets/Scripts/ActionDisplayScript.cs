@@ -15,7 +15,7 @@ public class ActionDisplayScript : MonoBehaviour {
 	public Image actionSprite;
 
 	// Sprites that could get displayed
-	public Sprite attack, tech, counter;
+	public Sprite attack, tech, counter, advance;
 
 	// Prefabs for showing the augmentation
 	public GameObject cardPrefab;
@@ -33,6 +33,9 @@ public class ActionDisplayScript : MonoBehaviour {
 			break;
 		case "Tech":
 			actionSprite.sprite = tech;
+			break;
+		case "Advance":
+			actionSprite.sprite = advance;
 			break;
 		}
 	}

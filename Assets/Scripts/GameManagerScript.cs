@@ -170,8 +170,6 @@ public class GameManagerScript : MonoBehaviour {
 			return;
 		}
 
-		players [player_id].GetComponent<ActionDisplayScript> ().DisplayAugmentation (players [player_id].augmentation);
-
 		// Next turn...
 		turn = (turn + 1) % players.Length;
 
@@ -234,6 +232,7 @@ public class GameManagerScript : MonoBehaviour {
 
 			results [i].damage = damage;
 			results [1 - i].damageToSelf = damage;
+			results [i].advancement = playerAction.advancement;
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
@@ -248,6 +247,7 @@ public class GameManagerScript : MonoBehaviour {
 			Card.ActionResult result = results [i];
 
 			player.health -= result.damageToSelf;
+			player.advancement += result.advancement;
 		}
 
 		if (players [0].health > 0 && players [1].health > 0) {
