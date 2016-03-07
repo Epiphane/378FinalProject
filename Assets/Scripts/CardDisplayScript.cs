@@ -5,14 +5,15 @@ using UnityEngine.UI;
 public class CardDisplayScript : MonoBehaviour {
 	/* Objects to modify */
 	private SpriteRenderer cardFrame;
-	public Text description;
+	public Text description, title;
 
 	/* Card object */
 	private Card _card = null;
 
 	// Use this for initialization
 	void Start () {
-		cardFrame = transform.FindChild ("Frame").GetComponent<SpriteRenderer>();
+		if (transform.FindChild ("Frame") != null)
+			cardFrame = transform.FindChild ("Frame").GetComponent<SpriteRenderer>();
 		description = transform.FindChild ("Description").GetComponent<Text>();
 
 		if (_card != null)
@@ -37,6 +38,9 @@ public class CardDisplayScript : MonoBehaviour {
 
 		if (description != null)
 			description.text = card.description;
+
+		if (title != null)
+			title.text = card.name;
 	}
 	
 	// Update is called once per frame

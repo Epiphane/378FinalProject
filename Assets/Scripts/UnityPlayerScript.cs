@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UnityPlayerScript : PlayerScript {
 
-	/* For unity UI */
+	/* For unity UI */ 
 	public GameObject actions;
 
 	// Use this for initialization

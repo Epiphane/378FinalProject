@@ -1,12 +1,13 @@
 fileFormatVersion: 2
 guid: 93c23624001e041cc8b565729077401e
-timeCreated: 1456605765
+timeCreated: 1457384301
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: card_types_0
     21300002: card_types_1
     21300004: card_types_2
+    21300006: card_types_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -449,6 +450,26 @@ TextureImporter:
         - {x: -233, y: 256}
         - {x: -243, y: 256}
         - {x: -256, y: 244}
+    - name: card_types_3
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -18, y: 195}
+        - {x: -145, y: 55}
+        - {x: -145, y: 20}
+        - {x: -139, y: 11}
+        - {x: 4, y: -167}
+        - {x: 36, y: -167}
+        - {x: 194, y: -86}
+        - {x: 194, y: 114}
+        - {x: 143, y: 195}
     outline: []
   spritePackingTag: 
   userData: 

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GameManagerScript : MonoBehaviour {
 	
 	private static int COMP_WAIT_TIME = 100;
+	public static int INITIAL_HEALTH = 20;
 
 	public enum MESSAGE { DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
@@ -40,7 +41,8 @@ public class GameManagerScript : MonoBehaviour {
 
 		for (int i = 0; i < players.Length; i++) {
 			players [i].ID = i;
-			players [i].health = 35;
+			players [i].health = INITIAL_HEALTH;
+			players [i].max_health = INITIAL_HEALTH;
 
 			// Tell players to draw an initial hand
 			for (int n = 0; n < 3; n ++)
@@ -176,8 +178,6 @@ public class GameManagerScript : MonoBehaviour {
 			return;
 		}
 
-		players [player_id].GetComponent<ActionDisplayScript> ().DisplayAugmentation (players [player_id].augmentation);
-
 		// Next turn...
 		turn = (turn + 1) % players.Length;
 
@@ -209,12 +209,16 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < players.Length; i ++) {
 			PlayerScript player = players [i];
 
+			player.school.BeforeAugmentation (player.augmentation, players [1 - i].augmentation);
+
 			if (player.augmentation.BeforeAugmentation != null)
 				player.augmentation.BeforeAugmentation (player.augmentation, players[1 - i].augmentation);
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
 			PlayerScript player = players [i];
+
+			player.school.BeforeAction (player.action);
 
 			if (player.augmentation.BeforeAction != null)
 				player.augmentation.BeforeAction (player.action);
@@ -240,6 +244,7 @@ public class GameManagerScript : MonoBehaviour {
 
 			results [i].damage = damage;
 			results [1 - i].damageToSelf = damage;
+			results [i].advancement = playerAction.advancement;
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
@@ -247,6 +252,8 @@ public class GameManagerScript : MonoBehaviour {
 
 			if (player.augmentation.AfterAction != null)
 				player.augmentation.AfterAction (results[i], player, players[1 - i]);
+
+			player.school.AfterAction (results[i], player, players[1 - i]);
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
@@ -254,6 +261,7 @@ public class GameManagerScript : MonoBehaviour {
 			Card.ActionResult result = results [i];
 
 			player.health -= result.damageToSelf;
+			player.school.advancement += result.advancement;
 		}
 
 		if (players [0].health > 0 && players [1].health > 0) {

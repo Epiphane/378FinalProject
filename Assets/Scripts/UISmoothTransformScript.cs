@@ -27,8 +27,15 @@ public class UISmoothTransformScript : MonoBehaviour {
 			if (timeElapsed > transition)
 				timeElapsed = transition;
 
-			transform.position = Vector3.Slerp (startPos, endPos, timeElapsed / transition);
-			transform.rotation = Quaternion.Slerp (startRot, endRot, timeElapsed / transition);
+//			if (transform is RectTransform) {
+//				RectTransform rTransform = (RectTransform)transform;
+//				rTransform.offsetMin = 
+//				((RectTransform)healthBar.transform).offsetMax = bottomLeft + ((RectTransform)healthBar.transform).sizeDelta;
+//				((RectTransform)healthBar.transform).offsetMin = bottomLeft;
+//			} else {
+				transform.position = Vector3.Lerp (startPos, endPos, timeElapsed / transition);
+				transform.rotation = Quaternion.Slerp (startRot, endRot, timeElapsed / transition);
+//			}
 		}
 	}
 

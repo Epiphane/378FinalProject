@@ -9,29 +9,24 @@ public class PlayerScript : MonoBehaviour {
 	public CardHolderScript hand;
 	public DeckScript deck;
 	public ActionDisplayScript actionDisplay;
+	public PlayerDashboardScript dashboard;
 	public int ID;
 
 	/* Augmentation for the current round */
 	public Card augmentation = null;
 	public PlayerAction action = null;
+	public PlayerSchool school = PlayerSchool.schools[0].Clone();
 
 	/* Health GUI display */
-	public Text healthOutput;
-	private int _health = 20;
-
-	public int health {
-		get {
-			return _health;
-		}
-		set {
-			_health = value;
-			if (healthOutput != null)
-				healthOutput.text = value.ToString();
-		}
-	}
+	public int health = GameManagerScript.INITIAL_HEALTH;
+	public int max_health = GameManagerScript.INITIAL_HEALTH;
 
 	// Use this for initialization
 	public virtual void Awake () {
+		// Set up the dashboard's reference
+		if (dashboard != null)
+			dashboard.player = this;
+
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 
 		if (deck == null)
