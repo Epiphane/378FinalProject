@@ -39,8 +39,8 @@ public class Card {
 	// Information about how a turn is resolved
 	public class ActionResult {
 		public int damage = 0;
-		public int damageToSelf = 0;
 		public int advancement = 0;
+		public PlayerAction action;
 	}
 
 	// Hooks for the GameManager!
@@ -50,23 +50,25 @@ public class Card {
 	public delegate void BeforeActionHook(PlayerAction action);
 	public BeforeActionHook BeforeAction;
 
-	public delegate void AfterActionHook(ActionResult result, PlayerScript player, PlayerScript other);
+	public delegate void AfterActionHook(ActionResult result, ActionResult other);
 	public AfterActionHook AfterAction;
+	public AfterActionHook AfterActionBeforeSchool;
 
 	// Constructor takes all of this information
 	public Card(string name, string description, Color color, BeforeAugmentationHook BeforeAugmentation,
-		BeforeActionHook BeforeAction, AfterActionHook AfterAction) {
+		BeforeActionHook BeforeAction, AfterActionHook AfterActionBeforeSchool, AfterActionHook AfterAction) {
 		this.name = name;
 		this.color = color;
 		this.description = description;
 
 		this.BeforeAugmentation = BeforeAugmentation;
 		this.BeforeAction = BeforeAction;
+		this.AfterActionBeforeSchool = AfterActionBeforeSchool;
 		this.AfterAction = AfterAction;
 	}
 
 	public Card Clone () {
-		return new Card (name, description, color, BeforeAugmentation, BeforeAction, AfterAction);
+		return new Card (name, description, color, BeforeAugmentation, BeforeAction, AfterActionBeforeSchool, AfterAction);
 	}
 
 	public override string ToString () {
@@ -78,26 +80,57 @@ public class Card {
 	 * Be careful to put the right callback in the right spot!
 	 */
 	public static Card[] cards = {
-		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
-			other.health -= result.damageToSelf;
+		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, null, null, null, (ActionResult result, ActionResult other) => {
+			result.damage += other.damage;
 		}),
-		new Card ("Kindness", "Heal 2 after this turn", Color.GREEN, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
-			player.health += 2;
+		new Card ("Kindness", "Heal 2 after this turn", Color.GREEN, null, null, null, (ActionResult result, ActionResult other) => {
+			other.damage -= 2;
 		}),
+		new Card ("Determination", "Counter will block ALL damage", Color.GREEN, null, (PlayerAction action) => {
+			if (action.name == "Counter") {
+				action.defense = 100;
+			}
+		}, null, null),
+		new Card ("Patience", "+2 damage to counter, +2 AP to advance", Color.GREEN, null, (PlayerAction action) => {
+			if (action.name == "Counter") {
+				action.counterAttack += 2;
+			}
+			else if (action.name == "Advance") {
+				action.advancement += 2;
+			}
+		}, null, null),
 		new Card ("Bloodlust", "Deal double damage", Color.RED, null, (PlayerAction action) => {
 			action.physicalAttack *= 2;
 			action.techAttack *= 2;
-		}, null),
-		new Card ("Feast", "Heal half the damage you deal", Color.RED, null, null, (ActionResult result, PlayerScript player, PlayerScript other) => {
-			player.health += (int) Mathf.Floor(result.damage / 2);
+		}, null, null),
+		new Card ("Feast", "Heal half the damage you deal", Color.RED, null, null, null, (ActionResult result, ActionResult other) => {
+			other.damage -= (int) Mathf.Floor(result.damage / 2);
 		}),
+		new Card ("Learn by Doing", "Gain 1AP for each damage you deal", Color.RED, null, null, null, (ActionResult result, ActionResult other) => {
+			result.advancement += result.damage;
+		}),
+		new Card ("A Strong Defense", "Attack and tech block 1 damage", Color.RED, null, (PlayerAction action) => {
+			if (action.name == "Attack" || action.name == "Tech") {
+				action.defense ++;
+			}
+		}, null, null),
 		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
 			augmentation.BeforeAction = other.BeforeAction;
 			augmentation.AfterAction = other.AfterAction;
-		}, null, null),
+		}, null, null, null),
 		new Card ("Mad Hacks", "Cancel your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
 			other.BeforeAction = null;
 			other.AfterAction = null;
-		}, null, null),
+		}, null, null, null),
+		new Card ("Siphon", "If tech deals damage, steal 2AP from your opponent", Color.BLUE, null, null, null, (ActionResult result, ActionResult other) => {
+			if (result.damage > 0 && result.action.name == "Tech") {
+				other.advancement -= 2;
+				result.advancement += 2;
+			}
+		}),
+		new Card ("Mind games", "+1 damage to tech", Color.BLUE, null, (PlayerAction action) => {
+			if (action.name == "Tech")
+				action.techAttack ++;
+		}, null, null)
 	};
 }

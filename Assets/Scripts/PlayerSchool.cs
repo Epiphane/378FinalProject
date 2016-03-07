@@ -11,7 +11,7 @@ public class PlayerSchool {
 	// Hooks for the GameManager!
 	public delegate void BeforeAugmentationHook(Card augmentation, Card other);
 	public delegate void BeforeActionHook(PlayerAction action);
-	public delegate void AfterActionHook(Card.ActionResult result, PlayerScript player, PlayerScript other);
+	public delegate void AfterActionHook(Card.ActionResult result, Card.ActionResult other);
 
 	public class Level {
 		public string description;
@@ -49,10 +49,10 @@ public class PlayerSchool {
 		}
 	}
 
-	public void AfterAction(Card.ActionResult result, PlayerScript player, PlayerScript other) {
+	public void AfterAction(Card.ActionResult result, Card.ActionResult other) {
 		for (int i = 0; i < 3 && i * 6 <= advancement; i ++) {
 			if (this.levels [i].AfterAction != null)
-				this.levels [i].AfterAction (result, player, other);
+				this.levels [i].AfterAction (result, other);
 		}
 	}
 
@@ -78,6 +78,36 @@ public class PlayerSchool {
 				}
 			}, null),
 			new Level ("Nothing", null, null, null)
+		}),
+		new PlayerSchool ("School of Tactics", Color.blue, new Level[] {
+			new Level ("Nothing", null, null, null),
+			new Level ("Always choose first augmentation", null, (PlayerAction action) => {
+				// TODO
+			}, null),
+			new Level ("+1 damage to tech and counter", null, (PlayerAction action) => {
+				if (action.name == "Counter") {
+					action.counterAttack ++;
+				} else if (action.name == "Tech") {
+					action.techAttack++;
+				}
+			}, null),
+			new Level ("Your opponent plays their augmentation first", null, null, null)
+		}),
+		new PlayerSchool ("School of Focus", Color.green, new Level[] {
+			new Level ("Nothing", null, null, null),
+			new Level ("+1 AP on advance", null, (PlayerAction action) => {
+				if (action.name == "Advance")
+					action.advancement ++;
+			}, null),
+			new Level ("Heal 1 on counter", null, null, (Card.ActionResult result, Card.ActionResult other) => {
+				if (result.action.name == "Counter")
+					other.damage --;
+
+				// TODO add an actual HEAL
+			}),
+			new Level ("Take 3 damage maximum in an action", null, null, (Card.ActionResult result, Card.ActionResult other) => {
+				other.damage = Mathf.Min(other.damage, 3);
+			})
 		})
 	};
 }

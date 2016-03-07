@@ -233,7 +233,7 @@ public class GameManagerScript : MonoBehaviour {
 			PlayerAction playerAction = players [i].action;
 			PlayerAction otherAction = players [1 - i].action;
 
-			int damage = playerAction.techAttack + playerAction.physicalAttack;
+			int damage = Mathf.Max(playerAction.techAttack + playerAction.physicalAttack - otherAction.defense, 0);
 
 			// Special case
 			if (playerAction.name == "Attack" && otherAction.name == "Counter") {
@@ -242,25 +242,36 @@ public class GameManagerScript : MonoBehaviour {
 				damage = playerAction.counterAttack;
 			}
 
+			results [i].action = playerAction;
 			results [i].damage = damage;
-			results [1 - i].damageToSelf = damage;
 			results [i].advancement = playerAction.advancement;
 		}
 
-		for (int i = 0; i < players.Length; i ++) {
+		for (int i = 0; i < players.Length; i++) {
+			PlayerScript player = players [i];
+
+			if (player.augmentation.AfterActionBeforeSchool != null)
+				player.augmentation.AfterActionBeforeSchool (results [i], results[1 - i]);
+		}
+
+		for (int i = 0; i < players.Length; i++) {
+			PlayerScript player = players [i];
+
+			player.school.AfterAction (results[i], results[1 - i]);
+		}
+
+		for (int i = 0; i < players.Length; i++) {
 			PlayerScript player = players [i];
 
 			if (player.augmentation.AfterAction != null)
-				player.augmentation.AfterAction (results[i], player, players[1 - i]);
-
-			player.school.AfterAction (results[i], player, players[1 - i]);
+				player.augmentation.AfterAction (results [i], results [1 - i]);
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
 			PlayerScript player = players [i];
 			Card.ActionResult result = results [i];
 
-			player.health -= result.damageToSelf;
+			player.health -= results [1 - i].damage;
 			player.school.advancement += result.advancement;
 		}
 

@@ -15,7 +15,7 @@ public class PlayerScript : MonoBehaviour {
 	/* Augmentation for the current round */
 	public Card augmentation = null;
 	public PlayerAction action = null;
-	public PlayerSchool school = PlayerSchool.schools[0].Clone();
+	public PlayerSchool school = null;
 
 	/* Health GUI display */
 	public int health = GameManagerScript.INITIAL_HEALTH;
@@ -26,6 +26,9 @@ public class PlayerScript : MonoBehaviour {
 		// Set up the dashboard's reference
 		if (dashboard != null)
 			dashboard.player = this;
+
+		// Choose random school
+		school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
 
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 

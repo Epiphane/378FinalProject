@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerDashboardScript : MonoBehaviour {
 
-	public Image advancementBar, healthBar;
+	public Image advancementBar, healthBar, nameBG;
 	public Image advancementLevel1, advancementLevel2, advancementLevel3;
 	public GameObject augmentation;
 
@@ -21,7 +21,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		health = 0;
 	}
 	
 	// Update is called once per frame
@@ -75,6 +75,10 @@ public class PlayerDashboardScript : MonoBehaviour {
 		} else if (augmentationState < 2 && player.gameManager.state == GameManagerScript.STATE.RESOLVE_ACTIONS) {
 			augmentationState = 2;
 			augmentation.transform.localPosition = new Vector2 (5, -17);
+		}
+
+		if (nameBG.color != player.school.color) {
+			nameBG.color = player.school.color;
 		}
 	}
 
