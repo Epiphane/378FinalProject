@@ -13,11 +13,17 @@ public class CardBankScript : CardHolderScript {
 
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
-		
-		for (int i = 0; i < Card.cards.Length; i++) {
-			for (int n = 0; n < 2; n++) {
+
+		// Put 3 of each starter in the deck
+		for (int i = 0; i < 12; i++) {
+			for (int n = 0; n < 3; n++) {
 				deck.AddCard (Card.cards [i].Clone ());
 			}
+		}
+
+		// Put one of each special card in the deck
+		for (int i = 12; i < Card.cards.Length; i++) {
+			deck.AddCard (Card.cards [i].Clone ());
 		}
 
 		deck.Shuffle ();

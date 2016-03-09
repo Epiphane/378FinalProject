@@ -48,7 +48,7 @@ public class Card {
 	}
 
 	// Hooks for the GameManager!
-	public delegate void InstantHook(Card augmentation, Card other);
+	public delegate void InstantHook(Card augmentation, Card other, PlayerScript player, PlayerScript opponent);
 	public InstantHook Instant;
 
 	public delegate void BeforeActionHook(PlayerAction action);
@@ -69,14 +69,15 @@ public class Card {
 
 		// Fill in nulls
 		if (Instant == null)
-			Instant = (Card augmentation, Card other) => {};
+			Instant = (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {};
 		if (BeforeAction == null)
 			BeforeAction = (PlayerAction action) => {};
 		if (AfterActionBeforeSchool == null)
 			AfterActionBeforeSchool = (ActionResult result, ActionResult other) => {};
 		if (AfterAction == null)
-			AfterActionBeforeSchool = (ActionResult result, ActionResult other) => {};
+			AfterAction = (ActionResult result, ActionResult other) => {};
 
+		Debug.Log (BeforeAction);
 		this.Instant = Instant;
 		this.BeforeAction = BeforeAction;
 		this.AfterActionBeforeSchool = AfterActionBeforeSchool;
@@ -95,12 +96,12 @@ public class Card {
 	 * This is the running DB of all the cards. To add a new one, just append it to this array!
 	 * Be careful to put the right callback in the right spot!
 	 */
-	public static Card[] cards = {
+	public static Card[] cards = new Card[] {
 		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, false, null, null, null, (ActionResult result, ActionResult other) => {
 			result.damage += other.damage;
 		}),
 		new Card ("Kindness", "Heal 1 after this action", Color.GREEN, true, null, null, null, (ActionResult result, ActionResult other) => {
-			other.healing ++;
+			result.healing ++;
 		}),
 		new Card ("Determination", "Counter will block ALL damage", Color.GREEN, false, null, (PlayerAction action) => {
 			if (action.name == "Counter") {
@@ -128,17 +129,17 @@ public class Card {
 		new Card ("Quick Attack", "Deal 1 extra damage after this action", Color.RED, true, null,  null, null, (ActionResult result, ActionResult other) => {
 			result.damage ++;
 		}),
-		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, false, (Card augmentation, Card other) => {
+		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
 			augmentation.chainable = other.chainable;
 			augmentation.BeforeAction = other.BeforeAction;
 			augmentation.AfterAction = other.AfterAction;
 			augmentation.AfterActionBeforeSchool = other.AfterActionBeforeSchool;
 		}, null, null, null),
-		new Card ("Mad Hacks", "Cancel your opponent's augmentation", Color.BLUE, false, (Card augmentation, Card other) => {
+		new Card ("Mad Hacks", "Cancel your opponent's augmentation", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
 			other.chainable = false;
-			other.BeforeAction = null;
-			other.AfterAction = null;
-			other.AfterActionBeforeSchool = null;
+			other.BeforeAction = augmentation.BeforeAction;
+			other.AfterAction = augmentation.AfterAction;
+			other.AfterActionBeforeSchool = augmentation.AfterActionBeforeSchool;
 		}, null, null, null),
 		new Card ("Siphon", "If tech deals damage, steal 2AP from your opponent", Color.BLUE, false, null, null, null, (ActionResult result, ActionResult other) => {
 			if (result.damage > 0 && result.action.name == "Tech") {
@@ -149,6 +150,26 @@ public class Card {
 		new Card ("Mind games", "+1 damage to tech", Color.BLUE, false, null, (PlayerAction action) => {
 			if (action.name == "Tech")
 				action.techAttack ++;
-		}, null, null)
+		}, null, null),
+		// Tier 2
+//		new Card ("Will", "Draw extra cards equal to your level and play again", Color.GREEN, true, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+//			player.Message(GameManagerScript.MESSAGE.DRAW, 1 + Mathf.Floor(player.school.advancement / 6));
+//		}, null, null, null),
+//		new Card ("Mind Swap", "Switch augmentations with your opponent", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+//			Card temp = augmentation.previous;
+//			other.previous = augmentation.previous;
+//			augmentation.previous = temp;
+//
+//			temp = augmentation;
+//			player.augmentation = opponent.augmentation;
+//			opponent.augmentation = temp;
+//		}, null, null, null),
+		new Card ("Integrity", "Immediately set your opponent's health equal to yours", Color.GREEN, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+			opponent.health = player.health;
+		}, null, null, null),
+		new Card ("Gambit", "Deal 6 damage to both your opponent and yourself", Color.RED, false, null, null, null, (ActionResult result, ActionResult other) => {
+			result.damage += 6;
+			other.damage += 6;
+		}),
 	};
 }

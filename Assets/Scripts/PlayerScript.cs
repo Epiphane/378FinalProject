@@ -61,6 +61,35 @@ public class PlayerScript : MonoBehaviour {
 		dashboard.AddAugmentation (this.augmentation);
 	}
 
+	/* Augmentation hooks */
+	public void BeforeAction (PlayerAction action) {
+		Card augmentation = this.augmentation;
+
+		while (augmentation != null) {
+			augmentation.BeforeAction (action);
+			augmentation = augmentation.previous;
+		}
+	}
+
+	public void AfterActionBeforeSchool (Card.ActionResult result, Card.ActionResult other) {
+		Card augmentation = this.augmentation;
+
+		while (augmentation != null) {
+			augmentation.AfterActionBeforeSchool (result, other);
+			augmentation = augmentation.previous;
+		}
+	}
+
+	public void AfterAction (Card.ActionResult result, Card.ActionResult other) {
+		Card augmentation = this.augmentation;
+
+		while (augmentation != null) {
+			augmentation.AfterAction (result, other);
+			augmentation = augmentation.previous;
+		}
+	}
+
+	/* Discard a card from your hand (to your deck) */
 	public void Discard (Card card) {
 		deck.AddCard (card);
 		hand.RemoveCard (card);

@@ -212,12 +212,12 @@ public class GameManagerScript : MonoBehaviour {
 			for (int i = 0; i < players.Length; i++) {
 				PlayerScript player = players [i];
 
-				player.augmentation.Instant (player.augmentation, players [1 - i].augmentation);
+				player.augmentation.Instant (player.augmentation, players [1 - i].augmentation, player, players[1 - i]);
 			}
 
 			// Determine whether we're done with augmentation-ing
 			foreach (PlayerScript player in players)
-				if (player.augmentation.chainable)
+				if (player.augmentation.chainable && player.hand.Size > 0)
 					complete = false;
 		}
 
@@ -272,8 +272,8 @@ public class GameManagerScript : MonoBehaviour {
 
 			player.school.BeforeAction (player.action);
 
-			if (player.augmentation.BeforeAction != null)
-				player.augmentation.BeforeAction (player.action);
+			// Augmentation effects
+			player.BeforeAction (player.action);
 		}
 
 		// Do stuff
@@ -302,8 +302,8 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < players.Length; i++) {
 			PlayerScript player = players [i];
 
-			if (player.augmentation.AfterActionBeforeSchool != null)
-				player.augmentation.AfterActionBeforeSchool (results [i], results[1 - i]);
+			// Augmentation effects
+			player.AfterActionBeforeSchool (results [i], results[1 - i]);
 		}
 
 		for (int i = 0; i < players.Length; i++) {
@@ -315,8 +315,8 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < players.Length; i++) {
 			PlayerScript player = players [i];
 
-			if (player.augmentation.AfterAction != null)
-				player.augmentation.AfterAction (results [i], results [1 - i]);
+			// Augmentation effects
+			player.AfterAction (results [i], results[1 - i]);
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
