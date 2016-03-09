@@ -57,9 +57,7 @@ public class AIScript : PlayerScript {
 
 	/* Select a school */
 	public void SelectSchool() {
-		this.school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
-
-		gameManager.SchoolSelected (ID);
+		this.SetSchool(PlayerSchool.schools [Random.Range (0, 3)].Clone ());
 	}
 
 	/* For receiving information from the game state */

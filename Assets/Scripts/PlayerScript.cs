@@ -35,10 +35,6 @@ public class PlayerScript : MonoBehaviour {
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
 
-		// Create a basic deck to start with
-		for (int i = 0; i < Card.cards.Length; i ++)
-			deck.AddCard(Card.cards[i].Clone());
-
 		deck.Shuffle ();
 	}
 	
@@ -75,6 +71,7 @@ public class PlayerScript : MonoBehaviour {
 		this.school = s;
 		// Set initial deck and draw hand
 		this.school.GenerateDeck (deck);
+		deck.Shuffle ();
 		for (int i = 0; i < 3; i++) {
 			hand.AddCard (deck.Draw ());
 		}
