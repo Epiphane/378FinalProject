@@ -8,8 +8,12 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 
 public class AirconsoleLogic : MonoBehaviour {
-	
-	public Dictionary<int, PlayerScript> activePlayers = new Dictionary<int, PlayerScript>();
+
+	// Key is the device_id from AirConsole, value is the resulting PlayerScript object
+	public Dictionary<int, UnityPlayerScript> activePlayers = new Dictionary<int, UnityPlayerScript>();
+
+	// How many players are currently connected to the game?
+	public static int numPlayers = 0;
 
 	void Awake() {
 		AirConsole.instance.onMessage += OnMessage;
@@ -20,8 +24,6 @@ public class AirconsoleLogic : MonoBehaviour {
 	public static int player0_id = -1;
 	public static int player1_id = -1;
 
-	// How many players are currently connected to the game?
-	public static int numPlayers = 0;
 
 	void Start() {
 		if (AirConsole.instance.IsAirConsoleUnityPluginReady ()) {
@@ -177,7 +179,6 @@ public class AirconsoleLogic : MonoBehaviour {
 		foreach (var player in players) {
 			print ("Current state: " + manager.state);
 			if (player is UnityPlayerScript) {
-
 
 				switch (manager.state) {
 
