@@ -9,7 +9,7 @@ public class GameManagerScript : MonoBehaviour {
 	private static int COMP_WAIT_TIME = 100;
 	public static int INITIAL_HEALTH = 20;
 
-	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
+	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DISCARD_ALL, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
 	public CardBankScript cardBank;
 	public PlayerScript[] players;
@@ -54,6 +54,7 @@ public class GameManagerScript : MonoBehaviour {
 	void Update() {
 		if (state == STATE.RESOLVE_ACTIONS) {
 			ResolveNextAction ();
+
 		} else if (state == STATE.ANIMATING_ACTION) {
 			for (int i = players.Length - 1; i >= 0; i--) {
 				players [i].actionDisplay.DisplayAction (players [i].action);
@@ -67,7 +68,16 @@ public class GameManagerScript : MonoBehaviour {
                 // Cycle the first turn
                 temp_first_turn = (temp_first_turn + players.Length - 1) % players.Length;
 
-				SetState (STATE.WAITING_ON_DISCARDS);
+				// Tell players to draw 2 cards
+				Flop ();
+				foreach (PlayerScript player in players) {
+					player.augmentation = null;
+					player.action = null;
+
+					player.Message (MESSAGE.DRAW, 2);
+				}
+
+				SetState (STATE.DRAW_NEW_CARD);
 			}
 		}
 	}
@@ -79,12 +89,6 @@ public class GameManagerScript : MonoBehaviour {
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
 			players [turn].Message (MESSAGE.DRAW_NEW_CARD);
-			break;
-		case STATE.WAITING_ON_DISCARDS:
-			foreach (PlayerScript player in players) {
-				// Tell player it's time to draw
-				player.Message (MESSAGE.DISCARD, 1);
-			}
 			break;
 		case STATE.WAITING_ON_ACTION:
 			// Tell all players to move
@@ -108,9 +112,6 @@ public class GameManagerScript : MonoBehaviour {
 			break;
 		case STATE.WAITING_ON_AUGMENTATION:
 			gameStatus.text = "Waiting on player " + turn + " to choose augmentation";
-			break;
-		case STATE.WAITING_ON_DISCARDS:
-			gameStatus.text = "Discard down to 1 card!";
 			break;
 		case STATE.WAITING_ON_ACTION:
 			gameStatus.text = "Waiting on player actions";
@@ -214,6 +215,9 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	public void PlayedAction (int player_id) {
+		// Tell this player to discard the rest of their cards (unless they have perseverance)
+		players[player_id].Message (MESSAGE.DISCARD_ALL);
+
 		// Check all players
 		foreach (PlayerScript player in players) {
 			if (player.action == null) {

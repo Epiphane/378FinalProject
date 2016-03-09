@@ -83,8 +83,16 @@ public class PlayerScript : MonoBehaviour {
 	public virtual void Message(GameManagerScript.MESSAGE message, object data = null) {
 		switch (message) {
 		case GameManagerScript.MESSAGE.DRAW:
-			if (deck.length > 0) {
-				hand.AddCard (deck.Draw ());
+			int num_to_draw = (int)data;
+			while (num_to_draw-- > 0) {
+				if (deck.length > 0) {
+					hand.AddCard (deck.Draw ());
+				}
+			}
+			break;
+		case GameManagerScript.MESSAGE.DISCARD_ALL:
+			while (hand.Size > 0) {
+				Discard (hand.cards [0]);
 			}
 			break;
 		}
