@@ -55,6 +55,13 @@ public class AIScript : PlayerScript {
 		gameManager.Discarded ();
 	}
 
+	/* Select a school */
+	public void SelectSchool() {
+		this.school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
+
+		gameManager.SchoolSelected (ID);
+	}
+
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data) {
 		base.Message (message, data);
@@ -76,6 +83,9 @@ public class AIScript : PlayerScript {
 			break;
 		case GameManagerScript.MESSAGE.DISCARD:
 			Invoke ("DiscardToOne", THINK_TIME);
+			break;
+		case GameManagerScript.MESSAGE.CHOOSE_SCHOOL:
+			Invoke ("SelectSchool", THINK_TIME);
 			break;
 		}
 	}

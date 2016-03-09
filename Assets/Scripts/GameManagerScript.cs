@@ -9,7 +9,7 @@ public class GameManagerScript : MonoBehaviour {
 	private static int COMP_WAIT_TIME = 100;
 	public static int INITIAL_HEALTH = 20;
 
-	public enum MESSAGE { DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
+	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
 	public CardBankScript cardBank;
 	public PlayerScript[] players;
@@ -26,7 +26,7 @@ public class GameManagerScript : MonoBehaviour {
 	private int counter;
 
 	/* State machine for the game */
-	public enum STATE { DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION, GAME_OVER };
+	public enum STATE { WAITING_ON_SCHOOL, DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION, GAME_OVER };
 	public STATE state { get; private set; }
 
 	void Awake () {
@@ -35,7 +35,7 @@ public class GameManagerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		state = STATE.WAITING_ON_AUGMENTATION;
+		state = STATE.WAITING_ON_SCHOOL;
 
 		UpdateStatus ();
 
@@ -44,9 +44,7 @@ public class GameManagerScript : MonoBehaviour {
 			players [i].health = INITIAL_HEALTH;
 			players [i].max_health = INITIAL_HEALTH;
 
-			// Tell players to draw an initial hand
-			for (int n = 0; n < 3; n ++)
-				players[i].Message(MESSAGE.DRAW);
+			players[i].Message(MESSAGE.CHOOSE_SCHOOL);
 		}
 	}
 
@@ -103,6 +101,9 @@ public class GameManagerScript : MonoBehaviour {
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
 			gameStatus.text = "Waiting on player " + turn + " to draw a card";
+			break;
+		case STATE.WAITING_ON_SCHOOL:
+			gameStatus.text = "Waiting on player " + turn + " to choose school";
 			break;
 		case STATE.WAITING_ON_AUGMENTATION:
 			gameStatus.text = "Waiting on player " + turn + " to choose augmentation";
@@ -201,6 +202,19 @@ public class GameManagerScript : MonoBehaviour {
 
 		// All players chose an action!
 		SetState(STATE.RESOLVE_ACTIONS);
+	}
+
+	/* Called after a player has successfully set their class */
+	public void SchoolSelected (int player_id) {
+		// Check all players
+		foreach (PlayerScript player in players) {
+			if (player.school == null) {
+				return;
+			}
+		}
+
+		// All players chose a school
+		SetState (STATE.WAITING_ON_AUGMENTATION);
 	}
 
 	void ResolveNextAction () {

@@ -27,8 +27,8 @@ public class PlayerScript : MonoBehaviour {
 		if (dashboard != null)
 			dashboard.player = this;
 
-		// Choose random school
-		school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
+		// Choose random school. Just kidding, don't do that.
+		// school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
 
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 
@@ -67,6 +67,19 @@ public class PlayerScript : MonoBehaviour {
 		this.action = action;
 
 		gameManager.PlayedAction (ID);
+	}
+
+	/* Sets the player's school to the given school */
+	public virtual void SetSchool(PlayerSchool s) {
+		// Set school
+		this.school = s;
+		// Set initial deck and draw hand
+		this.school.GenerateDeck (deck);
+		for (int i = 0; i < 3; i++) {
+			hand.AddCard (deck.Draw ());
+		}
+
+		gameManager.SchoolSelected (ID);
 	}
 
 	/* For receiving information from the game state */

@@ -39,7 +39,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 			UpdateBar (healthBar, health_display, health, player.max_health, Vector2.zero);
 		}
 
-		if (advancement != player.school.advancement) {
+		if (player.school != null && advancement != player.school.advancement) {
 			advancement += (player.school.advancement - advancement) / 3.0f;
 
 			if (Mathf.Abs (advancement - player.school.advancement) < 0.1)
@@ -77,7 +77,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 			augmentation.transform.localPosition = new Vector2 (5, -17);
 		}
 
-		if (nameBG.color != player.school.color) {
+		if (player.school != null && nameBG.color != player.school.color) {
 			nameBG.color = player.school.color;
 		}
 	}
