@@ -9,7 +9,7 @@ public class GameManagerScript : MonoBehaviour {
 	private static int COMP_WAIT_TIME = 100;
 	public static int INITIAL_HEALTH = 20;
 
-	public enum MESSAGE { DRAW, DISCARD, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
+	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DISCARD_ALL, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
 	public CardBankScript cardBank;
 	public PlayerScript[] players;
@@ -22,20 +22,23 @@ public class GameManagerScript : MonoBehaviour {
 	/* Whose turn was first, and who is going now? */
 	private int first_turn, turn;
 
+    /* if nothing was in the way, whose turn WOULD it be? */
+    private int temp_first_turn;
+
 	/* Temporary counter to pretend we have animations */
 	private int counter;
 
 	/* State machine for the game */
-	public enum STATE { DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION, GAME_OVER };
+	public enum STATE { WAITING_ON_SCHOOL, DRAW_NEW_CARD, WAITING_ON_AUGMENTATION, WAITING_ON_ACTION, WAITING_ON_DISCARDS, RESOLVE_ACTIONS, ANIMATING_ACTION, GAME_OVER };
 	public STATE state { get; private set; }
 
 	void Awake () {
-		first_turn = 0;
+		first_turn = temp_first_turn = 0;
 	}
 
 	// Use this for initialization
 	void Start () {
-		state = STATE.WAITING_ON_AUGMENTATION;
+		state = STATE.WAITING_ON_SCHOOL;
 
 		UpdateStatus ();
 
@@ -44,15 +47,14 @@ public class GameManagerScript : MonoBehaviour {
 			players [i].health = INITIAL_HEALTH;
 			players [i].max_health = INITIAL_HEALTH;
 
-			// Tell players to draw an initial hand
-			for (int n = 0; n < 3; n ++)
-				players[i].Message(MESSAGE.DRAW);
+			players[i].Message(MESSAGE.CHOOSE_SCHOOL);
 		}
 	}
 
 	void Update() {
 		if (state == STATE.RESOLVE_ACTIONS) {
 			ResolveNextAction ();
+
 		} else if (state == STATE.ANIMATING_ACTION) {
 			for (int i = players.Length - 1; i >= 0; i--) {
 				players [i].actionDisplay.DisplayAction (players [i].action);
@@ -63,10 +65,19 @@ public class GameManagerScript : MonoBehaviour {
 					players [i].actionDisplay.Clear ();
 				}
 
-				// Cycle the first turn
-				first_turn = (turn + players.Length - 1) % players.Length;
+                // Cycle the first turn
+                temp_first_turn = (temp_first_turn + players.Length - 1) % players.Length;
 
-				SetState (STATE.WAITING_ON_DISCARDS);
+				// Tell players to draw 2 cards
+				Flop ();
+				foreach (PlayerScript player in players) {
+					player.augmentation = null;
+					player.action = null;
+
+					player.Message (MESSAGE.DRAW, 2);
+				}
+
+				SetState (STATE.DRAW_NEW_CARD);
 			}
 		}
 	}
@@ -75,17 +86,9 @@ public class GameManagerScript : MonoBehaviour {
 		state = newState;
 		UpdateStatus ();
 
-		print ("State changed to " + newState);
-
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
 			players [turn].Message (MESSAGE.DRAW_NEW_CARD);
-			break;
-		case STATE.WAITING_ON_DISCARDS:
-			foreach (PlayerScript player in players) {
-				// Tell player it's time to draw
-				player.Message (MESSAGE.DISCARD, 1);
-			}
 			break;
 		case STATE.WAITING_ON_ACTION:
 			// Tell all players to move
@@ -104,11 +107,11 @@ public class GameManagerScript : MonoBehaviour {
 		case STATE.DRAW_NEW_CARD:
 			gameStatus.text = "Waiting on player " + turn + " to draw a card";
 			break;
+		case STATE.WAITING_ON_SCHOOL:
+			gameStatus.text = "Waiting on player " + turn + " to choose school";
+			break;
 		case STATE.WAITING_ON_AUGMENTATION:
 			gameStatus.text = "Waiting on player " + turn + " to choose augmentation";
-			break;
-		case STATE.WAITING_ON_DISCARDS:
-			gameStatus.text = "Discard down to 1 card!";
 			break;
 		case STATE.WAITING_ON_ACTION:
 			gameStatus.text = "Waiting on player actions";
@@ -133,7 +136,16 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void Flop (int count) {
-		floppedCards = cardBank.Flop (count);
+        first_turn = temp_first_turn;
+        if (players[0].school.FirstPick() != players[1].school.FirstPick())
+        {
+            if (players[0].school.FirstPick())
+                first_turn = 0;
+            else
+                first_turn = 1;
+        }
+
+        floppedCards = cardBank.Flop (count);
 		turn = first_turn;
 		SetState (STATE.DRAW_NEW_CARD);
 	}
@@ -152,7 +164,18 @@ public class GameManagerScript : MonoBehaviour {
 			if (turn == first_turn && cardBank.GetAvailableCards().Count - 1 < players.Length) {
 				cardBank.Clear ();
 
-				players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
+                // Pick who picks first augmentation
+                first_turn = temp_first_turn;
+                if (players[0].school.SecondMove() != players[1].school.SecondMove())
+                {
+                    if (players[0].school.SecondMove())
+                        first_turn = 1;
+                    else
+                        first_turn = 0;
+                }
+                turn = first_turn;
+
+                players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
 				SetState (STATE.WAITING_ON_AUGMENTATION);
 			} else {
 				// Message the player
@@ -192,6 +215,9 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	public void PlayedAction (int player_id) {
+		// Tell this player to discard the rest of their cards (unless they have perseverance)
+		players[player_id].Message (MESSAGE.DISCARD_ALL);
+
 		// Check all players
 		foreach (PlayerScript player in players) {
 			if (player.action == null) {
@@ -201,6 +227,19 @@ public class GameManagerScript : MonoBehaviour {
 
 		// All players chose an action!
 		SetState(STATE.RESOLVE_ACTIONS);
+	}
+
+	/* Called after a player has successfully set their class */
+	public void SchoolSelected (int player_id) {
+		// Check all players
+		foreach (PlayerScript player in players) {
+			if (player.school == null) {
+				return;
+			}
+		}
+
+		// All players chose a school
+		SetState (STATE.WAITING_ON_AUGMENTATION);
 	}
 
 	void ResolveNextAction () {

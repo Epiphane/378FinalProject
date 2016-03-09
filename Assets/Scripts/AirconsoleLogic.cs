@@ -177,7 +177,6 @@ public class AirconsoleLogic : MonoBehaviour {
 		PlayerScript[] players = manager.players;
 
 		foreach (var player in players) {
-			print ("Current state: " + manager.state);
 			if (player is UnityPlayerScript) {
 
 				switch (manager.state) {

@@ -27,17 +27,13 @@ public class PlayerScript : MonoBehaviour {
 		if (dashboard != null)
 			dashboard.player = this;
 
-		// Choose random school
-		school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
+		// Choose random school. Just kidding, don't do that.
+		// school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
 
 		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
 
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
-
-		// Create a basic deck to start with
-		for (int i = 0; i < Card.cards.Length; i ++)
-			deck.AddCard(Card.cards[i].Clone());
 
 		deck.Shuffle ();
 	}
@@ -69,12 +65,34 @@ public class PlayerScript : MonoBehaviour {
 		gameManager.PlayedAction (ID);
 	}
 
+	/* Sets the player's school to the given school */
+	public virtual void SetSchool(PlayerSchool s) {
+		// Set school
+		this.school = s;
+		// Set initial deck and draw hand
+		this.school.GenerateDeck (deck);
+		deck.Shuffle ();
+		for (int i = 0; i < 3; i++) {
+			hand.AddCard (deck.Draw ());
+		}
+
+		gameManager.SchoolSelected (ID);
+	}
+
 	/* For receiving information from the game state */
 	public virtual void Message(GameManagerScript.MESSAGE message, object data = null) {
 		switch (message) {
 		case GameManagerScript.MESSAGE.DRAW:
-			if (deck.length > 0) {
-				hand.AddCard (deck.Draw ());
+			int num_to_draw = (int)data;
+			while (num_to_draw-- > 0) {
+				if (deck.length > 0) {
+					hand.AddCard (deck.Draw ());
+				}
+			}
+			break;
+		case GameManagerScript.MESSAGE.DISCARD_ALL:
+			while (hand.Size > 0) {
+				Discard (hand.cards [0]);
 			}
 			break;
 		}

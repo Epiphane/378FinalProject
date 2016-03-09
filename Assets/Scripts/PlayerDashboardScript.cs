@@ -39,7 +39,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 			UpdateBar (healthBar, health_display, health, player.max_health, Vector2.zero);
 		}
 
-		if (advancement != player.school.advancement) {
+		if (player.school != null && advancement != player.school.advancement) {
 			advancement += (player.school.advancement - advancement) / 3.0f;
 
 			if (Mathf.Abs (advancement - player.school.advancement) < 0.1)
@@ -66,8 +66,9 @@ public class PlayerDashboardScript : MonoBehaviour {
 		if (augmentationState == 0 && player.augmentation != null) {
 			augmentationState = 1;
 			augmentation.GetComponent<CardDisplayScript> ().card = player.augmentation;
+            augmentation.GetComponent<Image>().color = CardDisplayManager.instance.DisplayColor(player.augmentation.color);
 
-			((RectTransform)augmentation.transform).localPosition = new Vector2 (5, 73);
+            ((RectTransform)augmentation.transform).localPosition = new Vector2 (5, 73);
 		} else if (augmentationState > 0 && player.augmentation == null) {
 			augmentationState = 0;
 
@@ -77,7 +78,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 			augmentation.transform.localPosition = new Vector2 (5, -17);
 		}
 
-		if (nameBG.color != player.school.color) {
+		if (player.school != null && nameBG.color != player.school.color) {
 			nameBG.color = player.school.color;
 		}
 	}
