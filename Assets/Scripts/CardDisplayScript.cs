@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CardDisplayScript : MonoBehaviour {
 	/* Objects to modify */
-	private SpriteRenderer cardFrame;
+	private Image cardFrame;
 	public Text description, title;
 
 	/* Card object */
@@ -13,7 +13,7 @@ public class CardDisplayScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if (transform.FindChild ("Frame") != null)
-			cardFrame = transform.FindChild ("Frame").GetComponent<SpriteRenderer>();
+			cardFrame = transform.FindChild ("Frame").GetComponent<Image>();
 		description = transform.FindChild ("Description").GetComponent<Text>();
 
 		if (_card != null)
@@ -32,9 +32,10 @@ public class CardDisplayScript : MonoBehaviour {
 	}
 
 	void UpdateDisplay() {
+    
 		// Set frame
 		if (cardFrame != null)
-			cardFrame.sprite = CardDisplayManager.instance.DisplayColor (_card.color);
+			cardFrame.color = CardDisplayManager.instance.DisplayColor (_card.color);
 
 		if (description != null)
 			description.text = card.description;

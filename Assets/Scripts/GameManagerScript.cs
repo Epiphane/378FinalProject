@@ -22,6 +22,9 @@ public class GameManagerScript : MonoBehaviour {
 	/* Whose turn was first, and who is going now? */
 	private int first_turn, turn;
 
+    /* if nothing was in the way, whose turn WOULD it be? */
+    private int temp_first_turn;
+
 	/* Temporary counter to pretend we have animations */
 	private int counter;
 
@@ -30,7 +33,7 @@ public class GameManagerScript : MonoBehaviour {
 	public STATE state { get; private set; }
 
 	void Awake () {
-		first_turn = 0;
+		first_turn = temp_first_turn = 0;
 	}
 
 	// Use this for initialization
@@ -61,8 +64,8 @@ public class GameManagerScript : MonoBehaviour {
 					players [i].actionDisplay.Clear ();
 				}
 
-				// Cycle the first turn
-				first_turn = (turn + players.Length - 1) % players.Length;
+                // Cycle the first turn
+                temp_first_turn = (temp_first_turn + players.Length - 1) % players.Length;
 
 				SetState (STATE.WAITING_ON_DISCARDS);
 			}
@@ -72,8 +75,6 @@ public class GameManagerScript : MonoBehaviour {
 	void SetState(STATE newState) {
 		state = newState;
 		UpdateStatus ();
-
-		print ("State changed to " + newState);
 
 		switch (state) {
 		case STATE.DRAW_NEW_CARD:
@@ -134,7 +135,16 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void Flop (int count) {
-		floppedCards = cardBank.Flop (count);
+        first_turn = temp_first_turn;
+        if (players[0].school.FirstPick() != players[1].school.FirstPick())
+        {
+            if (players[0].school.FirstPick())
+                first_turn = 0;
+            else
+                first_turn = 1;
+        }
+
+        floppedCards = cardBank.Flop (count);
 		turn = first_turn;
 		SetState (STATE.DRAW_NEW_CARD);
 	}
@@ -153,7 +163,18 @@ public class GameManagerScript : MonoBehaviour {
 			if (turn == first_turn && cardBank.GetAvailableCards().Count - 1 < players.Length) {
 				cardBank.Clear ();
 
-				players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
+                // Pick who picks first augmentation
+                first_turn = temp_first_turn;
+                if (players[0].school.SecondMove() != players[1].school.SecondMove())
+                {
+                    if (players[0].school.SecondMove())
+                        first_turn = 1;
+                    else
+                        first_turn = 0;
+                }
+                turn = first_turn;
+
+                players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
 				SetState (STATE.WAITING_ON_AUGMENTATION);
 			} else {
 				// Message the player

@@ -20,13 +20,18 @@ public class PlayerSchool {
 		public BeforeAugmentationHook BeforeAugmentation;
 		public BeforeActionHook BeforeAction;
 		public AfterActionHook AfterAction;
+        public bool secondMove;
+        public bool firstPick;
 
-		public Level(string description, BeforeAugmentationHook beforeAug, BeforeActionHook beforeAct, AfterActionHook afterAct) {
+		public Level(string description, BeforeAugmentationHook beforeAug, BeforeActionHook beforeAct, AfterActionHook afterAct, bool firstPick = false, bool secondMove = false) {
 			this.description = description;
 			BeforeAugmentation = beforeAug;
 			BeforeAction = beforeAct;
 			AfterAction = afterAct;
-		}
+            this.firstPick = firstPick;
+            this.secondMove = secondMove;
+
+        }
 	}
 
 	public PlayerSchool(string name, Color color, Level[] levels, Card[] starters) {
@@ -56,6 +61,15 @@ public class PlayerSchool {
 			if (this.levels [i].AfterAction != null)
 				this.levels [i].AfterAction (result, other);
 		}
+    }
+
+    public bool FirstPick()
+    {
+        for (int i = 0; i < 3 && i * 6 <= advancement; i++)
+            if (this.levels[i].firstPick)
+                return true;
+
+		return false;
 	}
 
 	public void GenerateDeck(DeckScript deckScript) {
@@ -64,6 +78,16 @@ public class PlayerSchool {
 			deckScript.AddCard (card.Clone ());
 		}
 	}
+
+    public bool SecondMove()
+    {
+        for (int i = 0; i < 4 && i * 6 <= advancement; i++)
+            if (this.levels[i].secondMove)
+                return true;
+
+        return false;
+    }
+
 
 	public PlayerSchool Clone() {
 		return new PlayerSchool (name, color, levels, starters);
@@ -97,9 +121,7 @@ public class PlayerSchool {
 		}),
 		new PlayerSchool ("School of Tactics", Color.blue, new Level[] {
 			new Level ("Nothing", null, null, null),
-			new Level ("Always choose first augmentation", null, (PlayerAction action) => {
-				// TODO
-			}, null),
+			new Level ("Always choose first augmentation", null, null, null, true),
 			new Level ("+1 damage to tech and counter", null, (PlayerAction action) => {
 				if (action.name == "Counter") {
 					action.counterAttack ++;
@@ -107,7 +129,7 @@ public class PlayerSchool {
 					action.techAttack++;
 				}
 			}, null),
-			new Level ("Your opponent plays their augmentation first", null, null, null)
+			new Level ("Your opponent plays their augmentation first", null, null, null, false, true)
 		}, new Card[] {
 				Card.cards[8],
 				Card.cards[8],
