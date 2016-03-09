@@ -41,19 +41,19 @@ public class CardDisplayManager : MonoBehaviour {
 		s_Instance = null;
 	}
 
-	public Sprite DisplayColor (Card.Color color) {
+	public Color DisplayColor (Card.Color color) {
 		switch (color) {
 		case Card.Color.BLANK:
-			return blankFrame;
+			return Color.white;
 		case Card.Color.RED:
-			return redFrame;
+			return Color.red;
 		case Card.Color.BLUE:
-			return blueFrame;
+			return new Color(0.5f, 0.5f, 1);
 		case Card.Color.GREEN:
-			return greenFrame;
+			return Color.green;
 		default:
 			Debug.LogError ("Card color not found: " + color);
-			return blankFrame;
+			return Color.white;
 		}
 	}
 }

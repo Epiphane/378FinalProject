@@ -195,7 +195,7 @@ Prefab:
       objectReference: {fileID: 1268813729}
     - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayAction
+      value: PlayActionString
       objectReference: {fileID: 0}
     - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -302,7 +302,7 @@ Prefab:
       objectReference: {fileID: 1268813729}
     - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayAction
+      value: PlayActionString
       objectReference: {fileID: 0}
     - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -1057,7 +1057,7 @@ Prefab:
       objectReference: {fileID: 1268813729}
     - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayAction
+      value: PlayActionString
       objectReference: {fileID: 0}
     - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -1736,7 +1736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37d83ebce05ad74683fd3228dde9e7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  browserStartMode: 1
+  browserStartMode: 2
   controllerHtml: {fileID: 102900000, guid: 28b53290b04ef468a936a6b5dfc7933a, type: 3}
   autoScaleCanvas: 1
 --- !u!4 &1716141190
@@ -1834,6 +1834,10 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1268813729}
+    - target: {fileID: 11424376, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayActionString
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e4631c41acbc44ba68b35760eb8ddc79, type: 2}
   m_IsPrefabParent: 0

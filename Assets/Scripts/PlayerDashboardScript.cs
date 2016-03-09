@@ -66,8 +66,9 @@ public class PlayerDashboardScript : MonoBehaviour {
 		if (augmentationState == 0 && player.augmentation != null) {
 			augmentationState = 1;
 			augmentation.GetComponent<CardDisplayScript> ().card = player.augmentation;
+            augmentation.GetComponent<Image>().color = CardDisplayManager.instance.DisplayColor(player.augmentation.color);
 
-			((RectTransform)augmentation.transform).localPosition = new Vector2 (5, 73);
+            ((RectTransform)augmentation.transform).localPosition = new Vector2 (5, 73);
 		} else if (augmentationState > 0 && player.augmentation == null) {
 			augmentationState = 0;
 
