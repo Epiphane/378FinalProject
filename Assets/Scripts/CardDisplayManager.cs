@@ -46,12 +46,12 @@ public class CardDisplayManager : MonoBehaviour {
 		case Card.Color.BLANK:
 			return Color.white;
 		case Card.Color.RED:
-			return Color.red;
-		case Card.Color.BLUE:
+			return new Color(1, 0.5f, 0.5f);
+            case Card.Color.BLUE:
 			return new Color(0.5f, 0.5f, 1);
 		case Card.Color.GREEN:
-			return Color.green;
-		default:
+			return new Color(0.5f, 1, 0.5f);
+            default:
 			Debug.LogError ("Card color not found: " + color);
 			return Color.white;
 		}
