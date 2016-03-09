@@ -48,10 +48,17 @@ public class PlayerScript : MonoBehaviour {
 	}
 
 	public virtual void PlayAugmentation(Card card) {
+		// Create a "linked list" of augmentations
+		card.previous = this.augmentation;
 		this.augmentation = card;
+
+		// Put it in the deck
 		Discard (card);
 
+		// Notify game manager
 		gameManager.PlayedAugmentation (ID);
+
+		dashboard.AddAugmentation (this.augmentation);
 	}
 
 	public void Discard (Card card) {
