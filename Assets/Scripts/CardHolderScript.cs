@@ -11,6 +11,7 @@ public class CardHolderScript : MonoBehaviour {
 
 	public delegate void ShouldPickCard(Card card);
 	public ShouldPickCard OnPickCard;
+	public bool secret = false;
 
 	/* Calculated variables */
 	public List<Card> cards {
@@ -45,16 +46,18 @@ public class CardHolderScript : MonoBehaviour {
 	public virtual GameObject AddCard(Card card) {
 		GameObject newCard = null;
 
-		if (cardPrefab != null) {
-			newCard = GameObject.Instantiate (cardPrefab);
-
-			// Set card to random type
-			newCard.GetComponent<CardDisplayScript> ().card = card;
-			newCard.transform.SetParent (transform);
-			newCard.transform.position = StartingPoint();
-
-			cardTransforms.Add (newCard.transform);
+		if (secret) { // Don't show the AI's cards.
+			return null;
 		}
+
+		newCard = GameObject.Instantiate (cardPrefab);
+
+		// Set card to random type
+		newCard.GetComponent<CardDisplayScript> ().card = card;
+		newCard.transform.SetParent (transform);
+		newCard.transform.position = StartingPoint();
+
+		cardTransforms.Add (newCard.transform);
 
 		_cards.Add (card);
 

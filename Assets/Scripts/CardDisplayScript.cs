@@ -5,16 +5,26 @@ using UnityEngine.UI;
 public class CardDisplayScript : MonoBehaviour {
 	/* Objects to modify */
 	private Image cardFrame;
-	public Text description, title;
+	public Text description;
+
+	string description_base = @"<size=56><b>{0}</b> </size>
+<size=10>.</size>
+<size=46>{1}</size>";
+
+	public Sprite redImg;
+	public Sprite greenImg;
+	public Sprite blueImg;
 
 	/* Card object */
 	private Card _card = null;
 
 	// Use this for initialization
 	void Start () {
-		if (transform.FindChild ("Frame") != null)
-			cardFrame = transform.FindChild ("Frame").GetComponent<Image>();
-		description = transform.FindChild ("Description").GetComponent<Text>();
+		var frameTransform = transform.FindChild ("Frame");
+		if (frameTransform != null) {
+			cardFrame = frameTransform.GetComponent<Image> ();
+			description = frameTransform.FindChild ("Description").GetComponent<Text>();
+		}
 
 		if (_card != null)
 			UpdateDisplay ();
@@ -33,15 +43,30 @@ public class CardDisplayScript : MonoBehaviour {
 
 	void UpdateDisplay() {
     
-		// Set frame
-		if (cardFrame != null)
-			cardFrame.color = CardDisplayManager.instance.DisplayColor (_card.color);
+		// Set card image
+		Sprite cardSprite = null;
 
-		if (description != null)
-			description.text = card.description;
+		if (cardFrame != null) {
+			switch (_card.color) {
+			case Card.Color.RED:
+				cardSprite = redImg;
+				break;
+			case Card.Color.BLUE:
+				cardSprite = blueImg;
+				break;
+			case Card.Color.GREEN:
+				cardSprite = greenImg;
+				break;
+			default:
+				Debug.LogWarning ("Invalid color for card: " + _card.color);
+				break;
+			}
+			cardFrame.sprite = cardSprite;
+		}
 
-		if (title != null)
-			title.text = card.name;
+		if (description != null) {
+			description.text = System.String.Format (description_base, _card.name, _card.description);
+		}
 	}
 	
 	// Update is called once per frame
