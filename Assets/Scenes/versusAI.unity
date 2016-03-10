@@ -550,7 +550,7 @@ GameObject:
   - 114: {fileID: 472832095}
   m_Layer: 0
   m_Name: AirconsoleManager
-  m_TagString: Untagged
+  m_TagString: AirConsoleLogic
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -563,10 +563,10 @@ Transform:
   m_GameObject: {fileID: 472832093}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2258065, y: 1.2258065, z: 1.2258065}
   m_Children: []
-  m_Father: {fileID: 1671589780}
-  m_RootOrder: 4
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
 --- !u!114 &472832095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2111,7 +2111,6 @@ Transform:
   - {fileID: 1696688661}
   - {fileID: 1268813733}
   - {fileID: 1251487509}
-  - {fileID: 472832094}
   m_Father: {fileID: 712674310}
   m_RootOrder: 1
 --- !u!1 &1696688659
@@ -2309,7 +2308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   browserStartMode: 2
-  controllerHtml: {fileID: 102900000, guid: 28b53290b04ef468a936a6b5dfc7933a, type: 3}
+  controllerHtml: {fileID: 102900000, guid: ca24ed453b03349bfa5054409b277d28, type: 3}
   autoScaleCanvas: 1
 --- !u!4 &1716141190
 Transform:

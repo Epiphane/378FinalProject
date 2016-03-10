@@ -27,20 +27,10 @@ public class PlayerScript : MonoBehaviour {
 		if (dashboard != null)
 			dashboard.player = this;
 
-		// Choose random school. Just kidding, don't do that.
-		// school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
-
-		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
+        gameManager = GameObject.FindObjectOfType<GameManagerScript>();
 
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
-
-		deck.Shuffle ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
 	public virtual void DrawCard(Card card) {

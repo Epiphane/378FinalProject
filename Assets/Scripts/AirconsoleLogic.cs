@@ -10,42 +10,64 @@ using System.Linq;
 public class AirconsoleLogic : MonoBehaviour {
 
 	// Key is the device_id from AirConsole, value is the resulting PlayerScript object
-	public Dictionary<int, UnityPlayerScript> activePlayers = new Dictionary<int, UnityPlayerScript>();
+	public static Dictionary<int, AirConsolePlayerScript> activePlayers = new Dictionary<int, AirConsolePlayerScript>();
 
 	// How many players are currently connected to the game?
 	public static int numPlayers = 0;
+    public GameObject emptyAirconsolePlayer;
 
 	void Awake() {
 		AirConsole.instance.onMessage += OnMessage;
 		AirConsole.instance.onConnect += OnConnect;
 		AirConsole.instance.onDisconnect += OnDisconnect;
-	}
 
-	public static int player0_id = -1;
-	public static int player1_id = -1;
+        // See if any AirConsoleLogic objects already exist
+        if (GameObject.FindGameObjectsWithTag("AirConsoleLogic").Count<GameObject>() > 1)
+        {
+            // RIP
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Be Persistent
+            DontDestroyOnLoad(gameObject);
+        }
+    }
 
+	public static AirConsolePlayerScript[] players = new AirConsolePlayerScript[2];
 
 	void Start() {
 		if (AirConsole.instance.IsAirConsoleUnityPluginReady ()) {
 			List<int> ids = AirConsole.instance.GetControllerDeviceIds ();
 
 			ids.ForEach ((device_id) => {
-				OnConnect (device_id);
+        		OnConnect (device_id);
 			});
 		}
+
+        Debug.Log(SceneManager.GetActiveScene().name);
 	}
 		
 	void OnConnect(int device_id) {
 		numPlayers++;
 
-		if (numPlayers == 1) {
-			player0_id = device_id;
-		} else if (numPlayers == 2) {
-			player1_id = device_id;
-		} else if (numPlayers > 2) {
-			// TODO: A third (or later) player tried to join. Tell them to wait, maybe have a "honk" button lawl
-		}
+        // Assign to player dictionary
+        GameObject newPlayerGO = GameObject.Instantiate(emptyAirconsolePlayer);
 
+        AirConsolePlayerScript newPlayer = newPlayerGO.GetComponent<AirConsolePlayerScript>();
+        newPlayer.device_id = device_id;
+        activePlayers[device_id] = newPlayer;
+
+        Debug.Log("Added " + device_id);
+        Debug.Log(activePlayers[device_id]);
+
+        if (numPlayers == 1) {
+            players[0] = newPlayer;
+        } else if (numPlayers == 2) {
+            players[1] = newPlayer;
+        } else if (numPlayers > 2) {
+            // TODO: A third (or later) player tried to join. Tell them to wait, maybe have a "honk" button lawl
+        }
 
 		SyncState ();
 	}
@@ -55,55 +77,29 @@ public class AirconsoleLogic : MonoBehaviour {
 	void OnDisconnect(int device_id) {
 		numPlayers--;
 
-		if (device_id == player0_id) {
+        // TODO: How do we handle people who leave?
+		/*if (device_id == player0_id) {
 			// Player 0 left
 			player0_id = -1;
 		} else if (device_id == player1_id) {
 			// Player 1 left
 			player1_id = -1;
-		}
+		}*/
 
 		// TODO: logic here for if too many people have left
 	}
 
-	void ChoseCard(int device_id, int ndx) {
-		GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
-
-		if (manager.state == GameManagerScript.STATE.WAITING_ON_AUGMENTATION || manager.state == GameManagerScript.STATE.WAITING_ON_DISCARDS) {
-			if (device_id == player0_id) {
-				Card selectedCard = manager.players [0].hand.cards [ndx];
-				manager.players [0].hand.CardSelected (null, selectedCard);
-			} else if (device_id == player1_id) {
-				Card selectedCard = manager.players [1].hand.cards [ndx];
-				manager.players [1].hand.CardSelected (null, selectedCard);
-			}
-		} else if (manager.state == GameManagerScript.STATE.DRAW_NEW_CARD) {
-			if (device_id == player0_id) {
-				Card selectedCard = manager.cardBank.cards[ndx];
-				manager.cardBank.PickCard (0, selectedCard);
-			} else if (device_id == player1_id) {
-				Card selectedCard = manager.cardBank.cards[ndx];
-				manager.cardBank.PickCard (1, selectedCard);
-			}
-		}
-			
-	}
-
-	void DoAction(int device_id, string action_name) {
-		GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
-
-		if (device_id == player0_id) {
-			((UnityPlayerScript)manager.players [0]).PlayActionString (action_name);
-		} else if (device_id == player1_id) {
-			((UnityPlayerScript)manager.players [1]).PlayActionString (action_name);
-		}
-	}
-
 	// Process a message sent from one of the controllers
 	void OnMessage(int device_id, JToken data) {
+        Debug.Log("message from " + device_id);
+
+        Debug.Log(activePlayers[device_id]);
+
+        if (activePlayers[device_id] != null)
+            activePlayers[device_id].OnMessage(data);
+
 		// TODO: pass in state and verify it here
-		print (data);
-		if (data ["chose_card0"] != null) {
+/*		if (data ["chose_card0"] != null) {
 			// Chose card 0
 			ChoseCard(device_id, 0);
 		} else if (data ["chose_card1"] != null) {
@@ -120,7 +116,7 @@ public class AirconsoleLogic : MonoBehaviour {
 			DoAction (device_id, "tech");
 		} else if (data ["advance"] != null) {
 			DoAction (device_id, "advance");
-		}
+		}*/
 	}
 
 	public static void AskPlayerForAction(int player) {
@@ -129,11 +125,6 @@ public class AirconsoleLogic : MonoBehaviour {
 
 	public static int PlayerNum_to_id(int player) {
 		var id = 0;
-		if (player == 0) {
-			id = player0_id;
-		} else {
-			id = player1_id;
-		}
 		return id;
 	}
 
@@ -173,6 +164,8 @@ public class AirconsoleLogic : MonoBehaviour {
 		}
 
 		GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
+
+        return;
 
 		PlayerScript[] players = manager.players;
 
