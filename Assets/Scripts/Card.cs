@@ -21,6 +21,8 @@ public class Card {
 	public string name { get; private set; }
 	public string description { get; private set; }
 	public Color color { get; private set; }
+	public bool chainable { get; private set; }
+	public Card previous;
 
 	// Converts enum color to a human readable string
 	public static string ColorToString (Color color) {
@@ -39,13 +41,15 @@ public class Card {
 	// Information about how a turn is resolved
 	public class ActionResult {
 		public int damage = 0;
+		public int healing = 0;
 		public int advancement = 0;
+		public int extraCards = 0;
 		public PlayerAction action;
 	}
 
 	// Hooks for the GameManager!
-	public delegate void BeforeAugmentationHook(Card augmentation, Card other);
-	public BeforeAugmentationHook BeforeAugmentation;
+	public delegate void InstantHook(Card augmentation, Card other, PlayerScript player, PlayerScript opponent);
+	public InstantHook Instant;
 
 	public delegate void BeforeActionHook(PlayerAction action);
 	public BeforeActionHook BeforeAction;
@@ -55,20 +59,33 @@ public class Card {
 	public AfterActionHook AfterActionBeforeSchool;
 
 	// Constructor takes all of this information
-	public Card(string name, string description, Color color, BeforeAugmentationHook BeforeAugmentation,
+	public Card(string name, string description, Color color, bool chainable, InstantHook Instant,
 		BeforeActionHook BeforeAction, AfterActionHook AfterActionBeforeSchool, AfterActionHook AfterAction) {
 		this.name = name;
 		this.color = color;
 		this.description = description;
+		this.chainable = chainable;
+		this.previous = null;
 
-		this.BeforeAugmentation = BeforeAugmentation;
+		// Fill in nulls
+		if (Instant == null)
+			Instant = (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {};
+		if (BeforeAction == null)
+			BeforeAction = (PlayerAction action) => {};
+		if (AfterActionBeforeSchool == null)
+			AfterActionBeforeSchool = (ActionResult result, ActionResult other) => {};
+		if (AfterAction == null)
+			AfterAction = (ActionResult result, ActionResult other) => {};
+
+		Debug.Log (BeforeAction);
+		this.Instant = Instant;
 		this.BeforeAction = BeforeAction;
 		this.AfterActionBeforeSchool = AfterActionBeforeSchool;
 		this.AfterAction = AfterAction;
 	}
 
 	public Card Clone () {
-		return new Card (name, description, color, BeforeAugmentation, BeforeAction, AfterActionBeforeSchool, AfterAction);
+		return new Card (name, description, color, chainable, Instant, BeforeAction, AfterActionBeforeSchool, AfterAction);
 	}
 
 	public override string ToString () {
@@ -79,19 +96,19 @@ public class Card {
 	 * This is the running DB of all the cards. To add a new one, just append it to this array!
 	 * Be careful to put the right callback in the right spot!
 	 */
-	public static Card[] cards = {
-		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, null, null, null, (ActionResult result, ActionResult other) => {
+	public static Card[] cards = new Card[] {
+		new Card ("Justice", "All damage you take this turn is dealt to your opponent too", Color.GREEN, false, null, null, null, (ActionResult result, ActionResult other) => {
 			result.damage += other.damage;
 		}),
-		new Card ("Kindness", "Heal 2 after this turn", Color.GREEN, null, null, null, (ActionResult result, ActionResult other) => {
-			other.damage -= 2;
+		new Card ("Kindness", "Heal 1 after this action", Color.GREEN, true, null, null, null, (ActionResult result, ActionResult other) => {
+			result.healing ++;
 		}),
-		new Card ("Determination", "Counter will block ALL damage", Color.GREEN, null, (PlayerAction action) => {
+		new Card ("Determination", "Counter will block ALL damage", Color.GREEN, false, null, (PlayerAction action) => {
 			if (action.name == "Counter") {
 				action.defense = 100;
 			}
 		}, null, null),
-		new Card ("Patience", "+2 damage to counter, +2 AP to advance", Color.GREEN, null, (PlayerAction action) => {
+		new Card ("Patience", "+2 damage to counter, +2 AP to advance", Color.GREEN, false, null, (PlayerAction action) => {
 			if (action.name == "Counter") {
 				action.counterAttack += 2;
 			}
@@ -99,38 +116,60 @@ public class Card {
 				action.advancement += 2;
 			}
 		}, null, null),
-		new Card ("Bloodlust", "Deal double damage", Color.RED, null, (PlayerAction action) => {
+		new Card ("Bloodlust", "Deal double damage", Color.RED, false, null, (PlayerAction action) => {
 			action.physicalAttack *= 2;
 			action.techAttack *= 2;
 		}, null, null),
-		new Card ("Feast", "Heal half the damage you deal", Color.RED, null, null, null, (ActionResult result, ActionResult other) => {
-			other.damage -= (int) Mathf.Floor(result.damage / 2);
+		new Card ("Feast", "Draw one extra card for each damage you deal (max 3)", Color.RED, false, null, null, null, (ActionResult result, ActionResult other) => {
+			result.extraCards = Mathf.Min(result.damage, 3);
 		}),
-		new Card ("Learn by Doing", "Gain 1AP for each damage you deal", Color.RED, null, null, null, (ActionResult result, ActionResult other) => {
+		new Card ("Learn by Doing", "Gain 1AP for each damage you deal", Color.RED, false, null, null, null, (ActionResult result, ActionResult other) => {
 			result.advancement += result.damage;
 		}),
-		new Card ("A Strong Defense", "Attack and tech block 1 damage", Color.RED, null, (PlayerAction action) => {
-			if (action.name == "Attack" || action.name == "Tech") {
-				action.defense ++;
-			}
-		}, null, null),
-		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
+		new Card ("Quick Attack", "Deal 1 extra damage after this action", Color.RED, true, null,  null, null, (ActionResult result, ActionResult other) => {
+			result.damage ++;
+		}),
+		new Card ("Morph", "Copy your opponent's augmentation", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+			augmentation.chainable = other.chainable;
 			augmentation.BeforeAction = other.BeforeAction;
 			augmentation.AfterAction = other.AfterAction;
+			augmentation.AfterActionBeforeSchool = other.AfterActionBeforeSchool;
 		}, null, null, null),
-		new Card ("Mad Hacks", "Cancel your opponent's augmentation", Color.BLUE, (Card augmentation, Card other) => {
-			other.BeforeAction = null;
-			other.AfterAction = null;
+		new Card ("Mad Hacks", "Cancel your opponent's augmentation", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+			other.chainable = false;
+			other.BeforeAction = augmentation.BeforeAction;
+			other.AfterAction = augmentation.AfterAction;
+			other.AfterActionBeforeSchool = augmentation.AfterActionBeforeSchool;
 		}, null, null, null),
-		new Card ("Siphon", "If tech deals damage, steal 2AP from your opponent", Color.BLUE, null, null, null, (ActionResult result, ActionResult other) => {
+		new Card ("Siphon", "If tech deals damage, steal 2AP from your opponent", Color.BLUE, false, null, null, null, (ActionResult result, ActionResult other) => {
 			if (result.damage > 0 && result.action.name == "Tech") {
 				other.advancement -= 2;
 				result.advancement += 2;
 			}
 		}),
-		new Card ("Mind games", "+1 damage to tech", Color.BLUE, null, (PlayerAction action) => {
+		new Card ("Mind games", "+1 damage to tech", Color.BLUE, false, null, (PlayerAction action) => {
 			if (action.name == "Tech")
 				action.techAttack ++;
-		}, null, null)
+		}, null, null),
+		// Tier 2
+//		new Card ("Will", "Draw extra cards equal to your level and play again", Color.GREEN, true, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+//			player.Message(GameManagerScript.MESSAGE.DRAW, 1 + Mathf.Floor(player.school.advancement / 6));
+//		}, null, null, null),
+//		new Card ("Mind Swap", "Switch augmentations with your opponent", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+//			Card temp = augmentation.previous;
+//			other.previous = augmentation.previous;
+//			augmentation.previous = temp;
+//
+//			temp = augmentation;
+//			player.augmentation = opponent.augmentation;
+//			opponent.augmentation = temp;
+//		}, null, null, null),
+		new Card ("Integrity", "Immediately set your opponent's health equal to yours", Color.GREEN, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+			opponent.health = player.health;
+		}, null, null, null),
+		new Card ("Gambit", "Deal 6 damage to both your opponent and yourself", Color.RED, false, null, null, null, (ActionResult result, ActionResult other) => {
+			result.damage += 6;
+			other.damage += 6;
+		}),
 	};
 }

@@ -29,7 +29,7 @@ public class CardHolderScript : MonoBehaviour {
 	// Use this for initialization
 	public virtual void Awake () {
 		_cards = new List<Card> ();
-		if (cardPrefab != null) {
+		if (!secret) {
 			cardTransforms = new List<Transform> ();
 		}
 	}
@@ -46,41 +46,39 @@ public class CardHolderScript : MonoBehaviour {
 	public virtual GameObject AddCard(Card card) {
 		GameObject newCard = null;
 
-		if (secret) { // Don't show the AI's cards.
-			return null;
+		if (!secret) { // Don't show the AI's cards.
+			newCard = GameObject.Instantiate (cardPrefab);
+
+			// Set card to random type
+			newCard.GetComponent<CardDisplayScript> ().card = card;
+			newCard.transform.SetParent (transform);
+			newCard.transform.position = StartingPoint();
+
+			cardTransforms.Add (newCard.transform);
 		}
 
-		newCard = GameObject.Instantiate (cardPrefab);
-
-		// Set card to random type
-		newCard.GetComponent<CardDisplayScript> ().card = card;
-		newCard.transform.SetParent (transform);
-		newCard.transform.position = StartingPoint();
-
-		cardTransforms.Add (newCard.transform);
 
 		_cards.Add (card);
 
-		if (cardPrefab != null)
+		if (!secret) {
 			Reorganize ();
+		}
 
 		return newCard;
 	}
 		
 	public virtual void RemoveCard (Card card) {
-		int index = _cards.IndexOf (card);
-		if (index < 0)
+		int windex = _cards.IndexOf (card);
+		if (windex < 0)
 			return;
 
-		_cards.RemoveAt (index);
+		_cards.RemoveAt (windex);
 
-		if (cardPrefab != null) {
-			Destroy (cardTransforms[index].gameObject);
-			cardTransforms.RemoveAt (index);
-		}
-
-		if (cardPrefab != null)
+		if (!secret) {
+			Destroy (cardTransforms[windex].gameObject);
+			cardTransforms.RemoveAt (windex);
 			Reorganize ();
+		}
 	}
 
 	public void Clear () {

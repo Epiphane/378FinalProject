@@ -6,6 +6,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 
 	public Image advancementBar, healthBar, nameBG;
 	public Image advancementLevel1, advancementLevel2, advancementLevel3;
+	public Transform augmentationArea;
 	public GameObject augmentation;
 
 	public Text name_display, health_display;
@@ -18,10 +19,13 @@ public class PlayerDashboardScript : MonoBehaviour {
 	// 1 = visible
 	// 2 = just the title is visible
 	private int augmentationState = 0;
+	private Transform augmentationDisplay;
 
 	// Use this for initialization
 	void Start () {
 		health = 0;
+
+		augmentationDisplay = augmentationArea;
 	}
 	
 	// Update is called once per frame
@@ -63,24 +67,33 @@ public class PlayerDashboardScript : MonoBehaviour {
 			UpdateBar (advancementBar, null, advancement + (42 - 18), 42, new Vector2(0, 46));
 		}
 
-		if (augmentationState == 0 && player.augmentation != null) {
-			augmentationState = 1;
-			augmentation.GetComponent<CardDisplayScript> ().card = player.augmentation;
-            augmentation.GetComponent<Image>().color = CardDisplayManager.instance.DisplayColor(player.augmentation.color);
-
-            ((RectTransform)augmentation.transform).localPosition = new Vector2 (5, 73);
-		} else if (augmentationState > 0 && player.augmentation == null) {
-			augmentationState = 0;
-
-			((RectTransform)augmentation.transform).localPosition = new Vector2 (5, -45);
-		} else if (augmentationState < 2 && player.gameManager.state == GameManagerScript.STATE.RESOLVE_ACTIONS) {
-			augmentationState = 2;
-			augmentation.transform.localPosition = new Vector2 (5, -17);
+		if (player.augmentation == null) {
+			while (augmentationDisplay != augmentationArea) {
+				// "Pop" off augmentations
+				Transform parent = augmentationDisplay.parent;
+				Destroy (augmentationDisplay.gameObject);
+				augmentationDisplay = parent;
+			}
 		}
 
 		if (player.school != null && nameBG.color != player.school.color) {
 			nameBG.color = player.school.color;
 		}
+	}
+
+	public void AddAugmentation(Card newAug) {
+		GameObject newAugmentation = GameObject.Instantiate (augmentation);
+
+		newAugmentation.GetComponent<CardDisplayScript> ().card = newAug;
+		newAugmentation.GetComponent<Image> ().color = CardDisplayManager.instance.DisplayColor (newAug.color);
+		newAugmentation.transform.SetParent(augmentationDisplay);
+		if (augmentationDisplay == augmentationArea)
+			newAugmentation.transform.localPosition = Vector2.zero;
+		else
+			newAugmentation.transform.localPosition = new Vector2 (0, 121);
+		newAugmentation.transform.localScale = Vector3.one;
+
+		augmentationDisplay = newAugmentation.transform;
 	}
 
 	void UpdateBar(Image bar, Text display, float num, int max, Vector2 offset) {

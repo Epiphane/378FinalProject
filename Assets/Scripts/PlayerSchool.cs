@@ -74,7 +74,6 @@ public class PlayerSchool {
 
 	public void GenerateDeck(DeckScript deckScript) {
 		foreach (Card card in starters) {
-			Debug.Log (card);
 			deckScript.AddCard (card.Clone ());
 		}
 	}

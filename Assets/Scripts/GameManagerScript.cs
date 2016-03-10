@@ -204,13 +204,35 @@ public class GameManagerScript : MonoBehaviour {
 		// Next turn...
 		turn = (turn + 1) % players.Length;
 
+		bool complete = false;
 		if (turn == first_turn) {
+			complete = true;
+
+			// Everyone played! See if we have any chains going
+			for (int i = 0; i < players.Length; i++) {
+				PlayerScript player = players [i];
+
+				player.augmentation.Instant (player.augmentation, players [1 - i].augmentation, player, players[1 - i]);
+			}
+
+			// Determine whether we're done with augmentation-ing
+			foreach (PlayerScript player in players)
+				if (player.augmentation.chainable && player.hand.Size > 0)
+					complete = false;
+		}
+
+		if (complete) {
 			// If everyone played we're gucci!
 			SetState (STATE.WAITING_ON_ACTION);
 		} else {
 			UpdateStatus ();
 
-			players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
+			// See whether this player can actually go
+			if (players [turn].augmentation == null || players [turn].augmentation.chainable)
+				players [turn].Message (MESSAGE.CHOOSE_AUGMENTATION);
+			else
+				// Otherwise pretend they played
+				PlayedAugmentation (turn);
 		}
 	}
 
@@ -248,19 +270,10 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < players.Length; i ++) {
 			PlayerScript player = players [i];
 
-			player.school.BeforeAugmentation (player.augmentation, players [1 - i].augmentation);
-
-			if (player.augmentation.BeforeAugmentation != null)
-				player.augmentation.BeforeAugmentation (player.augmentation, players[1 - i].augmentation);
-		}
-
-		for (int i = 0; i < players.Length; i ++) {
-			PlayerScript player = players [i];
-
 			player.school.BeforeAction (player.action);
 
-			if (player.augmentation.BeforeAction != null)
-				player.augmentation.BeforeAction (player.action);
+			// Augmentation effects
+			player.BeforeAction (player.action);
 		}
 
 		// Do stuff
@@ -289,8 +302,8 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < players.Length; i++) {
 			PlayerScript player = players [i];
 
-			if (player.augmentation.AfterActionBeforeSchool != null)
-				player.augmentation.AfterActionBeforeSchool (results [i], results[1 - i]);
+			// Augmentation effects
+			player.AfterActionBeforeSchool (results [i], results[1 - i]);
 		}
 
 		for (int i = 0; i < players.Length; i++) {
@@ -302,8 +315,8 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < players.Length; i++) {
 			PlayerScript player = players [i];
 
-			if (player.augmentation.AfterAction != null)
-				player.augmentation.AfterAction (results [i], results [1 - i]);
+			// Augmentation effects
+			player.AfterAction (results [i], results[1 - i]);
 		}
 
 		for (int i = 0; i < players.Length; i ++) {
@@ -311,7 +324,10 @@ public class GameManagerScript : MonoBehaviour {
 			Card.ActionResult result = results [i];
 
 			player.health -= results [1 - i].damage;
+			player.health += results [i].healing;
 			player.school.advancement += result.advancement;
+
+			player.Message (MESSAGE.DRAW, result.extraCards);
 		}
 
 		if (players [0].health > 0 && players [1].health > 0) {
