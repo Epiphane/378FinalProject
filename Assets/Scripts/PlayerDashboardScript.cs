@@ -86,7 +86,7 @@ public class PlayerDashboardScript : MonoBehaviour {
 
 		newAugmentation.GetComponent<CardDisplayScript> ().card = newAug;
 		newAugmentation.GetComponent<Image> ().color = CardDisplayManager.instance.DisplayColor (newAug.color);
-		newAugmentation.transform.parent = augmentationDisplay;
+		newAugmentation.transform.SetParent(augmentationDisplay);
 		if (augmentationDisplay == augmentationArea)
 			newAugmentation.transform.localPosition = Vector2.zero;
 		else
