@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using NDream.AirConsole;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 
@@ -89,5 +90,53 @@ public class AirConsolePlayerScript : PlayerScript {
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data = null) {
 		base.Message (message, data);
+	}
+
+	// Airconsole messaging
+	public void SyncState() {
+		GameManagerScript.STATE state = gameManager.state;
+
+		switch (state) {
+
+		// Player should play a card from their hand. Have the mobile controller
+		//  display a list of the player's cards.
+		case GameManagerScript.STATE.WAITING_ON_AUGMENTATION:
+			SendCards (hand.cards);
+			break;
+		case GameManagerScript.STATE.DRAW_NEW_CARD:
+			SendCards (gameManager.cardBank.cards);
+			break;
+		case GameManagerScript.STATE.WAITING_ON_ACTION:
+			AskPlayerForAction ();
+			break;
+		case GameManagerScript.STATE.WAITING_ON_DISCARDS:
+			SendCards (hand.cards);
+			break;
+		}
+	}
+
+	public void SendCards(List<Card> cards) {
+		var result_string = "{ \"newCards\": [ ";
+		for (int ndx = 0; ndx < cards.Count; ndx++) {
+			var card = cards [ndx];
+			// Remove trailing comma, it screws up JSON parsing which is DUMB.
+			var separator_comma = (ndx == cards.Count - 1) ? "" : ",";
+			var color = Card.ColorToString (card.color);
+			result_string += "{\"color\": \"" + color + "\", \"words\": \"" + card.description + "\"  }" + separator_comma;
+		}
+
+		result_string += "] }";
+
+		print ("Sending cardstring: " + result_string);
+
+		AirConsole.instance.Message (device_id, result_string);
+	}
+
+	public void AskPlayerForAction() {
+		AirConsole.instance.Message (device_id, "{ \"doAction\": true }");
+	}
+
+	public void CardWasTaken(int cardNdx) {
+		AirConsole.instance.Message (device_id, "{ \"cardWasTaken\": " + cardNdx + " }");
 	}
 }

@@ -58,9 +58,6 @@ public class AirconsoleLogic : MonoBehaviour {
         newPlayer.device_id = device_id;
         activePlayers[device_id] = newPlayer;
 
-        Debug.Log("Added " + device_id);
-        Debug.Log(activePlayers[device_id]);
-
         if (numPlayers == 1) {
             players[0] = newPlayer;
         } else if (numPlayers == 2) {
@@ -70,6 +67,10 @@ public class AirconsoleLogic : MonoBehaviour {
         }
 
 		SyncState ();
+	}
+
+	public bool IsReady() {
+		return (players [0] != null && players [1] != null) && (players [0].ready && players [1].ready);
 	}
 
 	// Called when a controller disconnects. Pause the game if we don't
@@ -97,60 +98,6 @@ public class AirconsoleLogic : MonoBehaviour {
 
         if (activePlayers[device_id] != null)
             activePlayers[device_id].OnMessage(data);
-
-		// TODO: pass in state and verify it here
-/*		if (data ["chose_card0"] != null) {
-			// Chose card 0
-			ChoseCard(device_id, 0);
-		} else if (data ["chose_card1"] != null) {
-			// Chose card 1
-			ChoseCard(device_id, 1);
-		} else if (data ["chose_card2"] != null) {
-			// Chose card 2
-			ChoseCard(device_id, 2);
-		} else if (data ["attack"] != null) {
-			DoAction (device_id, "attack");
-		} else if (data ["counter"] != null) {
-			DoAction (device_id, "counter");
-		} else if (data ["tech"] != null) {
-			DoAction (device_id, "tech");
-		} else if (data ["advance"] != null) {
-			DoAction (device_id, "advance");
-		}*/
-	}
-
-	public static void AskPlayerForAction(int player) {
-		AirConsole.instance.Message (PlayerNum_to_id(player), "{ \"doAction\": true }");
-	}
-
-	public static int PlayerNum_to_id(int player) {
-		var id = 0;
-		return id;
-	}
-
-	public static void SendCards(int player, List<Card> cards) {
-		var id = PlayerNum_to_id (player);
-
-		var result_string = "{ \"newCards\": [ ";
-		for (int ndx = 0; ndx < cards.Count; ndx++) {
-			var card = cards [ndx];
-			// Remove trailing comma, it screws up JSON parsing which is DUMB.
-			var separator_comma = (ndx == cards.Count - 1) ? "" : ",";
-			var color = Card.ColorToString (card.color);
-			result_string += "{\"color\": \"" + color + "\", \"words\": \"" + card.description + "\"  }" + separator_comma;
-		}
-
-		result_string += "] }";
-
-		print ("Sending cardstring: " + result_string);
-
-		AirConsole.instance.Message (id, result_string );
-	}
-
-	public static void CardWasTaken(int player, int cardNdx) {
-		var id = PlayerNum_to_id (player);
-
-		AirConsole.instance.Message (id, "{ \"cardWasTaken\": " + cardNdx + " }");
 	}
 
 	/**
@@ -165,34 +112,9 @@ public class AirconsoleLogic : MonoBehaviour {
 
 		GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
 
-        return;
-
-		PlayerScript[] players = manager.players;
-
-		foreach (var player in players) {
-			if (player is UnityPlayerScript) {
-
-				switch (manager.state) {
-
-				// Player should play a card from their hand. Have the mobile controller
-				//  display a list of the player's cards.
-				case GameManagerScript.STATE.WAITING_ON_AUGMENTATION:
-					SendCards (player.ID, player.hand.cards);
-					print ("Sending " + player.ID + " the cards " + player.hand.cards.Count);
-					break;
-				case GameManagerScript.STATE.DRAW_NEW_CARD:
-					SendCards (player.ID, manager.cardBank.cards);
-					print ("flopping " + player.ID + " the cards " + manager.cardBank.cards.Count);
-					break;
-				case GameManagerScript.STATE.WAITING_ON_ACTION:
-					AskPlayerForAction (player.ID);
-					break;
-				case GameManagerScript.STATE.WAITING_ON_DISCARDS:
-					SendCards (player.ID, player.hand.cards);
-					break;
-				}
-
-			}
+		foreach (AirConsolePlayerScript player in players) {
+			if (player != null)
+				player.SyncState ();
 		}
 	}
 
