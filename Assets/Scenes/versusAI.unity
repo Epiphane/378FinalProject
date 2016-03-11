@@ -776,8 +776,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -118}
-  m_SizeDelta: {x: 760, y: 80.3}
+  m_AnchoredPosition: {x: 20, y: -80}
+  m_SizeDelta: {x: 760, y: 118}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &830276917
 MonoBehaviour:
@@ -1118,14 +1118,6 @@ Prefab:
     - target: {fileID: 22474274, guid: c1df4d056bd8f4925b03c2e89618f6be, type: 2}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22497356, guid: c1df4d056bd8f4925b03c2e89618f6be, type: 2}
-      propertyPath: m_LocalScale.x
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 22497356, guid: c1df4d056bd8f4925b03c2e89618f6be, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c1df4d056bd8f4925b03c2e89618f6be, type: 2}
@@ -2402,7 +2394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37d83ebce05ad74683fd3228dde9e7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  browserStartMode: 2
+  browserStartMode: 1
   controllerHtml: {fileID: 102900000, guid: ca24ed453b03349bfa5054409b277d28, type: 3}
   autoScaleCanvas: 1
 --- !u!4 &1716141190
