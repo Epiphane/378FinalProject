@@ -76,8 +76,7 @@ public class Card {
 			AfterActionBeforeSchool = (ActionResult result, ActionResult other) => {};
 		if (AfterAction == null)
 			AfterAction = (ActionResult result, ActionResult other) => {};
-
-		Debug.Log (BeforeAction);
+        
 		this.Instant = Instant;
 		this.BeforeAction = BeforeAction;
 		this.AfterActionBeforeSchool = AfterActionBeforeSchool;

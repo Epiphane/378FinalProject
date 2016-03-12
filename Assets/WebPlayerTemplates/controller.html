@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="airconsole-controls/ctrl-generator/controller.css">
 
 <style>
+    #ready_container {
+      padding: 50px;
+    }
+
     .green {
         background-image: url('card_green.png');
     }
@@ -85,6 +89,11 @@
 
 </head>
 <body>
+    <div id="ready_container" class="gamepad_container">
+      <div id="ready" class="button-300-150">
+         <div class="button-text">Ready!</div>
+      </div>
+    </div>
 
     <div id="action_container" class="gamepad_container" style="display:none">
       <div id="left" class="left"></div>
@@ -92,7 +101,7 @@
       <div id="right" class="right"></div>
     </div>
 
-    <div id="card_container" class="gamepad_container container">
+    <div id="card_container" class="gamepad_container container" style="display: none">
         <div id="left" class="left card green">
             <div>Here I am! asdf asdf asdf</div>
         </div>
@@ -167,13 +176,23 @@ var cards = [$("#left.card"), $("#middle.card"), $("#right.card")];
 
 // Sends a rate-limited message over to AirConsole.
 function sendInputEvent(ndx) {
-  var message = {};
-  message[ndx] = true;
+   var message = ndx;
+   if (typeof(ndx) === 'string') {
+      message = {};
+      message[ndx] = true;
+   }
 
-  rate_limiter.message(AirConsole.SCREEN, message);
+   rate_limiter.message(AirConsole.SCREEN, message);
 
-  console.log("NICE: " + ndx)
+   console.log("NICE:", message)
 }
+
+// Prepare the ready button!
+new Button($('#ready')[0], {
+   down: function() {
+      sendInputEvent({ ready: true });
+   }
+});
 
 // Go through the cards, and turn them all into buttons! With magic.
 for (var ndx = 0; ndx < 3; ndx++) {
