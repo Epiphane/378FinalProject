@@ -85,12 +85,12 @@ public class PlayerDashboardScript : MonoBehaviour {
 		GameObject newAugmentation = GameObject.Instantiate (augmentation);
 
 		newAugmentation.GetComponent<CardDisplayScript> ().card = newAug;
-		newAugmentation.GetComponent<Image> ().color = CardDisplayManager.instance.DisplayColor (newAug.color);
+//		newAugmentation.GetComponent<Image> ().color = CardDisplayManager.instance.DisplayColor (newAug.color);
 		newAugmentation.transform.SetParent(augmentationDisplay);
 		if (augmentationDisplay == augmentationArea)
 			newAugmentation.transform.localPosition = Vector2.zero;
 		else
-			newAugmentation.transform.localPosition = new Vector2 (0, 121);
+			newAugmentation.transform.localPosition = new Vector2 (0, 160);
 		newAugmentation.transform.localScale = Vector3.one;
 
 		augmentationDisplay = newAugmentation.transform;

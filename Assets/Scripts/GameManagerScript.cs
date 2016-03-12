@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour {
 	
-	private static int COMP_WAIT_TIME = 100;
+	private static int COMP_WAIT_TIME = 200;
 	public static int INITIAL_HEALTH = 20;
 
 	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DISCARD_ALL, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };

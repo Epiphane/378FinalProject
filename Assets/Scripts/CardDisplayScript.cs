@@ -7,9 +7,9 @@ public class CardDisplayScript : MonoBehaviour {
 	private Image cardFrame;
 	public Text description;
 
-	string description_base = @"<size=56><b>{0}</b> </size>
-<size=10>.</size>
-<size=46>{1}</size>";
+	string description_base = @"<size=14><b>{0}</b> </size>
+<size=2>.</size>
+<size=12>{1}</size>";
 
 	public Sprite redImg;
 	public Sprite greenImg;
