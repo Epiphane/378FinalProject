@@ -247,6 +247,9 @@ public class GameManagerScript : MonoBehaviour {
 			}
 		}
 
+        // play sfx
+        GetComponent<AudioSource>().Play();
+
 		// All players chose an action!
 		SetState(STATE.RESOLVE_ACTIONS);
 	}
