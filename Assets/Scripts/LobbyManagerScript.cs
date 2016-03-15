@@ -15,7 +15,7 @@ public class LobbyManagerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (airconsole.IsReady ()) {
-			SceneManager.LoadScene ("versusAI");
+			SceneManager.LoadScene ("Backstory");
 		}
 	}
 }
