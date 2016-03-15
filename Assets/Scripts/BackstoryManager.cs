@@ -14,7 +14,7 @@ public class BackstoryManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if (text.transform.position.y >= 1500)
+		if (text.transform.position.y >= 1500 || (AirconsoleLogic.skip[0] && AirconsoleLogic.skip[1]))
         {
             SceneManager.LoadScene("versusAI");
         }

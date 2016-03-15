@@ -44,13 +44,26 @@
        text-align: center;
     }
 
-    .card div {
+    .card .title {
         position: absolute;
-        top: 46%;
-        width: 100%;
+        top: 50%;
+        width: 130px;
         text-align: center;
+        font-size: 24px;
+        left: 50%;
+        margin-left: -65px;
+        margin-top: -110px;
+    }
 
+    .card .description {
+        position: absolute;
+        top: 50%;
+        width: 130px;
+        text-align: left;
         font-size: 16px;
+        left: 50%;
+        margin-left: -65px;
+        margin-top: -50px;
     }
 
     .left.card {
@@ -233,7 +246,13 @@ function formatCard(card) {
   elem.addClass('card');
   changeCardColor(elem, card.color);
 
-  var description = $('<div></div>');
+  if (card.chainable) {
+    card.description += '<br><br>**Chainable';
+  }
+
+  var title = $('<div class="title">' + card.title + '</div>');
+  var description = $('<div class="description"></div>');
+  elem.append(title);
   elem.append(description);
 
   description.html(card.description);
@@ -269,7 +288,14 @@ airconsole.onMessage = function(senderID, data) {
     console.log("THANK yoU FOR NOTICING ME SEMPAI: " + senderID);
     console.log(data);
     
+<<<<<<< Updated upstream
     $('#message').html(data.message || '');
+=======
+    if (data.skip) {
+      $('#ready_container').show();
+      $('#ready_container .button-text').html('Skip');
+    }
+>>>>>>> Stashed changes
 
     // It's time for the user to choose from 3 cards.
     if (data.newCards) {
@@ -292,17 +318,14 @@ airconsole.onMessage = function(senderID, data) {
       displayCards([
         { 
           color: 'red',
-          title: 'Derp',
           description: 'School of Aggression'
         },
         { 
           color: 'blue',
-          title: 'Derp',
           description: 'School of Tactics'
         },
         { 
           color: 'green',
-          title: 'Derp',
           description: 'School of Focus'
         }
       ]);

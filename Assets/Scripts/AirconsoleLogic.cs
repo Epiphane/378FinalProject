@@ -33,7 +33,8 @@ public class AirconsoleLogic : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         }
     }
-
+		
+	public static bool[] skip = new bool[2];
 	public static int[] player_ids = new int[2];
 	public static AirConsolePlayerScript[] players = new AirConsolePlayerScript[2];
 
@@ -110,6 +111,11 @@ public class AirconsoleLogic : MonoBehaviour {
 	void OnMessage(int device_id, JToken data) {
         if (activePlayers[device_id] != null)
             activePlayers[device_id].OnMessage(data);
+
+		if (device_id == players [0].device_id && data ["skip"] != null)
+			skip [0] = true;
+		if (device_id == players [1].device_id && data ["skip"] != null)
+			skip [1] = true;
 	}
 
 	/**
