@@ -147,7 +147,35 @@
         message: &lt;Array&gt;
       }
     }
+<<<<<<< Updated upstream
   </pre></code>
+=======
+
+    #message {
+      position: fixed;
+      top: 5%;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+      color: white;
+    }
+</style>
+
+</head>
+<body>
+    <div id="message">Connecting...</div>
+
+    <div id="ready_container" class="gamepad_container">
+      <div id="ready" class="button-300-150">
+         <div class="button-text">Ready!</div>
+      </div>
+    </div>
+
+    <div id="action_container" class="gamepad_container" style="display:none">
+      <div id="left" class="left"></div>
+      <div id="middle" class="middle"></div>
+      <div id="right" class="right"></div>
+>>>>>>> Stashed changes
     </div>
 
   <div id="template_button_form" class="template_button_form">
@@ -221,6 +249,7 @@
 
       <div id="template-ButtonMiddle" class="button-80"><div class="button-text">START</div></div>
     </div>
+<<<<<<< Updated upstream
   </div>
 
   <!-- Include libraries -->
@@ -295,3 +324,157 @@
   </script>
 </body>
 </html>
+=======
+
+<script type="text/javascript" src="https://www.airconsole.com/api/airconsole-1.3.0.js"></script>
+<script type="text/javascript" src="airconsole-controls/rate-limiter/rate-limiter.js"></script>
+<script type="text/javascript" src="airconsole-controls/dpad/dpad.js"></script>
+<script type="text/javascript" src="airconsole-controls/joystick/joystick.js"></script>
+<script type="text/javascript" src="airconsole-controls/button/button.js"></script>
+<script type="text/javascript" src="airconsole-controls/swipe-digital/swipe-digital.js"></script>
+<script type="text/javascript" src="airconsole-controls/swipe-analog/swipe-analog.js"></script>
+<script type="text/javascript" src="airconsole-controls/swipe-pattern/swipe-pattern.js"></script>
+<script type="text/javascript" src="airconsole-controls/ctrl-generator/ctrl-generator.js"></script>
+<script type="text/javascript">
+
+
+
+var airconsole = new AirConsole({orientation: AirConsole.ORIENTATION_LANDSCAPE});
+var rate_limiter = new RateLimiter(airconsole);
+
+// Grab each of the user's cards and put them in an array
+var cards_text = [$("#left.card div"), $("#middle.card div"), $("#right.card div")];
+var cards = [$("#left.card"), $("#middle.card"), $("#right.card")];
+
+// Sends a rate-limited message over to AirConsole.
+function sendInputEvent(ndx) {
+   var message = ndx;
+   if (typeof(ndx) === 'string') {
+      message = {};
+      message[ndx] = true;
+   }
+
+   rate_limiter.message(AirConsole.SCREEN, message);
+
+   console.log("NICE:", message)
+}
+
+// Prepare the ready button!
+new Button($('#ready')[0], {
+   down: function() {
+      sendInputEvent({ ready: true });
+   }
+});
+
+// Go through the cards, and turn them all into buttons! With magic.
+// for (var ndx = 0; ndx < 3; ndx++) {
+//     (function (ndx) {
+//       var params = {
+//           down: function() {
+//               sendInputEvent("chose_card" + ndx);
+//           }
+//       }
+//       var dummy = new Button(cards[ndx][0], params);
+//     })(ndx);
+// }
+
+function changeCardColor(card, newColor) {
+  card.removeClass("red");
+  card.removeClass("green");
+  card.removeClass("blue");
+  card.removeClass("ded");
+  card.addClass(newColor);
+}
+
+// Returns a div element for a new card
+function formatCard(card) {
+  var elem = $('<div></div>');
+
+  elem.addClass('card');
+  changeCardColor(elem, card.color);
+
+  var description = $('<div></div>');
+  elem.append(description);
+
+  description.html(card.description);
+
+  return elem;
+}
+
+function displayCards(cards) {
+  console.log('showing cards', cards);
+  $('#card_container').show().empty();
+
+  var elems = [];
+
+  cards.forEach(function(card) {
+    elems.push(formatCard(card));
+  });
+
+  elems.forEach(function(cardDiv, index) {
+    $('#card_container').append(cardDiv);
+
+    new Button(cardDiv[0], {
+      down: function() {
+        sendInputEvent({ card: index });
+      }
+    })
+  });
+}
+
+airconsole.onMessage = function(senderID, data) {
+  data = JSON.parse(data);
+  if (senderID === AirConsole.SCREEN) {
+
+    console.log("THANK yoU FOR NOTICING ME SEMPAI: " + senderID);
+    console.log(data);
+    
+    $('#message').html(data.message || '');
+
+    // It's time for the user to choose from 3 cards.
+    if (data.newCards) {
+      $(".card").hide(0);
+
+      for (var ndx = 0; ndx < data.newCards.length; ndx++) {
+        $("#action_container, #ready_container").hide(0);
+        displayCards(data.newCards);
+      }
+    }
+
+    // It's time for the user to choose from the 4 actions
+    if (data.doAction) {
+      $("#action_container").show(0);
+      $("#card_container").hide(0);
+    }
+
+    if (data.chooseSchool) {
+      $("#action_container, #ready_container").hide(0);
+      displayCards([
+        { 
+          color: 'red',
+          title: 'Derp',
+          description: 'School of Aggression'
+        },
+        { 
+          color: 'blue',
+          title: 'Derp',
+          description: 'School of Tactics'
+        },
+        { 
+          color: 'green',
+          title: 'Derp',
+          description: 'School of Focus'
+        }
+      ]);
+    }
+
+    if (data.cardWasTaken) {
+      changeCardColor(cards[data.cardWasTaken], "ded");
+    }
+  }
+}
+
+CtrlGenerator.setAirConsole(airconsole);
+CtrlGenerator.generate({"left":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ATTACK","key":"attack","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"COUNTER","key":"counter","on_up_message":false}],"middle":[],"right":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"TECH","key":"tech","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ADVANCE","key":"advance","on_up_message":false}]});
+</script></body></html>
+>>>>>>> Stashed changes

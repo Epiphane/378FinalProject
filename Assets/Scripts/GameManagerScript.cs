@@ -150,6 +150,10 @@ public class GameManagerScript : MonoBehaviour {
 		SetState (STATE.DRAW_NEW_CARD);
 	}
 
+	public bool CanDrawCard(int player) {
+		return (state == STATE.DRAW_NEW_CARD && player == turn);
+	}
+
 	public bool DrawCard(int player, Card card) {
 		if (state != STATE.DRAW_NEW_CARD) {
 			Debug.LogError ("You shouldn't be able to draw new cards right now");
@@ -226,6 +230,7 @@ public class GameManagerScript : MonoBehaviour {
 			SetState (STATE.WAITING_ON_ACTION);
 		} else {
 			UpdateStatus ();
+			AirconsoleLogic.SyncState ();
 
 			// See whether this player can actually go
 			if (players [turn].augmentation == null || players [turn].augmentation.chainable)

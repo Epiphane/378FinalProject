@@ -57,6 +57,7 @@ public class AirconsoleLogic : MonoBehaviour {
         AirConsolePlayerScript newPlayer = newPlayerGO.GetComponent<AirConsolePlayerScript>();
         newPlayer.device_id = device_id;
         activePlayers[device_id] = newPlayer;
+		GameObject status;
 
         if (numPlayers == 1) {
             players[0] = newPlayer;
@@ -65,6 +66,15 @@ public class AirconsoleLogic : MonoBehaviour {
         } else if (numPlayers > 2) {
             // TODO: A third (or later) player tried to join. Tell them to wait, maybe have a "honk" button lawl
         }
+
+		if (status != null) {
+			Text text = status.GetComponent<Text> ();
+
+			if (text != null)
+				text.text = "Connected";
+
+			AirConsole.instance.Message(device_id, "{\"message\": \"Connected as player " + numPlayers + "!\"}");
+		}
 
 		SyncState ();
 	}

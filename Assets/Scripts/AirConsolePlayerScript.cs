@@ -14,45 +14,31 @@ public class AirConsolePlayerScript : PlayerScript {
     public void OnMessage(JToken data)
     {
         if (data["ready"] != null) {
-            ready = true;
-            Debug.Log("ready!");
-        } else if (data["chose_card0"] != null) {
-            // Chose card 0
-            ChoseCard(device_id, 0);
-        } else if (data["chose_card1"] != null) {
-            // Chose card 1
-            ChoseCard(device_id, 1);
-        } else if (data["chose_card2"] != null) {
-            // Chose card 2
-            ChoseCard(device_id, 2);
-        } else if (data["attack"] != null) {
-            DoAction(device_id, "attack");
-        } else if (data["counter"] != null) {
-            DoAction(device_id, "counter");
-        } else if (data["tech"] != null) {
-            DoAction(device_id, "tech");
+			ready = true;
+		} else if (data["card"] != null) {
+			ChoseCard ((int)data ["card"]);
+		} else if (data["attack"] != null) {
+			PlayAction (PlayerAction.actions [0].Clone ());
+		} else if (data["counter"] != null) {
+			PlayAction (PlayerAction.actions [2].Clone ());
+		} else if (data["tech"] != null) {
+			PlayAction (PlayerAction.actions [1].Clone ());
         } else if (data["advance"] != null) {
-            DoAction(device_id, "advance");
+			PlayAction (PlayerAction.actions [3].Clone ());
         }
     }
 
-    void ChoseCard(int device_id, int ndx) {
-        GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
-
-        if (manager.state == GameManagerScript.STATE.WAITING_ON_AUGMENTATION || manager.state == GameManagerScript.STATE.WAITING_ON_DISCARDS) {
-            Card selectedCard = manager.players[0].hand.cards[ndx];
-            manager.players[0].hand.CardSelected(null, selectedCard);
-        } else if (manager.state == GameManagerScript.STATE.DRAW_NEW_CARD) {
-            Card selectedCard = manager.cardBank.cards[ndx];
-            manager.cardBank.PickCard(0, selectedCard);
+    void ChoseCard(int ndx) {
+		if (gameManager.state == GameManagerScript.STATE.WAITING_ON_SCHOOL) {
+			SetSchool (PlayerSchool.schools [ndx].Clone ());
+		} else if (gameManager.state == GameManagerScript.STATE.WAITING_ON_AUGMENTATION || gameManager.state == GameManagerScript.STATE.WAITING_ON_DISCARDS) {
+			if (gameManager.CanPickAugmentation (ID)) {
+				PlayAugmentation (this.hand.cards[ndx]);
+			}
+		} else if (gameManager.state == GameManagerScript.STATE.DRAW_NEW_CARD) {
+			gameManager.cardBank.PickCard(this.ID, gameManager.cardBank.cards[ndx]);
         }
 
-    }
-
-    void DoAction(int device_id, string action_name) {
-        GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
-
-        ((UnityPlayerScript)manager.players[0]).PlayActionString(action_name);
     }
 
     public void PickCard(Card card) {
@@ -125,18 +111,27 @@ public class AirConsolePlayerScript : PlayerScript {
 			result_string += "{\"color\": \"" + color + "\", \"words\": \"" + card.description + "\"  }" + separator_comma;
 		}
 
-		result_string += "] }";
+		result_string += "], ";
+	
+		if (gameManager.CanPickAugmentation (ID))
+			result_string += "\"message\": \"Choose an augmentation!\"";
+		else if (gameManager.CanDrawCard (ID))
+			result_string += "\"message\": \"Pick a new card to add to your hand!\"";
+		else
+			result_string += "\"message\": \"Waiting...\"";
 
-		print ("Sending cardstring: " + result_string);
+		result_string += "}";
+
+		print ("Sending cardstring to " + device_id);
 
 		AirConsole.instance.Message (device_id, result_string);
 	}
 
 	public void AskPlayerForAction() {
-		AirConsole.instance.Message (device_id, "{ \"doAction\": true }");
+		AirConsole.instance.Message (device_id, "{ \"doAction\": true, \"message\": \"Choose an action!\" }");
 	}
 
-	public void CardWasTaken(int cardNdx) {
-		AirConsole.instance.Message (device_id, "{ \"cardWasTaken\": " + cardNdx + " }");
+	public void AskPlayerForSchool() {
+		AirConsole.instance.Message (device_id, "{ \"chooseSchool\": true, \"message\": \"Choose your school!\" }");
 	}
 }
