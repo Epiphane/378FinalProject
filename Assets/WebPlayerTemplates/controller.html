@@ -86,10 +86,21 @@
          transform: rotate(0deg);
       }
     }
+
+    #message {
+      position: fixed;
+      top: 5%;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+      color: white;
+    }
 </style>
 
 </head>
 <body>
+    <div id="message">Connecting...</div>
+
     <div id="ready_container" class="gamepad_container">
       <div id="ready" class="button-300-150">
          <div class="button-text">Ready!</div>
@@ -258,6 +269,7 @@ airconsole.onMessage = function(senderID, data) {
     console.log("THANK yoU FOR NOTICING ME SEMPAI: " + senderID);
     console.log(data);
     
+    $('#message').html(data.message || '');
 
     // It's time for the user to choose from 3 cards.
     if (data.newCards) {
@@ -265,12 +277,7 @@ airconsole.onMessage = function(senderID, data) {
 
       for (var ndx = 0; ndx < data.newCards.length; ndx++) {
         $("#action_container, #ready_container").hide(0);
-        // $("#card_container").show(0);
         displayCards(data.newCards);
-
-        // cards[ndx].show(0);
-        // cards_text[ndx].html(data.newCards[ndx].words);
-        // changeCardColor(cards[ndx], data.newCards[ndx].color);
       }
     }
 

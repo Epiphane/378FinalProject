@@ -16,33 +16,18 @@ public class AirConsolePlayerScript : PlayerScript {
 
     public void OnMessage(JToken data)
     {
-		if (data ["ready"] != null) {
+        if (data["ready"] != null) {
 			ready = true;
-			Debug.Log ("ready!");
-
-			if (status != null && status.GetComponent<Text> () != null) {
-				status.GetComponent<Text> ().text = "Ready!";
-			}
-		} else if (data ["chose_card0"] != null) {
-			// Chose card 0
-			ChoseCard (0);
-		} else if (data ["chose_card1"] != null) {
-			// Chose card 1
-			ChoseCard (1);
-		} else if (data ["chose_card2"] != null) {
-			// Chose card 2
-			ChoseCard (2);
-		} else if (data ["card"] != null) {
-			Debug.Log ("Card: " + data ["card"]);
+		} else if (data["card"] != null) {
 			ChoseCard ((int)data ["card"]);
 		} else if (data["attack"] != null) {
-			this.PlayAction (PlayerAction.actions [0].Clone ());
+			PlayAction (PlayerAction.actions [0].Clone ());
 		} else if (data["counter"] != null) {
-			this.PlayAction (PlayerAction.actions [2].Clone ());
+			PlayAction (PlayerAction.actions [2].Clone ());
 		} else if (data["tech"] != null) {
-			this.PlayAction (PlayerAction.actions [1].Clone ());
-		} else if (data["advance"] != null) {
-			this.PlayAction (PlayerAction.actions [3].Clone ());
+			PlayAction (PlayerAction.actions [1].Clone ());
+        } else if (data["advance"] != null) {
+			PlayAction (PlayerAction.actions [3].Clone ());
         }
     }
 
@@ -52,7 +37,6 @@ public class AirConsolePlayerScript : PlayerScript {
 		} else if (gameManager.state == GameManagerScript.STATE.WAITING_ON_AUGMENTATION || gameManager.state == GameManagerScript.STATE.WAITING_ON_DISCARDS) {
 			if (gameManager.CanPickAugmentation (ID)) {
 				PlayAugmentation (this.hand.cards[ndx]);
-				SyncState ();
 			}
 		} else if (gameManager.state == GameManagerScript.STATE.DRAW_NEW_CARD) {
 			gameManager.cardBank.PickCard(this.ID, gameManager.cardBank.cards[ndx]);
@@ -60,11 +44,25 @@ public class AirConsolePlayerScript : PlayerScript {
 
     }
 
-    void DoAction(int device_id, string action_name) {
-        GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
+    public void PickCard(Card card) {
+		if (gameManager.CanPickAugmentation (ID)) {
+			PlayAugmentation (card);
+		} else if (gameManager.ShouldDiscard (ID)) {
+			Discard (card);
 
-        ((UnityPlayerScript)manager.players[0]).PlayActionString(action_name);
-    }
+			gameManager.Discarded ();
+		}
+	}
+
+	public void SchoolString(string school) {
+		if (school == "aggression") {
+			this.SetSchool (PlayerSchool.schools [0].Clone ());
+		} else if (school == "tactics") {
+			this.SetSchool (PlayerSchool.schools [1].Clone ());
+		} else if (school == "focus") { 
+			this.SetSchool (PlayerSchool.schools [2].Clone ());
+		}
+	}
 
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data = null) {
@@ -114,23 +112,27 @@ public class AirConsolePlayerScript : PlayerScript {
 				result_string += ",";
 		}
 
-		result_string += "] }";
+		result_string += "], ";
+	
+		if (gameManager.CanPickAugmentation (ID))
+			result_string += "\"message\": \"Choose an augmentation!\"";
+		else if (gameManager.CanDrawCard (ID))
+			result_string += "\"message\": \"Pick a new card to add to your hand!\"";
+		else
+			result_string += "\"message\": \"Waiting...\"";
 
-		print ("Sending cardstring: " + result_string);
+		result_string += "}";
+
+		print ("Sending cardstring to " + device_id);
 
 		AirConsole.instance.Message (device_id, result_string);
 	}
 
 	public void AskPlayerForAction() {
-		AirConsole.instance.Message (device_id, "{ \"doAction\": true }");
+		AirConsole.instance.Message (device_id, "{ \"doAction\": true, \"message\": \"Choose an action!\" }");
 	}
 
 	public void AskPlayerForSchool() {
-		Debug.Log ("Choose your darn school already!");
-		AirConsole.instance.Message (device_id, "{ \"chooseSchool\": true }");
-	}
-
-	public void CardWasTaken(int cardNdx) {
-		AirConsole.instance.Message (device_id, "{ \"cardWasTaken\": " + cardNdx + " }");
+		AirConsole.instance.Message (device_id, "{ \"chooseSchool\": true, \"message\": \"Choose your school!\" }");
 	}
 }

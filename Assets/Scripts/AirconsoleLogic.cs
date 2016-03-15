@@ -78,6 +78,8 @@ public class AirconsoleLogic : MonoBehaviour {
 
 			if (text != null)
 				text.text = "Connected";
+
+			AirConsole.instance.Message(device_id, "{\"message\": \"Connected as player " + numPlayers + "!\"}");
 		}
 
 		SyncState ();
