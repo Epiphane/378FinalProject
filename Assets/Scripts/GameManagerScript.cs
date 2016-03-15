@@ -46,6 +46,7 @@ public class GameManagerScript : MonoBehaviour {
 		for (int i = 0; i < AirconsoleLogic.numPlayers && i < 2; i ++) {
 			AirConsolePlayerScript newPlayer = players [i].gameObject.AddComponent<AirConsolePlayerScript> ();
 			newPlayer.Copy (players [i]);
+			newPlayer.hand.secret = true;
 			newPlayer.GetComponent<AirConsolePlayerScript> ().device_id = AirconsoleLogic.players [i].device_id;
 			players [i] = newPlayer;
 
@@ -358,11 +359,11 @@ public class GameManagerScript : MonoBehaviour {
 			SetState (STATE.GAME_OVER);
 
 			if (players [0].health < players [1].health)
-				gameStatus.text = "Opponent wins!";
+				gameStatus.text = "Player 2 wins!";
 			else if (players [0].health == players [1].health)
 				gameStatus.text = "Tie game!";
 			else
-				gameStatus.text = "You win!";
+				gameStatus.text = "Player 1 wins!";
 		}
 	}
 
