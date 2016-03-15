@@ -213,9 +213,12 @@ function sendInputEvent(ndx) {
 }
 
 // Prepare the ready button!
+var bigButtonType = 'ready';
 new Button($('#ready')[0], {
    down: function() {
-      sendInputEvent({ ready: true });
+      obj = {};
+      obj[bigButtonType] = true;
+      sendInputEvent(obj);
    }
 });
 
@@ -246,16 +249,12 @@ function formatCard(card) {
   elem.addClass('card');
   changeCardColor(elem, card.color);
 
-  if (card.chainable) {
-    card.description += '<br><br>**Chainable';
-  }
-
-  var title = $('<div class="title">' + card.title + '</div>');
+  var title = $('<div class="title">' + (card.title || '') + '</div>');
   var description = $('<div class="description"></div>');
   elem.append(title);
   elem.append(description);
 
-  description.html(card.description);
+  description.html(card.description + (card.chainable ? '<br><br>**Chainable' : ''));
 
   return elem;
 }
@@ -288,14 +287,13 @@ airconsole.onMessage = function(senderID, data) {
     console.log("THANK yoU FOR NOTICING ME SEMPAI: " + senderID);
     console.log(data);
     
-<<<<<<< Updated upstream
     $('#message').html(data.message || '');
-=======
+
     if (data.skip) {
       $('#ready_container').show();
-      $('#ready_container .button-text').html('Skip');
+      $('#ready_container .button-text').html('Skip backstory (you monster)');
+      bigButtonType = 'skip';
     }
->>>>>>> Stashed changes
 
     // It's time for the user to choose from 3 cards.
     if (data.newCards) {
