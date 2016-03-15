@@ -35,6 +35,7 @@
     .card {
        position: relative;
        width: 30%;
+       height: 100%;
        float: left;
        background-size: contain;
        background-repeat: no-repeat;
@@ -195,16 +196,16 @@ new Button($('#ready')[0], {
 });
 
 // Go through the cards, and turn them all into buttons! With magic.
-for (var ndx = 0; ndx < 3; ndx++) {
-    (function (ndx) {
-      var params = {
-          down: function() {
-              sendInputEvent("chose_card" + ndx);
-          }
-      }
-      var dummy = new Button(cards[ndx][0], params);
-    })(ndx);
-}
+// for (var ndx = 0; ndx < 3; ndx++) {
+//     (function (ndx) {
+//       var params = {
+//           down: function() {
+//               sendInputEvent("chose_card" + ndx);
+//           }
+//       }
+//       var dummy = new Button(cards[ndx][0], params);
+//     })(ndx);
+// }
 
 function changeCardColor(card, newColor) {
   card.removeClass("red");
@@ -212,6 +213,42 @@ function changeCardColor(card, newColor) {
   card.removeClass("blue");
   card.removeClass("ded");
   card.addClass(newColor);
+}
+
+// Returns a div element for a new card
+function formatCard(card) {
+  var elem = $('<div></div>');
+
+  elem.addClass('card');
+  changeCardColor(elem, card.color);
+
+  var description = $('<div></div>');
+  elem.append(description);
+
+  description.html(card.description);
+
+  return elem;
+}
+
+function displayCards(cards) {
+  console.log('showing cards', cards);
+  $('#card_container').show().empty();
+
+  var elems = [];
+
+  cards.forEach(function(card) {
+    elems.push(formatCard(card));
+  });
+
+  elems.forEach(function(cardDiv, index) {
+    $('#card_container').append(cardDiv);
+
+    new Button(cardDiv[0], {
+      down: function() {
+        sendInputEvent({ card: index });
+      }
+    })
+  });
 }
 
 airconsole.onMessage = function(senderID, data) {
@@ -227,12 +264,13 @@ airconsole.onMessage = function(senderID, data) {
       $(".card").hide(0);
 
       for (var ndx = 0; ndx < data.newCards.length; ndx++) {
-        $("#action_container").hide(0);
-        $("#card_container").show(0);
+        $("#action_container, #ready_container").hide(0);
+        // $("#card_container").show(0);
+        displayCards(data.newCards);
 
-        cards[ndx].show(0);
-        cards_text[ndx].html(data.newCards[ndx].words);
-        changeCardColor(cards[ndx], data.newCards[ndx].color);
+        // cards[ndx].show(0);
+        // cards_text[ndx].html(data.newCards[ndx].words);
+        // changeCardColor(cards[ndx], data.newCards[ndx].color);
       }
     }
 
@@ -240,6 +278,27 @@ airconsole.onMessage = function(senderID, data) {
     if (data.doAction) {
       $("#action_container").show(0);
       $("#card_container").hide(0);
+    }
+
+    if (data.chooseSchool) {
+      $("#action_container, #ready_container").hide(0);
+      displayCards([
+        { 
+          color: 'red',
+          title: 'Derp',
+          description: 'School of Aggression'
+        },
+        { 
+          color: 'blue',
+          title: 'Derp',
+          description: 'School of Tactics'
+        },
+        { 
+          color: 'green',
+          title: 'Derp',
+          description: 'School of Focus'
+        }
+      ]);
     }
 
     if (data.cardWasTaken) {
