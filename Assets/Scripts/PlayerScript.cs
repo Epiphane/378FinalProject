@@ -21,6 +21,17 @@ public class PlayerScript : MonoBehaviour {
 	public int health = GameManagerScript.INITIAL_HEALTH;
 	public int max_health = GameManagerScript.INITIAL_HEALTH;
 
+	public void Copy(PlayerScript other) {
+		gameManager = other.gameManager;
+		hand = other.hand;
+		deck = other.deck;
+		actionDisplay = other.actionDisplay;
+		dashboard = other.dashboard;
+		ID = other.ID;
+
+		dashboard.player = this;
+	}
+
 	// Use this for initialization
 	public virtual void Awake () {
 		// Set up the dashboard's reference
@@ -102,6 +113,7 @@ public class PlayerScript : MonoBehaviour {
 			hand.AddCard (deck.Draw ());
 		}
 
+		Debug.Log ("Selected school!");
 		gameManager.SchoolSelected (ID);
 	}
 

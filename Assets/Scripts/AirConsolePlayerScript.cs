@@ -9,7 +9,10 @@ using System.Linq;
 public class AirConsolePlayerScript : PlayerScript {
 
     public int device_id;
-    public bool ready { get; private set; }
+	public bool ready { get; private set; }
+
+	/* Connection status display */
+	public GameObject status;
 
     public void OnMessage(JToken data)
     {
@@ -51,18 +54,6 @@ public class AirConsolePlayerScript : PlayerScript {
 		}
 	}
 
-	public void PlayActionString(string action) {
-		if (action == "attack") {
-			this.PlayAction (PlayerAction.actions [0].Clone ());
-		} else if (action == "tech") {
-			this.PlayAction (PlayerAction.actions [1].Clone ());
-		} else if (action == "counter") {
-			this.PlayAction (PlayerAction.actions [2].Clone ());
-		} else if (action == "advance") {
-			this.PlayAction (PlayerAction.actions [3].Clone ());
-		}
-	}
-
 	public void SchoolString(string school) {
 		if (school == "aggression") {
 			this.SetSchool (PlayerSchool.schools [0].Clone ());
@@ -76,14 +67,22 @@ public class AirConsolePlayerScript : PlayerScript {
 	/* For receiving information from the game state */
 	public override void Message(GameManagerScript.MESSAGE message, object data = null) {
 		base.Message (message, data);
+
+		if (message == GameManagerScript.MESSAGE.CHOOSE_SCHOOL) {
+			AskPlayerForSchool ();
+		}
 	}
 
 	// Airconsole messaging
 	public void SyncState() {
+		if (!gameManager) {
+			// Not in game
+			return;
+		}
+
 		GameManagerScript.STATE state = gameManager.state;
 
 		switch (state) {
-
 		// Player should play a card from their hand. Have the mobile controller
 		//  display a list of the player's cards.
 		case GameManagerScript.STATE.WAITING_ON_AUGMENTATION:
@@ -98,6 +97,9 @@ public class AirConsolePlayerScript : PlayerScript {
 		case GameManagerScript.STATE.WAITING_ON_DISCARDS:
 			SendCards (hand.cards);
 			break;
+		case GameManagerScript.STATE.WAITING_ON_SCHOOL:
+			AskPlayerForSchool ();
+			break;
 		}
 	}
 
@@ -105,10 +107,9 @@ public class AirConsolePlayerScript : PlayerScript {
 		var result_string = "{ \"newCards\": [ ";
 		for (int ndx = 0; ndx < cards.Count; ndx++) {
 			var card = cards [ndx];
-			// Remove trailing comma, it screws up JSON parsing which is DUMB.
-			var separator_comma = (ndx == cards.Count - 1) ? "" : ",";
-			var color = Card.ColorToString (card.color);
-			result_string += "{\"color\": \"" + color + "\", \"words\": \"" + card.description + "\"  }" + separator_comma;
+			result_string += card.ToJSON ();
+			if (ndx < cards.Count - 1)
+				result_string += ",";
 		}
 
 		result_string += "], ";

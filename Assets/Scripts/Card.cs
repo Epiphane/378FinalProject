@@ -17,6 +17,9 @@
 public class Card {
 	public enum Color { BLANK, RED, BLUE, GREEN };
 
+	private static int ID_COUNTER = 0;
+	public int id { get; private set; }
+
 	// Visual information
 	public string name { get; private set; }
 	public string description { get; private set; }
@@ -67,6 +70,8 @@ public class Card {
 		this.chainable = chainable;
 		this.previous = null;
 
+		this.id = ID_COUNTER++;
+
 		// Fill in nulls
 		if (Instant == null)
 			Instant = (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {};
@@ -89,6 +94,18 @@ public class Card {
 
 	public override string ToString () {
 		return name;
+	}
+
+	public string ToJSON() {
+		string result_string = "";
+
+		result_string += "\"id\": " + this.id + ",";
+		result_string += "\"color\": \"" + ColorToString(color) + "\",";
+		result_string += "\"title\": \"" + name + "\",";
+		result_string += "\"description\": \"" + description + "\",";
+		result_string += "\"chainable\": " + (chainable ? "true" : "false") + "";
+
+		return "{" + result_string + "}";
 	}
 
 	/*
