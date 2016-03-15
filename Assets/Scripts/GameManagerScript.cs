@@ -12,7 +12,7 @@ public class GameManagerScript : MonoBehaviour {
 	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DISCARD_ALL, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
 	public CardBankScript cardBank;
-	public PlayerScript[] players;
+	public PlayerScript[] players = new PlayerScript[2];
 	public Card[] augmentations;
 	public Text gameStatus;
 
@@ -42,12 +42,23 @@ public class GameManagerScript : MonoBehaviour {
 
 		UpdateStatus ();
 
+		// Attempt to get existing players
+		for (int i = 0; i < AirconsoleLogic.numPlayers && i < 2; i ++) {
+			AirConsolePlayerScript newPlayer = players [i].gameObject.AddComponent<AirConsolePlayerScript> ();
+			newPlayer.Copy (players [i]);
+			newPlayer.GetComponent<AirConsolePlayerScript> ().device_id = AirconsoleLogic.players [i].device_id;
+			players [i] = newPlayer;
+
+			AirconsoleLogic.activePlayers [AirconsoleLogic.players [i].device_id] = newPlayer;
+			AirconsoleLogic.players [i] = newPlayer;
+		}
+
 		for (int i = 0; i < players.Length; i++) {
 			players [i].ID = i;
 			players [i].health = INITIAL_HEALTH;
 			players [i].max_health = INITIAL_HEALTH;
 
-			players[i].Message(MESSAGE.CHOOSE_SCHOOL);
+			players [i].Message(MESSAGE.CHOOSE_SCHOOL);
 		}
 	}
 

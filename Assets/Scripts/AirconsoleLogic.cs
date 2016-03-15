@@ -34,6 +34,7 @@ public class AirconsoleLogic : MonoBehaviour {
         }
     }
 
+	public static int[] player_ids = new int[2];
 	public static AirConsolePlayerScript[] players = new AirConsolePlayerScript[2];
 
 	void Start() {
@@ -58,13 +59,26 @@ public class AirconsoleLogic : MonoBehaviour {
         newPlayer.device_id = device_id;
         activePlayers[device_id] = newPlayer;
 
-        if (numPlayers == 1) {
-            players[0] = newPlayer;
-        } else if (numPlayers == 2) {
-            players[1] = newPlayer;
+		GameObject status = null;
+
+		if (numPlayers == 1) {
+			player_ids [0] = device_id;
+			players [0] = newPlayer;
+			players [0].status = status = GameObject.Find ("P1 Status");
+		} else if (numPlayers == 2) {
+			player_ids [1] = device_id;
+			players [1] = newPlayer;
+			players [1].status = status = GameObject.Find ("P2 Status");
         } else if (numPlayers > 2) {
             // TODO: A third (or later) player tried to join. Tell them to wait, maybe have a "honk" button lawl
         }
+
+		if (status != null) {
+			Text text = status.GetComponent<Text> ();
+
+			if (text != null)
+				text.text = "Connected";
+		}
 
 		SyncState ();
 	}
@@ -92,10 +106,6 @@ public class AirconsoleLogic : MonoBehaviour {
 
 	// Process a message sent from one of the controllers
 	void OnMessage(int device_id, JToken data) {
-        Debug.Log("message from " + device_id);
-
-        Debug.Log(activePlayers[device_id]);
-
         if (activePlayers[device_id] != null)
             activePlayers[device_id].OnMessage(data);
 	}
@@ -109,8 +119,6 @@ public class AirconsoleLogic : MonoBehaviour {
 			// Controllers haven't loaded yet. FORGET ABOUT IT!!!
 			return;
 		}
-
-		GameManagerScript manager = GameObject.FindObjectOfType<GameManagerScript>();
 
 		foreach (AirConsolePlayerScript player in players) {
 			if (player != null)
