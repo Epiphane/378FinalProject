@@ -97,9 +97,11 @@ public class PlayerScript : MonoBehaviour {
 	}
 
 	public virtual void PlayAction(PlayerAction action) {
-		this.action = action;
+		if (gameManager.state == GameManagerScript.STATE.WAITING_ON_ACTION && this.action == null) {
+			this.action = action;
 
-		gameManager.PlayedAction (ID);
+			gameManager.PlayedAction (ID);
+		}
 	}
 
 	/* Sets the player's school to the given school */

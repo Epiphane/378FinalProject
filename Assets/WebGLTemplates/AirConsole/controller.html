@@ -295,6 +295,12 @@ airconsole.onMessage = function(senderID, data) {
       bigButtonType = 'skip';
     }
 
+    if (data.replay) {
+      $('#ready_container').show();
+      $('#ready_container .button-text').html('Play again!');
+      bigButtonType = 'replay';
+    }
+
     // It's time for the user to choose from 3 cards.
     if (data.newCards) {
       $(".card").hide(0);
