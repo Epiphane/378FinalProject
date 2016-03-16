@@ -100,6 +100,9 @@ public class AirConsolePlayerScript : PlayerScript {
 		case GameManagerScript.STATE.WAITING_ON_SCHOOL:
 			AskPlayerForSchool ();
 			break;
+		case GameManagerScript.STATE.GAME_OVER:
+			AirConsole.instance.Message (device_id, "{\"replay\":true}");
+			break;
 		}
 	}
 
