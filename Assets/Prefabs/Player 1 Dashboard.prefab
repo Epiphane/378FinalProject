@@ -289,7 +289,7 @@ MonoBehaviour:
   advancementLevel2: {fileID: 11481762}
   advancementLevel3: {fileID: 11412592}
   augmentationArea: {fileID: 22477636}
-  augmentation: {fileID: 191644, guid: c1df4d056bd8f4925b03c2e89618f6be, type: 2}
+  augmentation: {fileID: 0}
   name_display: {fileID: 11447260}
   health_display: {fileID: 11404296}
   player: {fileID: 0}
@@ -692,7 +692,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 5, y: 73}
+  m_AnchoredPosition: {x: 60, y: 165}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &22485926

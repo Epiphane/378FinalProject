@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="airconsole-controls/ctrl-generator/controller.css">
 
 <style>
+    #ready_container {
+      padding: 50px;
+    }
+
     .green {
         background-image: url('card_green.png');
     }
@@ -31,6 +35,7 @@
     .card {
        position: relative;
        width: 30%;
+       height: 100%;
        float: left;
        background-size: contain;
        background-repeat: no-repeat;
@@ -39,13 +44,30 @@
        text-align: center;
     }
 
-    .card div {
+    .card .title {
         position: absolute;
-        top: 46%;
-        width: 100%;
+        top: 50%;
+        width: 130px;
         text-align: center;
+        font-size: 24px;
+        left: 50%;
+        margin-left: -65px;
+        margin-top: -110px;
+    }
 
+    .card .description {
+        position: absolute;
+        top: 50%;
+        width: 130px;
+        text-align: left;
         font-size: 16px;
+        left: 50%;
+        margin-left: -65px;
+        margin-top: -50px;
+    }
+
+    .gamepad_container {
+      overflow: auto !important;
     }
 
     .left.card {
@@ -81,10 +103,26 @@
          transform: rotate(0deg);
       }
     }
+
+    #message {
+      position: fixed;
+      top: 5%;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+      color: white;
+    }
 </style>
 
 </head>
 <body>
+    <div id="message">Connecting...</div>
+
+    <div id="ready_container" class="gamepad_container">
+      <div id="ready" class="button-300-150">
+         <div class="button-text">Ready!</div>
+      </div>
+    </div>
 
     <div id="action_container" class="gamepad_container" style="display:none">
       <div id="left" class="left"></div>
@@ -92,7 +130,7 @@
       <div id="right" class="right"></div>
     </div>
 
-    <div id="card_container" class="gamepad_container container">
+    <div id="card_container" class="gamepad_container container" style="display: none">
         <div id="left" class="left card green">
             <div>Here I am! asdf asdf asdf</div>
         </div>
@@ -167,25 +205,38 @@ var cards = [$("#left.card"), $("#middle.card"), $("#right.card")];
 
 // Sends a rate-limited message over to AirConsole.
 function sendInputEvent(ndx) {
-  var message = {};
-  message[ndx] = true;
+   var message = ndx;
+   if (typeof(ndx) === 'string') {
+      message = {};
+      message[ndx] = true;
+   }
 
-  rate_limiter.message(AirConsole.SCREEN, message);
+   rate_limiter.message(AirConsole.SCREEN, message);
 
-  console.log("NICE: " + ndx)
+   console.log("NICE:", message)
 }
+
+// Prepare the ready button!
+var bigButtonType = 'ready';
+new Button($('#ready')[0], {
+   down: function() {
+      obj = {};
+      obj[bigButtonType] = true;
+      sendInputEvent(obj);
+   }
+});
 
 // Go through the cards, and turn them all into buttons! With magic.
-for (var ndx = 0; ndx < 3; ndx++) {
-    (function (ndx) {
-      var params = {
-          down: function() {
-              sendInputEvent("chose_card" + ndx);
-          }
-      }
-      var dummy = new Button(cards[ndx][0], params);
-    })(ndx);
-}
+// for (var ndx = 0; ndx < 3; ndx++) {
+//     (function (ndx) {
+//       var params = {
+//           down: function() {
+//               sendInputEvent("chose_card" + ndx);
+//           }
+//       }
+//       var dummy = new Button(cards[ndx][0], params);
+//     })(ndx);
+// }
 
 function changeCardColor(card, newColor) {
   card.removeClass("red");
@@ -195,6 +246,44 @@ function changeCardColor(card, newColor) {
   card.addClass(newColor);
 }
 
+// Returns a div element for a new card
+function formatCard(card) {
+  var elem = $('<div></div>');
+
+  elem.addClass('card');
+  changeCardColor(elem, card.color);
+
+  var title = $('<div class="title">' + (card.title || '') + '</div>');
+  var description = $('<div class="description"></div>');
+  elem.append(title);
+  elem.append(description);
+
+  description.html(card.description + (card.chainable ? '<br><br>**Chainable' : ''));
+
+  return elem;
+}
+
+function displayCards(cards) {
+  console.log('showing cards', cards);
+  $('#card_container').show().empty();
+
+  var elems = [];
+
+  cards.forEach(function(card) {
+    elems.push(formatCard(card));
+  });
+
+  elems.forEach(function(cardDiv, index) {
+    $('#card_container').append(cardDiv);
+
+    new Button(cardDiv[0], {
+      down: function() {
+        sendInputEvent({ card: index });
+      }
+    })
+  });
+}
+
 airconsole.onMessage = function(senderID, data) {
   data = JSON.parse(data);
   if (senderID === AirConsole.SCREEN) {
@@ -202,18 +291,21 @@ airconsole.onMessage = function(senderID, data) {
     console.log("THANK yoU FOR NOTICING ME SEMPAI: " + senderID);
     console.log(data);
     
+    $('#message').html(data.message || '');
+
+    if (data.skip) {
+      $('#ready_container').show();
+      $('#ready_container .button-text').html('Skip backstory (you monster)');
+      bigButtonType = 'skip';
+    }
 
     // It's time for the user to choose from 3 cards.
     if (data.newCards) {
       $(".card").hide(0);
 
       for (var ndx = 0; ndx < data.newCards.length; ndx++) {
-        $("#action_container").hide(0);
-        $("#card_container").show(0);
-
-        cards[ndx].show(0);
-        cards_text[ndx].html(data.newCards[ndx].words);
-        changeCardColor(cards[ndx], data.newCards[ndx].color);
+        $("#action_container, #ready_container").hide(0);
+        displayCards(data.newCards);
       }
     }
 
@@ -221,6 +313,24 @@ airconsole.onMessage = function(senderID, data) {
     if (data.doAction) {
       $("#action_container").show(0);
       $("#card_container").hide(0);
+    }
+
+    if (data.chooseSchool) {
+      $("#action_container, #ready_container").hide(0);
+      displayCards([
+        { 
+          color: 'red',
+          description: 'School of Aggression'
+        },
+        { 
+          color: 'blue',
+          description: 'School of Tactics'
+        },
+        { 
+          color: 'green',
+          description: 'School of Focus'
+        }
+      ]);
     }
 
     if (data.cardWasTaken) {

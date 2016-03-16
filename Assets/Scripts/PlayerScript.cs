@@ -21,26 +21,27 @@ public class PlayerScript : MonoBehaviour {
 	public int health = GameManagerScript.INITIAL_HEALTH;
 	public int max_health = GameManagerScript.INITIAL_HEALTH;
 
+	public void Copy(PlayerScript other) {
+		gameManager = other.gameManager;
+		hand = other.hand;
+		deck = other.deck;
+		actionDisplay = other.actionDisplay;
+		dashboard = other.dashboard;
+		ID = other.ID;
+
+		dashboard.player = this;
+	}
+
 	// Use this for initialization
 	public virtual void Awake () {
 		// Set up the dashboard's reference
 		if (dashboard != null)
 			dashboard.player = this;
 
-		// Choose random school. Just kidding, don't do that.
-		// school = PlayerSchool.schools [Random.Range (0, 3)].Clone ();
-
-		gameManager = Utils.Find<GameManagerScript> (gameManager, "GameManager");
+        gameManager = GameObject.FindObjectOfType<GameManagerScript>();
 
 		if (deck == null)
 			deck = GetComponent<DeckScript> ();
-
-		deck.Shuffle ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
 	public virtual void DrawCard(Card card) {
@@ -112,6 +113,7 @@ public class PlayerScript : MonoBehaviour {
 			hand.AddCard (deck.Draw ());
 		}
 
+		Debug.Log ("Selected school!");
 		gameManager.SchoolSelected (ID);
 	}
 

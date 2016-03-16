@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour {
 	
-	private static int COMP_WAIT_TIME = 100;
+	private static int COMP_WAIT_TIME = 200;
 	public static int INITIAL_HEALTH = 20;
 
 	public enum MESSAGE { CHOOSE_SCHOOL, DRAW, DISCARD, DISCARD_ALL, DRAW_NEW_CARD, CHOOSE_AUGMENTATION, CHOOSE_ACTION };
 
 	public CardBankScript cardBank;
-	public PlayerScript[] players;
+	public PlayerScript[] players = new PlayerScript[2];
 	public Card[] augmentations;
 	public Text gameStatus;
 
@@ -42,12 +42,24 @@ public class GameManagerScript : MonoBehaviour {
 
 		UpdateStatus ();
 
+		// Attempt to get existing players
+		for (int i = 0; i < AirconsoleLogic.numPlayers && i < 2; i ++) {
+			AirConsolePlayerScript newPlayer = players [i].gameObject.AddComponent<AirConsolePlayerScript> ();
+			newPlayer.Copy (players [i]);
+			newPlayer.hand.secret = true;
+			newPlayer.GetComponent<AirConsolePlayerScript> ().device_id = AirconsoleLogic.players [i].device_id;
+			players [i] = newPlayer;
+
+			AirconsoleLogic.activePlayers [AirconsoleLogic.players [i].device_id] = newPlayer;
+			AirconsoleLogic.players [i] = newPlayer;
+		}
+
 		for (int i = 0; i < players.Length; i++) {
 			players [i].ID = i;
 			players [i].health = INITIAL_HEALTH;
 			players [i].max_health = INITIAL_HEALTH;
 
-			players[i].Message(MESSAGE.CHOOSE_SCHOOL);
+			players [i].Message(MESSAGE.CHOOSE_SCHOOL);
 		}
 	}
 
@@ -150,6 +162,10 @@ public class GameManagerScript : MonoBehaviour {
 		SetState (STATE.DRAW_NEW_CARD);
 	}
 
+	public bool CanDrawCard(int player) {
+		return (state == STATE.DRAW_NEW_CARD && player == turn);
+	}
+
 	public bool DrawCard(int player, Card card) {
 		if (state != STATE.DRAW_NEW_CARD) {
 			Debug.LogError ("You shouldn't be able to draw new cards right now");
@@ -226,6 +242,7 @@ public class GameManagerScript : MonoBehaviour {
 			SetState (STATE.WAITING_ON_ACTION);
 		} else {
 			UpdateStatus ();
+			AirconsoleLogic.SyncState ();
 
 			// See whether this player can actually go
 			if (players [turn].augmentation == null || players [turn].augmentation.chainable)
@@ -246,6 +263,9 @@ public class GameManagerScript : MonoBehaviour {
 				return;
 			}
 		}
+
+        // play sfx
+        GetComponent<AudioSource>().Play();
 
 		// All players chose an action!
 		SetState(STATE.RESOLVE_ACTIONS);
@@ -339,11 +359,11 @@ public class GameManagerScript : MonoBehaviour {
 			SetState (STATE.GAME_OVER);
 
 			if (players [0].health < players [1].health)
-				gameStatus.text = "Opponent wins!";
+				gameStatus.text = "Player 2 wins!";
 			else if (players [0].health == players [1].health)
 				gameStatus.text = "Tie game!";
 			else
-				gameStatus.text = "You win!";
+				gameStatus.text = "Player 1 wins!";
 		}
 	}
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class HandScript : CardHolderScript {
 
-	private static float FAN_WIDTH = 1;
+	private static float FAN_WIDTH = 0.5f;
 
 	// Use this for initialization
 	void Start () {

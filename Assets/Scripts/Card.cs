@@ -17,11 +17,16 @@
 public class Card {
 	public enum Color { BLANK, RED, BLUE, GREEN };
 
+	private static int ID_COUNTER = 0;
+	public int id { get; private set; }
+
 	// Visual information
 	public string name { get; private set; }
 	public string description { get; private set; }
 	public Color color { get; private set; }
 	public bool chainable { get; private set; }
+	public bool consumable { get; private set; }
+
 	public Card previous;
 
 	// Converts enum color to a human readable string
@@ -67,6 +72,8 @@ public class Card {
 		this.chainable = chainable;
 		this.previous = null;
 
+		this.id = ID_COUNTER++;
+
 		// Fill in nulls
 		if (Instant == null)
 			Instant = (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {};
@@ -76,8 +83,7 @@ public class Card {
 			AfterActionBeforeSchool = (ActionResult result, ActionResult other) => {};
 		if (AfterAction == null)
 			AfterAction = (ActionResult result, ActionResult other) => {};
-
-		Debug.Log (BeforeAction);
+        
 		this.Instant = Instant;
 		this.BeforeAction = BeforeAction;
 		this.AfterActionBeforeSchool = AfterActionBeforeSchool;
@@ -90,6 +96,18 @@ public class Card {
 
 	public override string ToString () {
 		return name;
+	}
+
+	public string ToJSON() {
+		string result_string = "";
+
+		result_string += "\"id\": " + this.id + ",";
+		result_string += "\"color\": \"" + ColorToString(color) + "\",";
+		result_string += "\"title\": \"" + name + "\",";
+		result_string += "\"description\": \"" + description + "\",";
+		result_string += "\"chainable\": " + (chainable ? "true" : "false") + "";
+
+		return "{" + result_string + "}";
 	}
 
 	/*
@@ -152,18 +170,18 @@ public class Card {
 				action.techAttack ++;
 		}, null, null),
 		// Tier 2
-//		new Card ("Will", "Draw extra cards equal to your level and play again", Color.GREEN, true, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
-//			player.Message(GameManagerScript.MESSAGE.DRAW, 1 + Mathf.Floor(player.school.advancement / 6));
-//		}, null, null, null),
-//		new Card ("Mind Swap", "Switch augmentations with your opponent", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
-//			Card temp = augmentation.previous;
-//			other.previous = augmentation.previous;
-//			augmentation.previous = temp;
-//
-//			temp = augmentation;
-//			player.augmentation = opponent.augmentation;
-//			opponent.augmentation = temp;
-//		}, null, null, null),
+		new Card ("Will", "Draw extra cards equal to your level + 1 and play again", Color.GREEN, true, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+			player.Message(GameManagerScript.MESSAGE.DRAW, 1 + Mathf.Floor(player.school.advancement / 6));
+		}, null, null, null),
+		new Card ("Mind Swap", "Switch augmentations with your opponent", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+			Card temp = augmentation.previous;
+			other.previous = augmentation.previous;
+			augmentation.previous = temp;
+
+			temp = augmentation;
+			player.augmentation = opponent.augmentation;
+			opponent.augmentation = temp;
+		}, null, null, null),
 		new Card ("Integrity", "Immediately set your opponent's health equal to yours", Color.GREEN, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
 			opponent.health = player.health;
 		}, null, null, null),
