@@ -276,9 +276,14 @@ function displayCards(cards) {
   elems.forEach(function(cardDiv, index) {
     $('#card_container').append(cardDiv);
 
+    cardDiv.click(function() {
+
+    })
     new Button(cardDiv[0], {
-      down: function() {
-        sendInputEvent({ card: index });
+      up: function() {
+        if (!CANCEL_CARD_SELECT) {
+          sendInputEvent({ card: index });
+        }
       }
     })
   });
@@ -344,6 +349,40 @@ airconsole.onMessage = function(senderID, data) {
     }
   }
 }
+var CANCEL_CARD_SELECT = false;
+
+function touchHorizScroll(id){
+    // if(isTouchDevice()){ //if touch events exist...
+        var el=document.getElementById(id);
+        var scrollStartPos=0;
+
+        document.getElementById(id).addEventListener("touchstart", function(event) {
+            scrollStartPos=this.scrollTop+event.touches[0].pageY;  
+
+        },false);
+
+        document.getElementById(id).addEventListener("touchmove", function(event) {
+            this.scrollTop=scrollStartPos-event.touches[0].pageY;    
+            if (this.scrollTop > 20) {
+            CANCEL_CARD_SELECT = true;          
+            }
+        },false);
+
+        document.getElementById(id).addEventListener("touchend", function(event) {
+            CANCEL_CARD_SELECT = false;          
+        },false);
+    // }
+}
+function isTouchDevice(){
+    try{
+        document.createEvent("TouchEvent");
+        return true;
+    }catch(e){
+        return false;
+    }
+} 
+
+touchHorizScroll("card_container");
 
 CtrlGenerator.setAirConsole(airconsole);
 CtrlGenerator.generate({"left":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ATTACK","key":"attack","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"COUNTER","key":"counter","on_up_message":false}],"middle":[],"right":[{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"TECH","key":"tech","on_up_message":false},{"type":{"label":"ButtonVertical","class_name":"Button"},"label":"ADVANCE","key":"advance","on_up_message":false}]});
