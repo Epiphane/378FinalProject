@@ -543,19 +543,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "The year is 204X.\n\nWars have been fought, natural disasters faced, and
-    tragedies experienced.\n\nA pity it took so much for a global effort to finally
-    be made towards colonizing space.\n\nWith amazing advances in technologies and
-    the combined skills of engineers all over the world, humankind quickly made its
-    way to outer planets. \n\nColonies emerged quickly and humans finally settled,
-    but their new era of peace was soon interrupted.\n\n\nAlien life had found them...\n\n\nAs
-    the colonies prepared for the worst, leaders assembled to meet the strangers and
-    show an offering of peace.\n\nLuckily, the aliens had the same idea. \n\nHowever,
-    their offering was in the form of a game.\n\nSomehow transcending language barriers,
-    a few humans quickly learned this new card game and were amazed at the technology
-    behind it. \n\nThose who learned the game the fastest organized into 3 schools,
-    and the only way in was to pass the Tactical  Advantage Combat Test.\n\nOnly the
-    best have the skills necessary to enter the academy, and you want to prove you're
-    worthy.\n\nYou will need skill.\n\nYou will need luck.\n\nYou will need TACT."
+    tragedies experienced.\n\nThe world seemed doomed.\n\n\nBut, with amazing advances
+    in technologies and the combined skills of engineers all over the world, humankind
+    quickly began attempts to colonize space.\n\nSettlements emerged quickly and humankind
+    was once again flourishing. However, this prosperity did not last for long. \n\n\nAlien
+    life had found them, and they were not seeking peace.\n\nThe advanced race produced
+    a translator and demanded the humans produce their finest minds to participate
+    in a strategic bout against their own. \n\nThe humans who were selected  became
+    known as the Tactical  Advantage Combat Team.\n\nYou are the first of the team
+    to face off against the much more knowledgable and fearsome aliens. \n\nYou're
+    guided through a series of winding corridors and outfitted with armor. Two giant
+    doors part revealing not a coliseum, but a small bridge with a device floating
+    on it.\n\nYour opponent stands at the opposite end.\n\nTo win, you will need skill.\n\nYou
+    will need luck.\n\nAnd you will need TACT.\n\n\n\n\n\nGodspeed."
 --- !u!222 &1645436563
 CanvasRenderer:
   m_ObjectHideFlags: 0
