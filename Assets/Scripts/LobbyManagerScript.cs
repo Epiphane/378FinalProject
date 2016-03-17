@@ -22,4 +22,8 @@ public class LobbyManagerScript : MonoBehaviour {
 			SceneManager.LoadScene ("Backstory");
 		}
 	}
+
+	public void SinglePlayer() {
+		SceneManager.LoadScene ("versusAI");
+	}
 }
