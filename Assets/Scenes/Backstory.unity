@@ -507,8 +507,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2, y: -1262}
-  m_SizeDelta: {x: 480, y: 2023}
+  m_AnchoredPosition: {x: 2, y: -1296}
+  m_SizeDelta: {x: 480, y: 2092}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1645436562
 MonoBehaviour:
@@ -549,13 +549,14 @@ MonoBehaviour:
     was once again flourishing. However, this prosperity did not last for long. \n\n\nAlien
     life had found them, and they were not seeking peace.\n\nThe advanced race produced
     a translator and demanded the humans produce their finest minds to participate
-    in a strategic bout against their own. \n\nThe humans who were selected  became
-    known as the Tactical  Advantage Combat Team.\n\nYou are the first of the team
-    to face off against the much more knowledgable and fearsome aliens. \n\nYou're
-    guided through a series of winding corridors and outfitted with armor. Two giant
-    doors part revealing not a coliseum, but a small bridge with a device floating
-    on it.\n\nYour opponent stands at the opposite end.\n\nTo win, you will need skill.\n\nYou
-    will need luck.\n\nAnd you will need TACT.\n\n\n\n\n\nGodspeed."
+    in a strategic bout against their own. \n\nThe winner keeps the planets, and the
+    loser must find a new home.\n\nThe humans who were selected  became known as the
+    Tactical  Advantage Combat Team.\n\nYou are the first of the team to face off
+    against the much more knowledgable and fearsome aliens. \n\nYou're guided through
+    a series of winding corridors and outfitted with armor. Two giant doors part,
+    revealing not a coliseum, but a small bridge with a device floating on it.\n\nYour
+    opponent stands at the opposite end.\n\nTo win, you will need skill.\n\nYou will
+    need luck.\n\nAnd you will need TACT.\n\n\n\n\n\nGodspeed."
 --- !u!222 &1645436563
 CanvasRenderer:
   m_ObjectHideFlags: 0
