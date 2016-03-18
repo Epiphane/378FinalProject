@@ -173,15 +173,15 @@ public class Card {
 		new Card ("Will", "Draw extra cards equal to your level + 1 and play again", Color.GREEN, true, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
 			player.Message(GameManagerScript.MESSAGE.DRAW, (int) (1 + Mathf.Floor(player.school.advancement / 6)));
 		}, null, null, null),
-		new Card ("Mind Swap", "Switch augmentations with your opponent", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
-			Card temp = augmentation.previous;
-			other.previous = augmentation.previous;
-			augmentation.previous = temp;
-
-			temp = augmentation;
-			player.augmentation = opponent.augmentation;
-			opponent.augmentation = temp;
-		}, null, null, null),
+//		new Card ("Mind Swap", "Switch augmentations with your opponent", Color.BLUE, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
+//			Card temp = augmentation.previous;
+//			other.previous = augmentation.previous;
+//			augmentation.previous = temp;
+//
+//			temp = augmentation;
+//			player.augmentation = opponent.augmentation;
+//			opponent.augmentation = temp;
+//		}, null, null, null),
 		new Card ("Integrity", "Immediately set your opponent's health equal to yours", Color.GREEN, false, (Card augmentation, Card other, PlayerScript player, PlayerScript opponent) => {
 			opponent.health = player.health;
 		}, null, null, null),

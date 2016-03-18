@@ -121,7 +121,7 @@ public class PlayerSchool {
 		new PlayerSchool ("Tactics: Outwit and outplay", Color.blue, new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("Always choose first augmentation", null, null, null, true),
-			new Level ("+1 damage to tech and counter", null, (PlayerAction action) => {
+			new Level ("+1 tech and counter", null, (PlayerAction action) => {
 				if (action.name == "Counter") {
 					action.counterAttack ++;
 				} else if (action.name == "Tech") {
@@ -145,9 +145,7 @@ public class PlayerSchool {
 			}, null),
 			new Level ("Heal 1 on counter", null, null, (Card.ActionResult result, Card.ActionResult other) => {
 				if (result.action.name == "Counter")
-					other.damage --;
-
-				// TODO add an actual HEAL
+					other.healing ++;
 			}),
 			new Level ("Take 3 damage maximum in an action", null, null, (Card.ActionResult result, Card.ActionResult other) => {
 				other.damage = Mathf.Min(other.damage, 3);

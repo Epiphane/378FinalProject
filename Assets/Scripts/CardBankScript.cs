@@ -49,7 +49,7 @@ public class CardBankScript : CardHolderScript {
 			GameObject newCardObject = AddCard (newCard);
 			cards.Add (newCard);
 
-			newCardObject.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 75, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
+			newCardObject.transform.position = transform.position - new Vector3 ((amountToDraw % 4 + 1) * 140, -Mathf.Floor(amountToDraw / 4) * 3 + yoffset, 0);
 		}
 
 		return cards;

@@ -12,6 +12,9 @@ public class PlayerDashboardScript : MonoBehaviour {
 	public Text name_display, health_display;
 	public PlayerScript player;
 
+	public Text abilities;
+	public Image abilitiesBG;
+
 	private float health = GameManagerScript.INITIAL_HEALTH;
 	private float advancement = -1;
 
@@ -77,7 +80,11 @@ public class PlayerDashboardScript : MonoBehaviour {
 		}
 
 		if (player.school != null && nameBG.color != player.school.color) {
-			nameBG.color = player.school.color;
+			abilitiesBG.color = nameBG.color = player.school.color;
+
+			abilities.text = "Level 1: " + player.school.levels[1].description + "\n\n" +
+				"Level 2: " + player.school.levels[2].description + "\n\n" +
+				"Level 3: " + player.school.levels[3].description + "\n\n";
 		}
 	}
 
