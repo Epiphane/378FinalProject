@@ -136,6 +136,6 @@ public class AirConsolePlayerScript : PlayerScript {
 	}
 
 	public void AskPlayerForSchool() {
-		AirConsole.instance.Message (device_id, "{ \"chooseSchool\": true, \"message\": \"Choose your school!\" }");
+		AirConsole.instance.Message (device_id, "{ \"chooseSchool\": true, \"message\": \"Choose your discipline!\" }");
 	}
 }

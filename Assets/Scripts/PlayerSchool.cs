@@ -93,7 +93,7 @@ public class PlayerSchool {
 	}
 
 	public static PlayerSchool[] schools = {
-		new PlayerSchool ("School of Aggression", Color.red, new Level[] {
+		new PlayerSchool ("Aggression: Destroy your enemy", Color.red, new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("+1 attack and tech", null, (PlayerAction action) => {
 				if (action.name == "Attack") {
@@ -118,7 +118,7 @@ public class PlayerSchool {
 				Card.cards[6],
 				Card.cards[7],
 		}),
-		new PlayerSchool ("School of Tactics", Color.blue, new Level[] {
+		new PlayerSchool ("Tactics: Outwit and outplay", Color.blue, new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("Always choose first augmentation", null, null, null, true),
 			new Level ("+1 damage to tech and counter", null, (PlayerAction action) => {
@@ -137,7 +137,7 @@ public class PlayerSchool {
 				Card.cards[10],
 				Card.cards[11],
 		}),
-		new PlayerSchool ("School of Focus", Color.green, new Level[] {
+		new PlayerSchool ("Focus: Steadfast in victory", Color.green, new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("+1 AP on advance", null, (PlayerAction action) => {
 				if (action.name == "Advance")

@@ -120,7 +120,7 @@ public class GameManagerScript : MonoBehaviour {
 			gameStatus.text = "Waiting on player " + turn + " to draw a card";
 			break;
 		case STATE.WAITING_ON_SCHOOL:
-			gameStatus.text = "Waiting on player " + turn + " to choose school";
+			gameStatus.text = "Waiting on player " + turn + " to choose discipline";
 			break;
 		case STATE.WAITING_ON_AUGMENTATION:
 			gameStatus.text = "Waiting on player " + turn + " to choose augmentation";
