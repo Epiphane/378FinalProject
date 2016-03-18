@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
-  m_SkyboxMaterial: {fileID: 2100000, guid: b8f20d5ca50d16143afc11f5e4af6fc1, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: a07fadb24ea940240afba3afc1a692cc, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -544,7 +544,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "The year is 204X.\n\nWars have been fought, natural disasters faced, and
     tragedies experienced.\n\nThe world seemed doomed.\n\n\nBut, with amazing advances
-    in technologies and the combined skills of engineers all over the world, humankind
+    in technology and the combined skills of engineers all over the world, humankind
     quickly began attempts to colonize space.\n\nSettlements emerged quickly and humankind
     was once again flourishing. However, this prosperity did not last for long. \n\n\nAlien
     life had found them, and they were not seeking peace.\n\nThe advanced race produced

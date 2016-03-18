@@ -21,7 +21,7 @@ public class BackstoryManager : MonoBehaviour {
         else
         {
             Vector3 pos = text.transform.position;
-			pos.y += (float) 50 * Time.deltaTime;
+			pos.y += (float) 45 * Time.deltaTime;
             text.transform.position = pos;
         }
 

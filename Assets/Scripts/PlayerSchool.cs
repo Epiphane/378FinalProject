@@ -118,7 +118,7 @@ public class PlayerSchool {
 				Card.cards[6],
 				Card.cards[7],
 		}),
-		new PlayerSchool ("Tactics: Outwit and outplay", Color.blue, new Level[] {
+		new PlayerSchool ("Tactics: Outwit and outplay", new Color(0.396f,0.396f,1.0f), new Level[] {
 			new Level ("Nothing", null, null, null),
 			new Level ("Always choose first augmentation", null, null, null, true),
 			new Level ("+1 tech and counter", null, (PlayerAction action) => {

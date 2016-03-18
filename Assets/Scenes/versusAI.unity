@@ -1865,6 +1865,12 @@ Prefab:
       propertyPath: augmentation
       value: 
       objectReference: {fileID: 478418851}
+    - target: {fileID: 11447260, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
+      propertyPath: m_Text
+      value: '(P1) Human
+
+'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
   m_IsPrefabParent: 0
@@ -2367,7 +2373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.05882353, g: 0.05882353, b: 1, a: 1}
+  m_Color: {r: 0.39705884, g: 0.39705884, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2991,7 +2997,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22485926, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -69
+      value: -24
       objectReference: {fileID: 0}
     - target: {fileID: 22485926, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -2999,7 +3005,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11447260, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
       propertyPath: m_Text
-      value: Alien
+      value: Alien (P2)
       objectReference: {fileID: 0}
     - target: {fileID: 22491410, guid: 69a15799284d24be4be7151cce3f81f5, type: 2}
       propertyPath: m_LocalScale.z
