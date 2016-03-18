@@ -80,7 +80,9 @@ public class PlayerDashboardScript : MonoBehaviour {
 		}
 
 		if (player.school != null && nameBG.color != player.school.color) {
-			abilitiesBG.color = nameBG.color = player.school.color;
+			nameBG.color = player.school.color;
+
+			abilitiesBG.color = new Color(nameBG.color.r, nameBG.color.g, nameBG.color.b, 0.7f);
 
 			abilities.text = "Level 1: " + player.school.levels[1].description + "\n\n" +
 				"Level 2: " + player.school.levels[2].description + "\n\n" +
